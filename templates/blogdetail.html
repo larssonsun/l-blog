@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% import "_marcos.html" as mcs %}
+
+{% block title %}{{ blog.name }}{% endblock %}
+
+{% block description %}{{ blog.summary|getArticalFull(size=170) }}{% endblock %}
+{% block keywords %}{{ blog.tagsStr }}{% endblock %}
+
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/colorful.css">
+{% endblock %}
+{% block content %}
+<div class="uk-section uk-section-small l-background-color">
+    <div class="uk-container">
+        <div class="uk-grid">
+            <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove">
+                    {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), blog.catelog_name, 
+                    url('catelog', cateId=blog.catelog_id), blog.catelog_name, blog.name) }}
+            </div>
+            <div id="artclAndCmmDiv" class="uk-width-3-4@l uk-width-1-1@m uk-box-shadow-large">
+                <article class="uk-article uk-margin-small-bottom">
+                    <h2 class="uk-margin-reset uk-heading-line uk-text-center l-article-title">
+                        <span>{{ blog.name }}</span>
+                    </h2>
+                    <p class="uk-article-meta l-meta">
+                        <span>{{ blog.user_name|fmtLabel('author') }}</span>
+                        <span>{{ blog.browse_count|fmtLabel('read_count') }}</span>
+                        <span>{{ commentCount|fmtLabel('comment_count') }}</span>
+                        <span>{{ blog.created_at|fmtDatetimeFromFloat }}</span>
+                    </p>
+                    <div class="l-atricalContent">{{ blog.markDownedContent|safe }}</div>
+                    <hr class="uk-divider-icon">
+                    <p class="l-urlblock"><span href="" uk-icon="link"></span>{{ blogurl|fmtLabel('blog_url_left') }}</p>
+                    {% if blog.tags %}
+                    <div class="l-tags uk-margin-small-bottom">
+                        {% for tag in blog.tags %}
+                        <a href="{{ url ('tag', tagId=tag.id) }}" class="uk-badge {{ 'l-tag' if not tag.current else 'l-tag-select' }}"
+                            uk-tooltip="title:{{ tag.tag_name|fmtLabel('blogCountInCatelog', tag.bct) }};pos:bottom">{{ tag.tag_name }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if blog.Prev or blog.Next %}
+                    <ul class="uk-pagination l-prev-next-pagi">
+                        {% if blog.Prev %}
+                        <li>
+                            <a href="{{ url('BlogDetail', id=blog.Prev)}}">
+                                <span class="uk-margin-small-right" uk-pagination-previous></span> {{ blog.PrevName }}
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if blog.Next %}
+                        <li class="uk-margin-auto-left">
+                            <a href="{{ url('BlogDetail', id=blog.Next)}}">{{ blog.NextName }} 
+                                <span class="uk-margin-small-left" uk-pagination-next></span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+                </article>
+            </div>
+            <div class="uk-width-1-4@l l-sidebar-right uk-visible@l">
+                <div uk-sticky="offset: 160" class="uk-sticky uk-active uk-sticky-fixed">
+                    {{ blog.toc|safe }}
+                    <ul class="uk-nav uk-nav-default l-nav uk-nav-parent-icon">
+                        <li class="uk-nav-divider"></li>
+                        <li class="uk-align-center uk-text-center">
+                            <a href="" uk-totop uk-scroll></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="uk-sticky-placeholder" style="height: 232px; margin: 0px;"></div>
+            </div>
+            <div id="artclAndCmmDiv2" class="uk-width-3-4@l uk-width-1-1@m uk-box-shadow-large">
+                <div class="uk-grid-small uk-child-width-auto l-reply-bar" uk-grid>
+                    <div>
+                        <i uk-icon="icon:comments;ratio:0.6"></i>
+                        <span><a class="uk-button uk-button-text" href="">{{ commentCount|fmtLabel('comment_count_right') }}</a></span>
+                        <i uk-icon="icon:commenting;ratio:0.6"></i>
+                        <span><a id="goSndCommFrAtcl" class="uk-button uk-button-text" href="#sendCommentTa">{{ None|fmtLabel('reply') }}</a></span>
+                    </div>
+                </div>
+                {% include "_comment.html" %}
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

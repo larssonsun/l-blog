@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "_marcos.html" as mcs %}
+
+{% block title %}{{ None|fmtLabel('archive_title') }}{% endblock %}
+
+{% block description %}{{ None|fmtLabel('archive_discrib') }}{% endblock %}
+{% block keywords %}{{ None|fmtLabel('archive_keywords') }}{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-small l-background-color">
+    <div class="uk-container">
+        <div class="uk-grid">
+            <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove l-achive-list">
+                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel('archive_label')) }}
+                {{ mcs.filterBar(None|fmtLabel('archive_label'), None|fmtLabel('archive_discrib'), archiveVM.bct) }}
+                <div class="uk-box-shadow uk-box-shadow-large l-archive-item">
+                    {% for archive in archiveVM.archives %}
+                    <h3 class="uk-margin-remove">
+                        <span>{{ archive.year }}</span>
+                    </h3>
+                    <ul class="uk-list uk-list-large uk-list-bullet uk-margin-large-left">
+                        {% for d in archive.data %}
+                        <li>
+                            <span>{{ d.created_at|fmtMonthDateFromFloat }}</span>
+                            <a href="{{ url('BlogDetail',id=d.name_en) }}"><span class="uk-margin-medium-left">{{ d.name }}</span></a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="uk-width-1-4@l uk-visible@l l-rightSideBar">
+                {% include "_tagsform.html" %}
+                {% include "_catelogform.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

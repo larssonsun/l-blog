@@ -1,0 +1,16 @@
+<div class="uk-box-shadow-medium l-cateloglist">
+    <table class="uk-table uk-table-striped">
+        <h3 class="uk-heading-divider"><span class="uk-margin-small-right" uk-icon="icon:  pencil"></span><span>{{ None|fmtLabel("catelog") }}</span></h3>
+        <tbody>
+            {% for cate in catelogs %}
+            <tr>
+                <td class="{{ '' if not cate.current else 'l-cateloglist-select' }}">
+                    <span uk-icon="icon: chevron-right; ratio: 1"></span>
+                    <a href="{{ url ('catelog', cateId=cate.id) }}" class="uk-link-heading">{{cate.catelog_name }}</a>
+                    <span class="uk-label uk-align-right" uk-tooltip="title:{{ cate.catelog_name|fmtLabel('blogCountInCatelog', cate.bct) }};pos:bottom">{{ cate.bct }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

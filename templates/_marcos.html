@@ -1,0 +1,27 @@
+<!-- url nav -->
+{% macro breadcrumb(indexHef, indexHrefName, firChdName, cateHref, cateName, blogName) %}
+<div class="uk-box-shadow-large l-breadcrumb">
+    <ul class="uk-breadcrumb">
+        <li>
+            <span uk-icon="icon: home; ratio: 0.8" class="uk-margin-small-right"></span>
+            <a class="uk-text-middle" href="{{ indexHef }}">{{ indexHrefName }}</a>
+        </li>
+        {% if cateName and blogName %}
+        <li><a class="uk-text-middle" href="{{ cateHref }}">{{ cateName }}</a></li>
+        <li><span class="uk-text-middle">{{ blogName }}</span></li>
+        {% else %}
+        <li><span class="uk-text-middle">{{ firChdName }}</span></li>
+        {% endif %}
+    </ul>
+</div>
+{% endmacro %}
+<!-- catelog filter ba -->
+{% macro filterBar(filterName, filterDiscrib, ct) %}
+<div class="uk-box-shadow-large l-filterBar">
+    <div class="uk-card uk-card-primary uk-card-body">
+        <span class="uk-align-right">{{ ct|fmtLabel("filter_sum_count") }}</span>
+        <h3 class="uk-card-title uk-heading-divider">{{ filterName }}</h3>
+        <p>{{ filterDiscrib }}</p>
+    </div>
+</div>
+{% endmacro %}

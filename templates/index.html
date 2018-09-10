@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% import "_marcos.html" as mcs %}
+
+{% block description %}{{ None|fmtLabel("default_meta_desctiption") }}{% endblock %}
+{% block keywords %}{% if tag %}
+{{ tag.tagDiscrib }}{% elif catelog %}{{ catelog.catelogDiscib }}{% else %}{{ None|fmtLabel("default_meta_keywords")}}
+{% endif %}{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-small l-background-color">
+    <div class="uk-container">
+        <div class="uk-grid">
+            <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove l-article-list">
+                {% if tag%}
+                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), tag.tagName) }}
+                {{ mcs.filterBar(tag.tagName, tag.tagDiscrib, tag.bct) }}
+                {% endif %}
+
+                {% if catelog%}
+                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), catelog.catelogName) }}
+                {{ mcs.filterBar(catelog.catelogName, catelog.catelogDiscib, catelog.bct) }}
+                {% endif %}
+                <div class="l-order-tab uk-box-shadow-medium">
+                    <ul class="uk-margin-remove">
+                        <li class="{% if not sortType or sortType=='time' %}uk-active{% endif %}">
+                            {% if tag %}
+                            <a href="{{ url('index_tag_sort', type='time', tagId=tagId) }}">
+                            {% elif catelog %}
+                            <a href="{{ url('index_catelog_sort', type='time', cateId=catelogid) }}">
+                            {% else %}
+                            <a href="{{ url('index_sort', type='time') }}">
+                            {% endif %}
+                            <span class="uk-margin-small-right" uk-icon="icon: table; ratio: 1"></span>{{ None|fmtLabel("sort_time") }}</a>
+                        </li>
+                        <li class="{% if sortType=='hot' %}uk-active{% endif %}">
+                                {% if tag %}
+                                <a href="{{ url('index_tag_sort', type='hot', tagId=tagId) }}">
+                                {% elif catelog %}
+                                <a href="{{ url('index_catelog_sort', type='hot', cateId=catelogid) }}">
+                                {% else %}
+                                <a href="{{ url('index_sort', type='hot') }}">
+                                {% endif %}
+                                <span class="uk-margin-small-right" uk-icon="icon: users; ratio: 1"></span>{{ None|fmtLabel("sort_hot") }}</a>
+                        </li>
+                    </ul>
+                </div>
+                {% for artical in articals %}
+                <article class="uk-article uk-margin-remove uk-box-shadow-large">
+                    <h2 class="uk-margin-remove l-article-title">
+                        <span class="uk-border-rounded uk-text-middle uk-margin-small-right l-cirlcle-icon {{artical.source_from|fmtCatelog('cssType')}}"
+                            uk-tooltip="title:{{artical.source_from|fmtCatelog('tooltipType')}};pos:top-right">
+                            {{artical.source_from|fmtCatelog('iconType')}}
+                        </span>
+                        <a class="uk-link-reset" href="{{ url('BlogDetail', id=artical.name_en) }}">{{artical.name}}</a></h2>
+                    <hr class="uk-margin-remove">
+                    <p class="uk-article-meta l-meta">
+                        <i uk-icon="icon:clock;ratio:0.6"></i>
+                        <span>{{ artical.created_at|fmtDatetimeFromFloat }}</span>
+                        <i uk-icon="icon:user;ratio:0.6"></i>
+                        <span><a href="">{{ artical.user_name }}</a></span>
+                    </p>
+                    <p>{{ artical.summary|getArticalFull(size=170) }}</p>
+                    <div class="uk-grid-small uk-child-width-auto l-bottom-bar" uk-grid>
+                        <div class="uk-text-small">
+                            <span uk-tooltip="title:{{ None|fmtLabel('read_count_t2') }};pos:bottom">
+                                <i uk-icon="icon:users;ratio:0.7"></i>
+                                {{ artical.readCount }}
+                            </span>
+                            <span class="uk-margin-small-left" uk-tooltip="title:{{ None|fmtLabel('comment_count_t2') }};pos:bottom">
+                                <i uk-icon="icon:comments;ratio:0.7"></i>
+                                {{ artical.commentCount}}
+                            </span>
+                            <span class="uk-margin-small-left" uk-tooltip="title:{{ None|fmtLabel('watchfor_detail') }};pos:bottom">
+                                <a href="{{ url('BlogDetail', id=artical.name_en) }}"><i uk-icon="icon:more;ratio:0.7"></i></a>
+                            </span>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            <div class="uk-width-1-4@l uk-visible@l l-rightSideBar">
+            {% include "_tagsform.html" %}
+            {% include "_catelogform.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block beforefooter %}
+{% endblock %}

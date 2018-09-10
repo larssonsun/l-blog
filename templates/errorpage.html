@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block base_body %}
+<div class="uk-section uk-section-large l-errorpage">
+    <div class="uk-container uk-container-small uk-padding-large uk-text-center">
+        <h1 class="uk-heading-hero">{{ errorVm.code }}</h1>
+        <h4>{{ errorVm.discrib }}</h4>
+        <div><a class="uk-border-rounded uk-box-shadow-large" href="javascript:history.go(-1);">返回</a></div>
+    </div>
+</div>
+{% endblock %}

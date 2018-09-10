@@ -1,0 +1,99 @@
+<ul class="uk-comment-list l-comment-list">
+    {% for comment in comments %}
+    <li>
+        <article class="uk-comment uk-comment-primary uk-visible-toggle l-comment-primary">
+            <header class="uk-comment-header uk-position-relative l-comment-header">
+                <div class="uk-grid-small uk-flex-middle" uk-grid>
+                    <div class="uk-width-auto">
+                        <img class="uk-comment-avatar uk-border-circle l-avatar-img" src="{{ comment.avatar }}" width="80" height="80" alt="">
+                    </div>
+                    <div class="uk-width-expand">
+                        <h4 class="uk-comment-title uk-margin-remove l-comment-title">
+                            <a l-field-userName class="uk-link-reset" href="#">{{ comment.user_name}}</a>
+                            {% if comment.admintag %}
+                            <span class="uk-label">博主</span>
+                            {% endif %}
+                        </h4>
+                        <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
+                            <a l-field-cmmNo class="uk-link-reset" href="#">{{ cmmNo.send(None) }}</a>
+                            <a l-field-createdAt class="uk-link-reset" href="#">{{ comment.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="uk-position-top-right uk-position-small uk-hidden-hover">
+                    <a l-field-cmmId class="uk-button uk-button-default uk-button-small l-comment-button" data-ForCommId="{{ comment.id }}" 
+                        data-to-cmm-username="{{ comment.user_name }}" href="">
+                        <span uk-icon="icon: reply; ratio: 0.7"></span>
+                        <span>{{ ""|fmtLabel('reply') }}</span>
+                    </a>
+                </div>
+                <hr>
+            </header>
+            <div class="uk-comment-body l-comment-body">
+                <p l-field-cmmContent>{{ comment.content }}</p>
+            </div>
+        </article>
+        {% set cfcs = cfcsList|getCommentForComments(comment.id) %}
+        <ul class="l-commentForCmm-list">
+            {% if cfcs %}
+            {% for cfc in cfcs %}
+            <li>
+                <article class="uk-comment uk-visible-toggle">
+                    <header class="uk-comment-header uk-position-relative l-comment-header">
+                        <div class="uk-grid-small uk-flex-middle" uk-grid>
+                            <div class="uk-width-auto">
+                                <img class="uk-comment-avatar uk-border-circle uk-box-shadow-medium l-avatar-img" src="{{ cfc.avatar }}" width="80" height="80"
+                                    alt="">
+                            </div>
+                            <div class="uk-width-expand">
+                                <h4 class="uk-comment-title uk-margin-remove l-comment-title">
+                                    <a class="uk-link-reset" href="#">{{ cfc.user_name }}</a>
+                                    {% if cfc.admintag %}
+                                    <span class="uk-label">博主</span>
+                                    {% endif %}
+                                    {% if cfc.to_userName %}
+                                    <span>{{ ""|fmtLabel('reply') }}</span>
+                                    <a class="uk-link-reset" href="#">{{ cfc.to_userName }}</a>
+                                    {% endif %}
+                                </h4>
+                                <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
+                                    <a class="uk-link-reset" href="#">{{ cfc.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="uk-position-top-right uk-position-small uk-hidden-hover">
+                            <a class="uk-button uk-button-default uk-button-small l-comment-button l-comment-button-chd" 
+                                data-ForCommId="{{ comment.id }}" data-isLevelCmm="1" 
+                                data-to-cmm-username="{{ cfc.user_name }}" href="#">
+                                <span uk-icon="icon: reply; ratio: 0.7"></span>
+                                <span>{{ None|fmtLabel('reply') }}</span>
+                            </a>
+                        </div>
+                    </header>
+                    <div class="uk-comment-body l-comment-body">
+                        <p>{{ cfc.content }}</p>
+                    </div>
+                    <hr>
+                </article>
+            </li>
+            {% endfor %}
+            {% endif %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+<div id="sendCommentFrm" class="uk-form uk-box-shadow-small l-form">
+    <fieldset class="uk-fieldset">
+        <legend class="uk-legend">{{ None|fmtLabel('send_reply') }}</legend>
+        <div class="uk-margin">
+            <div class="uk-margin">
+                <textarea id="sendCommentTa" class="uk-textarea" rows="5" placeholder="{{ None|fmtLabel('content') }}"></textarea>
+            </div>
+        </div>
+        <div class="uk-margin">
+            <button id="sendCommentBttn" class="uk-button uk-button-default uk-button-primary uk-button-small" 
+                data-blog-id="{{ blog.id }}" data-blog-username="{{ blog.user_name }}" url-send-cmm="{{ url('add-comment') }}" >{{ None|fmtLabel("reply") }}</button>
+            <button class="uk-button uk-button-default uk-button-small l-form-Cmm-BlogCancel">{{ None|fmtLabel("cancel") }}</button>
+        </div>
+    </fieldset>
+</div> 
