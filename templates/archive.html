@@ -9,7 +9,7 @@
 {% block content %}
 <div class="uk-section uk-section-small l-background-color">
     <div class="uk-container">
-        <div class="uk-grid">
+        <div class="uk-grid uk-margin-remove-left">
             <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove l-achive-list">
                 {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel('archive_label')) }}
                 {{ mcs.filterBar(None|fmtLabel('archive_label'), None|fmtLabel('archive_discrib'), archiveVM.bct) }}

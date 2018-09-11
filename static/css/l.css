@@ -32,7 +32,6 @@ body {
     height: 100%;
 }
 
-
 .codehilite pre {
     border: none;
     background-color: #e4eaef;
@@ -252,12 +251,6 @@ div.l-bottom-bar a {
 .l-comment-header hr{
     margin:0;
     margin-top:8px
-}
-
-@media (min-width: 960px) {
-    .l-comment-list .uk-comment~ul {
-        padding-left: 60px;
-    }
 }
 
 .l-comment-list .uk-comment~ul {
@@ -595,4 +588,52 @@ footer .l-tel, footer .l-mail {
     font-style: italic;
     color:#666;
     font-size:15px
+}
+
+@media (max-width: 960px) {
+    .uk-margin-large-left {
+        margin-left: 4px!important;
+    }
+
+    .uk-margin-medium-left {
+        margin-left: 2px!important;
+    }
+
+    .l-archive-item {
+        margin-top: 4px;
+        padding: 10px;
+    }
+
+    .l-article-list article:nth-of-type(n+2) {
+        margin-top: 4px !important;
+    }
+
+    .l-article-title > a, .l-article-title > span{
+        font-size: 18px;
+    }
+
+    .l-background-color .uk-container {
+        padding:1px;
+    }
+
+    .l-background-color {
+        padding-top:1px;
+        background: #F2F2F2
+    }
+
+    .l-breadcrumb {
+        margin-bottom: 4px !important;
+    }
+
+    .l-comment-list .uk-comment~ul {
+        padding-left: 60px;
+    }
+
+    .l-order-tab:nth-child(3) {
+        margin-top: 4px;
+    }
+
+    .l-prev-next-pagi {
+        font-size:12px
+    }
 }
