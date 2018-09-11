@@ -11,7 +11,7 @@ from aiohttp import web
 from application.middlewares import setup_middlewares
 from application.routes import (setupRoutes, setupSession, setupStaticRoutes,
                                 setupTemplateRoutes)
-from models.db import create_cache, create_pool, create_redis_pool
+from models.db import create_cache, create_pool, create_redis_pool, create_smtp
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,6 +20,7 @@ async def init(loop):
     mysql_pool = await create_pool(loop)
     redis_pool = await create_redis_pool(loop)
     cache = await create_cache(loop)
+    smtp = await create_smtp(loop)
 
     async def dispose_mysql_pool():
         mysql_pool.close()
@@ -36,6 +37,7 @@ async def init(loop):
         await dispose_mysql_pool()
         await dispose_redis_pool()
         await dispose_cache()
+        smtp.close()
 
     app = web.Application(logger=logging.Logger)
     setupSession(app, redis_pool)
