@@ -9,16 +9,13 @@
 
 import asyncio
 import logging
-from email.mime.text import MIMEText
 
 import aiomysql
 import aioredis
 from aiocache import RedisCache
 from aiocache.serializers import PickleSerializer
-from aiosmtplib import SMTP
 
-from config.settings import (CACHES_CONTENT, CACHES_SESSION, DATABASES,
-                             MAIL_SMTPCLIENT)
+from config.settings import CACHES_CONTENT, CACHES_SESSION, DATABASES
 from models.larsson_db_mysql_aio import MyPyAioMysql
 
 # logging.basicConfig(level=logging.INFO)
@@ -74,22 +71,3 @@ async def get_cache(k):
 
 async def set_cache(k, v):
     return await _cache.set(k, v)
-
-
-async def create_smtp(loop):
-    logging.info('create smtp connection ...')  # 定义smtp
-    global _smptClient
-    _smptClient = SMTP(
-        hostname=MAIL_SMTPCLIENT['host'], port=MAIL_SMTPCLIENT['port'], use_tls=True, loop=loop)
-    return _smptClient
-
-# await stmp_send("l@scetia.com", "邮箱确认", f"<div><a href='{request.url}'>{request.url}<div>")
-async def stmp_send(toAddr, subject, html):
-    await _smptClient.connect()
-    await _smptClient.login(MAIL_SMTPCLIENT['fromAddr'], MAIL_SMTPCLIENT['fromPwd'])
-    message = MIMEText(html, "HTML", "utf-8")
-    message['From'] = MAIL_SMTPCLIENT['fromAddr']
-    message['To'] = toAddr
-    message['Subject'] = subject
-    await _smptClient.send_message(message)
-    await _smptClient.quit()

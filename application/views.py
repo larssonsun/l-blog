@@ -17,11 +17,13 @@ from aiohttp import web
 from aiohttp_session import get_session
 
 from application.utils import (addDictProp, emialRc, mdToHtml, pwdRc, rtData,
-                               userNameRc)
-from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache, stmp_send
+                               stmp_send_thread, userNameRc)
+from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache
 
 
 async def hello(request):
+    stmp_send_thread("l@scetia.com", "邮箱确认",
+              f"<div><a href='{request.url}'>{request.url}<div>")
     return web.Response(body=b'<h1>Hello fucky! shity!</h1>', content_type="text/html", charset="utf-8")
 
 
@@ -423,7 +425,7 @@ class Archive(web.View):
 
         archiveVM["archives"] = archivesInY
         archiveVM["bct"] = len(archives)
-        
+
         #tags
         tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
 
