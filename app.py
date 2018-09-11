@@ -56,7 +56,7 @@ def main():
     args = parser.parse_args()
     # # uvloop 是 asyncio 默认事件循环的一个代替品，实现的功能完整，且即插即用。uvloop 是用 Cython 写的，建于 libuv 之上。
     # # uvloop 可以使 asyncio 更快。事实上，它至少比 nodejs、gevent 和其他 Python 异步框架要快 两倍 。基于 uvloop 的 asyncio 的速度几乎接近了 Go 程序的速度。
-    # # 该模块不支持windows....wocao....
+    # # 该模块不支持windows....wocao.... 
     # asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     loop = asyncio.get_event_loop()
     web.run_app(init(loop), host=args.host, port=args.port)
