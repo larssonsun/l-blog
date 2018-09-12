@@ -63,8 +63,6 @@ def stmp_send(toAddr, subject, html):
     smtpServ.sendmail(MAIL_SMTPCLIENT['fromAddr'], toAddr, msg.as_string())
     smtpServ.quit()
 
-#stmp_send_thread("l@scetia.com", "邮箱确认", f"<div><a href='{request.url}'>{request.url}<div>")
-
 
 def stmp_send_thread(toAddr, subject, html):
     t = Thread(target=stmp_send, args=(toAddr, subject, html))

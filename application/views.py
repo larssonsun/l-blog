@@ -19,12 +19,10 @@ from aiohttp_session import get_session
 from application.utils import (addDictProp, duplicateSqlRc, emialRc, hash_md5,
                                mdToHtml, pwdRc, rtData, stmp_send_thread,
                                userNameRc)
-from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache
+from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache, get_cache_ttl
 
 
 async def hello(request):
-    stmp_send_thread("l@scetia.com", "邮箱确认",
-                     f"<div><a href='{request.url}'>{request.url}<div>")
     return web.Response(body=b'<h1>Hello fucky! shity!</h1>', content_type="text/html", charset="utf-8")
 
 
@@ -182,8 +180,8 @@ class Registe(web.View):
                 `name`, `image`, `created_at`, `approved`) VALUES (%s, %s, %s, 0, %s, '', %s, 0);",
                                       userId, email, hash_md5(pwd), uname, datetime.now().timestamp())
                 if 1 != i:
-                    rtd = rtData(error_code=10008,
-                                 error_msg="未能成功注册", data=None)
+                    rtd = rtData(error_code=10009,
+                                 error_msg="意外地未能成功注册", data=None)
             except Exception as ex:
                 try:
                     if duplicateSqlRc.match(ex.args[1]):
@@ -193,10 +191,21 @@ class Registe(web.View):
                     rtd = rtData(error_code=10007,
                                  error_msg="注册过程中发生错误", data=None)
 
-            approvedKey = hash_md5(str(uuid.uuid4()))
-            await set_cache(approvedKey, userId, ttl=320)
-            print(f"{ self.request.url }{ approvedKey }")
+            #send certificate mail to target mailbox
+            smc = await get_cache("sendMail_minute")
+            smc = 0 if not smc else smc
+            if smc < 2:
+                approvedKey = hash_md5(str(uuid.uuid4()))
+                await set_cache(approvedKey, userId, ttl=320)
+                await set_cache("sendMail_minute", smc + 1, ttl=90)
+                stmp_send_thread(email, "l-blog注册验证",
+                        f"<div><a href='{ self.request.url }{ approvedKey }/'>请按此进行验证</a><div>")
 
+                # print(f"{ self.request.url }{ approvedKey }/")
+            else:
+                ttl = await get_cache_ttl("sendMail_minute")
+                rtd = rtData(error_code=10008,
+                                     error_msg=f"验证邮件发送受限，请于 {ttl}秒后再试", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
