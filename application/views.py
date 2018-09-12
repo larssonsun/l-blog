@@ -16,14 +16,15 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
 
-from application.utils import (addDictProp, emialRc, mdToHtml, pwdRc, rtData,
-                               stmp_send_thread, userNameRc)
+from application.utils import (addDictProp, duplicateSqlRc, emialRc, hash_md5,
+                               mdToHtml, pwdRc, rtData, stmp_send_thread,
+                               userNameRc)
 from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache
 
 
 async def hello(request):
     stmp_send_thread("l@scetia.com", "邮箱确认",
-              f"<div><a href='{request.url}'>{request.url}<div>")
+                     f"<div><a href='{request.url}'>{request.url}<div>")
     return web.Response(body=b'<h1>Hello fucky! shity!</h1>', content_type="text/html", charset="utf-8")
 
 
@@ -56,7 +57,11 @@ def login_required(*a):
             uid = session.get("uid")
             if uid:
                 user = await select('select id, name, email from users where id = %s', uid)
-                cls.request.app.l_data = user[0]
+                if not user or len(user) != 1:
+                    if cls.request.app.get("l_data"):
+                        cls.request.app.pop("l_data")
+                else:
+                    cls.request.app.l_data = user[0]
                 return await func(cls, *args, **kw)
             else:
                 cls.request.app.l_data = None
@@ -107,37 +112,49 @@ class Logout(web.View):
 
 
 class Login(web.View):
-
-    async def get(self):
-        return aiohttp_jinja2.render_template('login.html', self.request, locals())
-
     async def post(self):
         postData = await self.request.post()
-        email = postData.get("username")
+        loginName = postData.get("username")
         pwd = postData.get("pwd")
-
-        if emialRc.match(email):
-            userDct = await select("select id, email, passwd, name from users where email = %s", email)
-            if not userDct or len(userDct) != 1:
-                rtd = rtData(error_code=20003, error_msg="该用户不存在", data=None)
-                return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
-        else:
-            rtd = rtData(error_code=20005, error_msg="帐号必须是邮箱", data=None)
+        hashedPwd = hash_md5(pwd)
+        userDct = await select("select `id`, `email`, `passwd`, `approved`, `name` from `users` \
+            where `email` = %s or `name` = %s", loginName, loginName)
+        if not userDct or len(userDct) != 1:
+            rtd = rtData(error_code=20003, error_msg="该用户不存在", data=None)
             return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
         userDct = userDct[0]
 
-        if pwd != userDct.get('passwd'):
+        if hashedPwd != userDct.get('passwd'):
             rtd = rtData(error_code=20004, error_msg="密码错误", data=None)
+            return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+        if b"\x01" != userDct.get('approved'):
+            rtd = rtData(error_code=20005, error_msg="帐号尚未激活", data=None)
             return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
         session = await get_session(self.request)
         session['uid'] = userDct.get('id')
-        # sessionid = session.identity
         rtd = rtData(error_code=-1, error_msg="登录成功", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
 class Registe(web.View):
+    async def get(self):
+        
+        # #f"{ self.request.url }/registe/{approvedKey}"
+        approvedKey = self.request.match_info["approvedKey"]
+        userId = await get_cache(approvedKey)
+        print(userId)
+
+        # session = await get_session(self.request)
+        # if session:
+        #     session.pop("uid")
+
+        # session = await get_session(self.request)
+        # session['uid'] = userId
+
+        return web.Response(body=(f'<h1>{userId}</h1>').encode("utf-8"), content_type="text/html", charset="utf-8")
+
     async def post(self):
         postData = await self.request.post()
         email = postData.get("email")
@@ -146,9 +163,10 @@ class Registe(web.View):
         repwd = postData.get("repwd")
         userId = str(uuid.uuid4())
 
-        rtd = rtData(error_code=-1, error_msg="注册成功 ", data=None)
+        rtd = rtData(
+            error_code=-1, error_msg="确认邮件已发送至您的注册邮箱,\r\n请于5分钟内根据其中提示完成注册。", data=None)
         if not emialRc.match(email):
-            rtd = rtData(error_code=10001, error_msg="帐号必须是邮箱", data=None)
+            rtd = rtData(error_code=10001, error_msg="邮箱格式不正确", data=None)
         elif not userNameRc.match(uname):
             rtd = rtData(error_code=10004,
                          error_msg="昵称必须是6到12位的字母或数字", data=None)
@@ -159,30 +177,27 @@ class Registe(web.View):
                          error_msg="密码必须是6到18位的字母数字或下划线", data=None)
 
         if rtd.error_code == -1:
-            i = await exeNonQuery("INSERT INTO users(`id`, `email`, `passwd`, `admin`, `name`, `image`, `created_at`) \
-                VALUES (%s, %s, %s, 0, %s, '', %s);", userId, email, pwd, uname, datetime.now().timestamp())
-            if 1 != i:
-                rtd = rtData(error_code=10005,
-                             error_msg="注册过程中发生错误", data=None)
+            try:
+                i = await exeNonQuery("INSERT INTO users (`id`, `email`, `passwd`, `admin`, \
+                `name`, `image`, `created_at`, `approved`) VALUES (%s, %s, %s, 0, %s, '', %s, 0);",
+                                      userId, email, hash_md5(pwd), uname, datetime.now().timestamp())
+                if 1 != i:
+                    rtd = rtData(error_code=10008,
+                                 error_msg="未能成功注册", data=None)
+            except Exception as ex:
+                try:
+                    if duplicateSqlRc.match(ex.args[1]):
+                        rtd = rtData(error_code=10006,
+                                     error_msg="昵称或邮箱已经被使用", data=None)
+                except:
+                    rtd = rtData(error_code=10007,
+                                 error_msg="注册过程中发生错误", data=None)
 
-        if rtd.error_code != -1:
-            return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
-        else:
-            session = await get_session(self.request)
-            if session:
-                session.pop("uid")
-            headers = self.request.headers
-            host = headers.get("host")
-            referer = headers.get("Referer")
-            if referer:
-                referPath = referer.split(host)[-1]
-            else:
-                referPath = "/"
+            approvedKey = hash_md5(str(uuid.uuid4()))
+            await set_cache(approvedKey, userId, ttl=320)
+            print(f"{ self.request.url }{ approvedKey }")
 
-            session = await get_session(self.request)
-            session['uid'] = userId
-
-            return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
 class Index(web.View):
@@ -244,7 +259,6 @@ class BlogDetail(web.View):
     def setAvatar(self, comms):
         avatarAdmin = "../static/images/avatardemo.png"
         size = 40
-        avatarUrl = None
         gravatar_url = "http://www.gravatar.com/avatar/{0}?"
         gravatar_url += urllib.parse.urlencode({'d': "mm", 's': str(size)})
 
@@ -288,7 +302,6 @@ class BlogDetail(web.View):
                 blog.get("content"))
 
             #browse count
-            readCount = blog.get("browse_count")
             session = await get_session(self.request)
             uid = session.get("uid")
             if uid and blog.get("user_id") != uid:
@@ -389,7 +402,6 @@ class AddComment(web.View):
                 ic = await exeNonQuery("insert into comments values (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                                        cmmId, blog_id, user_id, user_name, "", content, created_at, "" if parent_comment_id is None else parent_comment_id,
                                        toCommUserName if isLv2Cm == "1" else "")
-                ct = await exeScalar("select count(1) from comments where blog_id = %s and length(parent_comment_id)=0", blog_id)
 
                 if(ic == 1):
                     rtd = rtData(error_code=-1, error_msg="发布成功", data=None)

@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from aiohttp import web
+import uuid
+
 import aiohttp_jinja2
-import jinja2, uuid, hashlib
+import jinja2
+from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
-from application.views import hello, Login, Index, BlogDetail, AddComment, Logout, Registe, Archive
+
 from application import filters
-from config.settings import TEMPLATE_DIR, STATIC_DIR
+from application.utils import hash_sha256
+from application.views import (AddComment, Archive, BlogDetail, Index, Login,
+                               Logout, Registe, hello)
+from config.settings import STATIC_DIR, TEMPLATE_DIR
+
 
 def setupRoutes(app):
     app.router.add_view("/hello", hello, name="Hello")
@@ -24,6 +30,7 @@ def setupRoutes(app):
     app.router.add_view("/login/", Login, name="Login")
     app.router.add_view("/logout/", Logout, name="logout")
     app.router.add_view("/registe/", Registe, name="registe")
+    app.router.add_view("/registe/" + "{approvedKey:\w{32}}/", Registe, name="registe_confirm")
     
     
 
@@ -46,9 +53,3 @@ def setupTemplateRoutes(app):
 def setupSession(app, redis_pool):
     storage = RedisStorage(redis_pool=redis_pool, cookie_name='sessionid', key_factory=lambda: hash_sha256(uuid.uuid4().hex))
     setup(app, storage)
-
-def hash_sha256(password):
-    """sha256加密"""
-    h = hashlib.sha256('henrik'.encode('utf-8'))
-    h.update(password.encode('utf-8'))
-    return h.hexdigest()

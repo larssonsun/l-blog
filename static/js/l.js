@@ -236,7 +236,9 @@ $(document).ready(function () {
         },
             function (result) {
                 if (new Number(result.error_code) < 0) {
-                    window.location.reload();
+                    // window.location.reload();
+                    showMsg(result.error_msg, "success")
+                    UIkit.modal($("#registeModel")).hide();
                 }
                 else
                     registMsg.text(result.error_msg);

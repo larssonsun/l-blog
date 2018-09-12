@@ -69,5 +69,5 @@ async def get_cache(k):
     return await _cache.get(k)
 
 
-async def set_cache(k, v):
-    return await _cache.set(k, v)
+async def set_cache(k, v, ttl=None):
+    return await _cache.set(k, v, ttl=ttl)
