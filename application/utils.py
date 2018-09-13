@@ -56,8 +56,6 @@ def stmp_send(toAddr, subject, html):
     msg = MIMEText(html, "HTML", "utf-8")
     msg['Subject'] = subject
     # 这里如果不是使用SSL就是smtplib.SMTP 
-    print(smtplib)
-    print(dir(smtplib))
     smtpServ = smtplib.SMTP_SSL(
         MAIL_SMTPCLIENT['host'], port=MAIL_SMTPCLIENT['port'])
     smtpServ.set_debuglevel(-1)
