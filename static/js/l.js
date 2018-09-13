@@ -5,6 +5,8 @@
 
 $(document).ready(function () {
 
+    
+
     //caotm的我不知道如何在markdown生成的toc里面注入class和属性，只能自己用脚本注册
     //uk-scrollspy-nav="closest: li; scroll: true; offset: 100"
     $(".l-sidebar-right > div > div > ul").attr("uk-scrollspy-nav", "closest: li; scroll: true; offset: 80");
@@ -20,6 +22,21 @@ $(document).ready(function () {
             success: successFunc,
             error: errFunc
         });
+    }
+
+    var persec = function (jqObj, orgTxt, s, callback){
+        jqObj.empty().append(orgTxt + "(" + s + ")");
+        s=s-1;
+        if(s>=0){
+            setTimeout(function(){
+                persec(jqObj, orgTxt, s, callback);
+            },1000);
+        }
+        else {
+            jqObj.text(orgTxt);
+            if(callback)
+                callback();
+        }
     }
 
     //----------------评论----------------
@@ -160,9 +177,16 @@ $(document).ready(function () {
 
     //----------------登录----------------
 
-    var validate_login = function (usernameCtl, pwdCtl, msgCtl) {
-        return true;
-    }
+    UIkit.util.on($('#loginModel'), 'shown', function () {
+        $('#loginModel').find("input")[0].focus();
+    });
+
+    $("#loginModel").keypress(function(e) {
+        //Enter key
+        if (e.which == 13) {
+            return false;
+        }
+    });
 
     //登录按钮
     $("#lognBttn").click(function () {
@@ -203,6 +227,20 @@ $(document).ready(function () {
 
     //----------------注册----------------
 
+    UIkit.util.on($('#registeModel'), 'shown', function () {
+        $('#registeModel').find("input")[0].focus();
+    });
+    var validate_login = function (usernameCtl, pwdCtl, msgCtl) {
+        return true;
+    }
+
+    $("#registeModel").keypress(function(e) {
+        //Enter key
+        if (e.which == 13) {
+            return false;
+        }
+    });
+
     var validate_regist = function (emailCtl, usernameCtl, pwdCtl, repwdCtl, msgCtl) {
         return true;
     }
@@ -238,13 +276,30 @@ $(document).ready(function () {
                 if (new Number(result.error_code) < 0) {
                     // window.location.reload();
                     showMsg(result.error_msg, "success")
+                    //clear page
+                    emailCtl.val("");
+                    usernameCtl.val("");
+                    pwdCtl.val("");
+                    repwdCtl.val("");
+                    registMsg.val("");
+                    submitBttn.removeAttr("disabled");
+                    //close
                     UIkit.modal($("#registeModel")).hide();
                 }
-                else
+                else if(new Number(result.error_code) == 10008) {
                     registMsg.text(result.error_msg);
+                    waits = result.data["waits"];
+                    persec(submitBttn, submitBttn.text(), waits, function(){
+                        registMsg.text("");
+                        submitBttn.removeAttr("disabled");
+                    });
+                }
+                else {
+                    registMsg.text(result.error_msg);
+                    submitBttn.removeAttr("disabled");
+                }
 
                 spin.addClass("l-spinner");
-                submitBttn.removeAttr("disabled");
             },
             function (XMLHttpRequest, textStatus, errorThrown) {
                 registMsg.text(textStatus);
