@@ -135,6 +135,12 @@ class Login(web.View):
         rtd = rtData(error_code=-1, error_msg="登录成功", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
+class Approve(web.View):
+    async def post(self):
+        postData = await self.request.post()
+        loginName = postData.get("username")
+        rtd = rtData(error_code=-1, error_msg="激活成功", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 class Registe(web.View):
     async def get(self):

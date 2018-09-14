@@ -11,7 +11,7 @@ from aiohttp_session.redis_storage import RedisStorage
 
 from application import filters
 from application.utils import hash_sha256
-from application.views import (AddComment, Archive, BlogDetail, Index, Login,
+from application.views import (AddComment, Archive, BlogDetail, Index, Login, Approve,
                                Logout, Registe, hello)
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 
@@ -31,6 +31,7 @@ def setupRoutes(app):
     app.router.add_view("/logout/", Logout, name="logout")
     app.router.add_view("/registe/", Registe, name="registe")
     app.router.add_view("/registe/" + r"{approvedKey:\w{32}}/", Registe, name="registe_confirm")
+    app.router.add_view("/approve/", Approve, name="approve")
     
     
 

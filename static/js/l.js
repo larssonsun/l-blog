@@ -181,6 +181,23 @@ $(document).ready(function () {
         $('#loginModel').find("input")[0].focus();
     });
 
+    UIkit.util.on($('#loginModel'), 'hidden', function () {
+        var approve = $('#approve');
+        var recover = $('#recover');
+        approve.attr("hidden", true);
+        approve.find("input[class='uk-input']").each(function(){
+            $(this).val("");
+        });
+        recover.attr("hidden", true);
+        recover.find("input[class='uk-input']").each(function(){
+            $(this).val("");
+        });
+    });
+
+    var validate_login = function (usernameCtl, pwdCtl, msgCtl) {
+        return true;
+    }
+    
     $("#loginModel").keypress(function(e) {
         //Enter key
         if (e.which == 13) {
@@ -189,7 +206,7 @@ $(document).ready(function () {
     });
 
     //登录按钮
-    $("#lognBttn").click(function () {
+    $("#lognBttn").click(function() {
 
         var submitBttn = $(this);
         var form = $(submitBttn.parents("form"));
@@ -230,9 +247,6 @@ $(document).ready(function () {
     UIkit.util.on($('#registeModel'), 'shown', function () {
         $('#registeModel').find("input")[0].focus();
     });
-    var validate_login = function (usernameCtl, pwdCtl, msgCtl) {
-        return true;
-    }
 
     $("#registeModel").keypress(function(e) {
         //Enter key
@@ -305,6 +319,46 @@ $(document).ready(function () {
                 registMsg.text(textStatus);
                 spin.addClass("l-spinner");
                 submitBttn.removeAttr("disabled");
+            });
+    });
+
+    //----------------激活----------------
+
+    var validate_approve = function (usernameCtl) {
+        return true;
+    }
+
+    $("#approveBttn").click(function() {
+
+        var approveBttn = $(this);
+        var form = $(approveBttn.parents("form"));
+        var URL = approveBttn.attr("url-send-approve");
+        var usernameCtl = $(form.find("input[name='userName']")[0]);
+        var loginMsg = $("#loginMsg");
+        // var spin = $($("#loginModel").find(".l-spinner")[0]);
+
+        if (!validate_approve(usernameCtl)) {
+            return;
+        }
+
+        // spin.removeClass("l-spinner");
+        approveBttn.attr("disabled", "");
+
+        ajxJson(URL, "post", { "username": usernameCtl.val() },
+            function (result) {
+                if (new Number(result.error_code) < 0) {
+                    window.location.reload();
+                }
+                else
+                    loginMsg.text(result.error_msg);
+
+                // spin.addClass("l-spinner");
+                approveBttn.removeAttr("disabled");
+            },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                loginMsg.text(textStatus);
+                // spin.addClass("l-spinner");
+                approveBttn.removeAttr("disabled");
             });
 
     });
