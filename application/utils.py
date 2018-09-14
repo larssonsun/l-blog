@@ -20,7 +20,20 @@ emialRc = re.compile(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
 pwdRc = re.compile(r'^[0-9a-zA-Z\_]{6,18}$')
 userNameRc = re.compile(r'^[0-9a-zA-Z]{6,12}$')
 duplicateSqlRc = re.compile(r'[d|D]uplicate entry .+ for key .+')
-
+certivateMailHtml= '''
+<div style="background-color:#bbb;padding:30px">
+    <div style="padding:20px 5px">L-blog</div>
+    <div style="background-color:#fff;border-top:#3F6D98 solid 8px; padding:30px">
+        <h2 style="font-size:20px;font-weight:bold">Hi {targetUserName},</h2>
+        <div style="padding:15px 0">{describ}</div>
+        <div style="background-color:#eee;text-align:center;padding:15px 0">
+            <a href="{certificateHref}" style="color: #fff; text-decoration:none; font-size: 14px; background:#3f6d98; line-height: 32px; padding: 1px 20px; display: inline-block;border-radius: 3px;"
+                target="_blank">{certificateButtonTxt}</a>
+        </div>
+        <div style="font-style:italic;color:#bbb;padding-top:20px">—— L-blog</div>
+    </div>
+</div>
+'''
 
 def addDictProp(dct, newProp, prpoVal):
     dct[newProp] = prpoVal
@@ -58,7 +71,7 @@ def stmp_send(toAddr, subject, html):
     # 这里如果不是使用SSL就是smtplib.SMTP 
     smtpServ = smtplib.SMTP_SSL(
         MAIL_SMTPCLIENT['host'], port=MAIL_SMTPCLIENT['port'])
-    smtpServ.set_debuglevel(1)
+    smtpServ.set_debuglevel(-1)
     smtpServ.login(MAIL_SMTPCLIENT['fromAddr'], MAIL_SMTPCLIENT['fromPwd'])
     smtpServ.sendmail(MAIL_SMTPCLIENT['fromAddr'], toAddr, msg.as_string())
     smtpServ.quit()

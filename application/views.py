@@ -18,7 +18,7 @@ from aiohttp_session import get_session
 
 from application.utils import (addDictProp, duplicateSqlRc, emialRc, hash_md5,
                                mdToHtml, pwdRc, rtData, stmp_send_thread,
-                               userNameRc)
+                               userNameRc, certivateMailHtml)
 from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache, get_cache_ttl
 
 
@@ -148,7 +148,7 @@ class Registe(web.View):
         userId = await get_cache(approvedKey)
         if not userId:
             keyCur = False
-
+        welcomeVm = dict(title="欢迎!{userName}", discrib="您已经完成注册。")
         if keyCur:
             i = await exeNonQuery("update `users` set `approved`=1 where `id`=%s", userId)
             if i == 1:
@@ -157,11 +157,11 @@ class Registe(web.View):
                     session.pop("uid")
                 session = await get_session(self.request)
                 session['uid'] = userId
-                return web.Response(body=(f"<a href='/'>刷新页面</a>").encode("utf-8"), content_type="text/html", charset="utf-8")
+                return aiohttp_jinja2.render_template("welcome.html", self.request, welcomeVm)
             else:
-                return web.Response(body=(f"<a href='/'>帐号激活失败</a>").encode("utf-8"), content_type="text/html", charset="utf-8")
+                raise web.HTTPForbidden(text="帐号激活失败，请登录以便重新进行验证")
         else:
-            return web.Response(body=(f"<a href='/'>验证失败</a>").encode("utf-8"), content_type="text/html", charset="utf-8")
+            raise web.HTTPForbidden(text="您无法进行未授权的邮箱验证")
 
     async def post(self):
         postData = await self.request.post()
@@ -172,7 +172,7 @@ class Registe(web.View):
         userId = str(uuid.uuid4())
 
         rtd = rtData(
-            error_code=-1, error_msg="确认邮件已发送至您的注册邮箱,\r\n请于5分钟内根据其中提示完成注册。", data=None)
+            error_code=-1, error_msg="", data=None)
         if not emialRc.match(email):
             rtd = rtData(error_code=10001, error_msg="邮箱格式不正确", data=None)
         elif not userNameRc.match(uname):
@@ -213,9 +213,13 @@ class Registe(web.View):
                 approvedKey = hash_md5(str(uuid.uuid4()))
                 await set_cache(approvedKey, userId, ttl=approveExpert)
                 await set_cache("sendMail_minute", smc + 1, ttl=mailCerExpert)
-                stmp_send_thread(email, "l-blog注册验证",
-                        f"<div><a href='{ self.request.url }{ approvedKey }/'>请按此进行验证</a><div>")
-                # print(f"{ self.request.url }{ approvedKey }/")
+                stmp_send_thread(email, "l-blog 邮箱验证", certivateMailHtml.format(
+                    targetUserName=uname, 
+                    describ="欢迎注册，您现在可以通过点击下方的按钮完成邮箱验证。",
+                    certificateButtonTxt="验证邮箱",
+                    certificateHref=f"{ self.request.url }{ approvedKey }/"
+                    ))
+                rtd = rtData(error_code=-1, error_msg=f"一封邮件已发送至您的邮箱,\r\n请于{ int(approveExpert / 60) }分钟内完成验证。", data=None)
             else:
                 ttl = await get_cache_ttl("sendMail_minute")
                 rtd = rtData(error_code=10008,

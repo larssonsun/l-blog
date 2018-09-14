@@ -281,7 +281,7 @@ $(document).ready(function () {
                     usernameCtl.val("");
                     pwdCtl.val("");
                     repwdCtl.val("");
-                    registMsg.val("");
+                    registMsg.text("");
                     submitBttn.removeAttr("disabled");
                     //close
                     UIkit.modal($("#registeModel")).hide();

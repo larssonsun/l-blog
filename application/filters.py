@@ -4,8 +4,8 @@
 import re
 from datetime import datetime
 
-REC_LEAD = re.compile("\|lead\|(.*)\|leadend\|")
-REC_MAIN = re.compile(".*\|main\|(.*)\|mainend\|")
+REC_LEAD = re.compile(r"\|lead\|(.*)\|leadend\|")
+REC_MAIN = re.compile(r".*\|main\|(.*)\|mainend\|")
 CATLOG_ICONTYPE = dict(
     original="原",
     transfer="转")
@@ -49,7 +49,8 @@ SWITCH_i18n = dict(
     sort_time=lambda x: "时间排序",
     sort_hot=lambda x: "热度排序",
     e404_discrib=lambda x: "未能找到该页面",
-    e500_discrib=lambda x: "服务端发生错误")
+    e500_discrib=lambda x: "服务端发生错误",
+    welcome_toIndex=lambda x: "登录")
 
 
 def fmtCatelog(content, doType):

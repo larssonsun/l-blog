@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block base_body %}
+<div class="uk-section uk-section-large l-welcome">
+    <div class="uk-container uk-container-small uk-padding-large uk-text-center">
+        <h1 class="uk-heading-hero">{{ title }}</h1>
+        <h4>{{ discrib }}</h4>
+        <div><a class="uk-border-rounded uk-box-shadow-large uk-close" href="{{ url('Index') }}">{{
+                None|fmtLabel("welcome_toIndex") }}</a>
+            </div>
+    </div>
+</div>
+{% endblock %}

@@ -21,16 +21,16 @@ def setupRoutes(app):
     app.router.add_view("/", Index, name="Index")
     app.router.add_view("/" + "{type:[hot|time]+}/", Index, name="index_sort")
     app.router.add_view("/archive/", Archive, name="archive")
-    app.router.add_view("/tag/" + "{tagId:[0-9a-zA-Z\_]+}/", Index, name="tag")
-    app.router.add_view("/tag/" + "{tagId:[0-9a-zA-Z\_]+}/" + "{type:[hot|time]+}/", Index, name="index_tag_sort")
-    app.router.add_view("/catelog/" + "{cateId:[0-9a-zA-Z\_]+}/", Index, name="catelog")
-    app.router.add_view("/catelog/" + "{cateId:[0-9a-zA-Z\_]+}/" + "{type:[hot|time]+}/", Index, name="index_catelog_sort")
-    app.router.add_view("/blogdetail/" + "{id:[0-9a-zA-Z\-]+}/", BlogDetail, name="BlogDetail")
+    app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\_]+}/", Index, name="tag")
+    app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\_]+}/" + r"{type:[hot|time]+}/", Index, name="index_tag_sort")
+    app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/", Index, name="catelog")
+    app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/" + r"{type:[hot|time]+}/", Index, name="index_catelog_sort")
+    app.router.add_view("/blogdetail/" + r"{id:[0-9a-zA-Z\-]+}/", BlogDetail, name="BlogDetail")
     app.router.add_view("/blogdetail/addComment", AddComment, name="add-comment")
     app.router.add_view("/login/", Login, name="Login")
     app.router.add_view("/logout/", Logout, name="logout")
     app.router.add_view("/registe/", Registe, name="registe")
-    app.router.add_view("/registe/" + "{approvedKey:\w{32}}/", Registe, name="registe_confirm")
+    app.router.add_view("/registe/" + r"{approvedKey:\w{32}}/", Registe, name="registe_confirm")
     
     
 

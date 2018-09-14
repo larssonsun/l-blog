@@ -382,6 +382,22 @@ div.l-bottom-bar a {
     text-decoration: underline
 }
 
+.l-welcome h1 {
+    color:#202226
+}
+
+.l-welcome a {
+    background-color:#202226;
+    color:#fff;
+    padding:3px 12px;
+}
+
+.l-welcome a:hover {
+    text-decoration: none;
+    color:#202226;
+    background-color:#fff;
+}
+
 footer {
     padding-top:50px;
     padding-bottom:10px;

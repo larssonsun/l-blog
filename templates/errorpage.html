@@ -4,7 +4,7 @@
     <div class="uk-container uk-container-small uk-padding-large uk-text-center">
         <h1 class="uk-heading-hero">{{ errorVm.code }}</h1>
         <h4>{{ errorVm.discrib }}</h4>
-        <div><a class="uk-border-rounded uk-box-shadow-large" href="javascript:history.go(-1);">返回</a></div>
+        <div><a class="uk-border-rounded uk-box-shadow-large" href="{{ url('Index') }}">返回</a></div>
     </div>
 </div>
 {% endblock %}
