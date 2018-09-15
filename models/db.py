@@ -72,5 +72,10 @@ async def get_cache(k):
 async def set_cache(k, v, ttl=None):
     return await _cache.set(k, v, ttl=ttl)
 
+
+async def expert_cache(k):
+    return await _cache.expire(k, 0)
+
+
 async def get_cache_ttl(k):
     return await _cache.raw("ttl", f"blog_cache:{k}".encode("utf-8"))

@@ -192,6 +192,7 @@ $(document).ready(function () {
         recover.find("input[class='uk-input']").each(function(){
             $(this).val("");
         });
+        $("#loginMsg").text("");
     });
 
     var validate_login = function (usernameCtl, pwdCtl, msgCtl) {
@@ -295,7 +296,7 @@ $(document).ready(function () {
                     usernameCtl.val("");
                     pwdCtl.val("");
                     repwdCtl.val("");
-                    registMsg.text("");
+                    registMsg.text(" ");
                     submitBttn.removeAttr("disabled");
                     //close
                     UIkit.modal($("#registeModel")).hide();
@@ -304,7 +305,7 @@ $(document).ready(function () {
                     registMsg.text(result.error_msg);
                     waits = result.data["waits"];
                     persec(submitBttn, submitBttn.text(), waits, function(){
-                        registMsg.text("");
+                        registMsg.text(" ");
                         submitBttn.removeAttr("disabled");
                     });
                 }
@@ -334,7 +335,7 @@ $(document).ready(function () {
         var form = $(approveBttn.parents("form"));
         var URL = approveBttn.attr("url-send-approve");
         var usernameCtl = $(form.find("input[name='userName']")[0]);
-        var loginMsg = $("#loginMsg");
+        var approveMsg = $("#loginMsg");
         // var spin = $($("#loginModel").find(".l-spinner")[0]);
 
         if (!validate_approve(usernameCtl)) {
@@ -347,16 +348,28 @@ $(document).ready(function () {
         ajxJson(URL, "post", { "username": usernameCtl.val() },
             function (result) {
                 if (new Number(result.error_code) < 0) {
-                    window.location.reload();
+                    approveMsg.text(" ");
+                    showMsg(result.error_msg, "success");
+                    // spin.addClass("l-spinner");
+                    approveBttn.removeAttr("disabled");
                 }
-                else
-                    loginMsg.text(result.error_msg);
-
-                // spin.addClass("l-spinner");
-                approveBttn.removeAttr("disabled");
+                else if(new Number(result.error_code) == 10008) {
+                    approveMsg.text(result.error_msg);
+                    waits = result.data["waits"];
+                    persec(approveBttn, approveBttn.text(), waits, function(){
+                        approveMsg.text(" ");
+                        // spin.addClass("l-spinner");
+                        approveBttn.removeAttr("disabled");
+                    });
+                }
+                else {
+                    approveMsg.text(result.error_msg);
+                    // spin.addClass("l-spinner");
+                    approveBttn.removeAttr("disabled");
+                }
             },
             function (XMLHttpRequest, textStatus, errorThrown) {
-                loginMsg.text(textStatus);
+                approveMsg.text(textStatus);
                 // spin.addClass("l-spinner");
                 approveBttn.removeAttr("disabled");
             });

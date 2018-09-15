@@ -16,7 +16,7 @@ from config.settings import MAIL_SMTPCLIENT, HASH_KEY
 
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
 
-emialRc = re.compile(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
+emailRc = re.compile(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
 pwdRc = re.compile(r'^[0-9a-zA-Z\_]{6,18}$')
 userNameRc = re.compile(r'^[0-9a-zA-Z]{6,12}$')
 duplicateSqlRc = re.compile(r'[d|D]uplicate entry .+ for key .+')

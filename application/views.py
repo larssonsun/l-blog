@@ -16,10 +16,10 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
 
-from application.utils import (addDictProp, duplicateSqlRc, emialRc, hash_md5,
+from application.utils import (addDictProp, duplicateSqlRc, emailRc, hash_md5,
                                mdToHtml, pwdRc, rtData, stmp_send_thread,
                                userNameRc, certivateMailHtml)
-from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache, get_cache_ttl
+from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache, get_cache_ttl, expert_cache
 
 
 async def hello(request):
@@ -93,6 +93,33 @@ async def getTags(*blogTags):
     return tags
 
 
+async def sendCerMain(*, cerUrl, userId, uname, mailAddr):
+    #send certificate mail to registed email address
+    rtd = None
+    mailCerExpert = 70
+    mailCerPerSec = 2
+    approveExpert = 320
+    smc = await get_cache("sendMail_minute")
+    smc = 0 if not smc else smc
+    if smc < mailCerPerSec:
+        approvedKey = hash_md5(str(uuid.uuid4()))
+        await set_cache(approvedKey, userId, ttl=approveExpert)
+        await set_cache("sendMail_minute", smc + 1, ttl=mailCerExpert)
+        stmp_send_thread(mailAddr, "l-blog 邮箱验证", certivateMailHtml.format(
+            targetUserName=uname,
+            describ="欢迎注册，您现在可以通过点击下方的按钮完成邮箱验证。",
+            certificateButtonTxt="验证邮箱",
+            certificateHref=f"{ cerUrl }{ approvedKey }/"
+        ))
+        rtd = rtData(
+            error_code=-1, error_msg=f"一封邮件已发送至您的邮箱,\r\n请于{ int(approveExpert / 60) }分钟内完成验证。", data=None)
+    else:
+        ttl = await get_cache_ttl("sendMail_minute")
+        rtd = rtData(error_code=10008,
+                     error_msg=f"验证邮件发送受限，请于 {ttl}秒后再试", data=dict(waits=ttl))
+    return rtd
+
+
 class Logout(web.View):
     async def get(self):
         self.request.app.l_data = None
@@ -135,12 +162,34 @@ class Login(web.View):
         rtd = rtData(error_code=-1, error_msg="登录成功", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
+
 class Approve(web.View):
     async def post(self):
         postData = await self.request.post()
         loginName = postData.get("username")
-        rtd = rtData(error_code=-1, error_msg="激活成功", data=None)
+        rtd = rtData(error_code=-1, error_msg="", data=None)
+        if not emailRc.match(loginName) and not userNameRc.match(loginName):
+            rtd = rtData(error_code=40001,
+                         error_msg="请输入正确格式的email或昵称", data=None)
+        else:
+            user = await select("select `id`, `name`, `email`, `approved` from `users` where `name`=%s or `email`=%s limit 0, 1", loginName, loginName)
+            if not user or len(user)!=1:
+                rtd = rtData(error_code=40002,
+                         error_msg="未注册该邮箱或昵称", data=None)
+            else:
+                user = user[0]
+                if b"\x01" == user.get('approved'):
+                    rtd = rtData(error_code=40003,
+                            error_msg="目标账号已经激活，无需重复操作", data=None)
+                else:
+                    rtd = await sendCerMain(
+                        cerUrl=f"{self.request.scheme}:/{self.request.host}{self.request.app.router['registe'].url_for()}", 
+                        userId=user.get("id"), 
+                        uname=user.get("name"), 
+                        mailAddr=user.get("email"))
+
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
 
 class Registe(web.View):
     async def get(self):
@@ -154,7 +203,7 @@ class Registe(web.View):
         userId = await get_cache(approvedKey)
         if not userId:
             keyCur = False
-        welcomeVm = dict(title="欢迎!{userName}", discrib="您已经完成注册。")
+        
         if keyCur:
             i = await exeNonQuery("update `users` set `approved`=1 where `id`=%s", userId)
             if i == 1:
@@ -163,11 +212,13 @@ class Registe(web.View):
                     session.pop("uid")
                 session = await get_session(self.request)
                 session['uid'] = userId
+                await expert_cache(approvedKey)
+                welcomeVm = dict(title="欢迎!", discrib="您已经完成注册。")
                 return aiohttp_jinja2.render_template("welcome.html", self.request, welcomeVm)
             else:
-                raise web.HTTPForbidden(text="帐号激活失败，请登录以便重新进行验证")
+                raise web.HTTPForbidden(text="帐号激活失败。")
         else:
-            raise web.HTTPForbidden(text="您无法进行未授权的邮箱验证")
+            raise web.HTTPForbidden(text="您无法进行未授权的邮箱验证。")
 
     async def post(self):
         postData = await self.request.post()
@@ -179,7 +230,7 @@ class Registe(web.View):
 
         rtd = rtData(
             error_code=-1, error_msg="", data=None)
-        if not emialRc.match(email):
+        if not emailRc.match(email):
             rtd = rtData(error_code=10001, error_msg="邮箱格式不正确", data=None)
         elif not userNameRc.match(uname):
             rtd = rtData(error_code=10004,
@@ -208,28 +259,7 @@ class Registe(web.View):
                                  error_msg="注册过程中发生错误", data=None)
 
         if rtd.error_code == -1:
-
-            #send certificate mail to target mailbox
-            mailCerExpert = 70
-            mailCerPerSec = 2
-            approveExpert = 320
-            smc = await get_cache("sendMail_minute")
-            smc = 0 if not smc else smc
-            if smc < mailCerPerSec:
-                approvedKey = hash_md5(str(uuid.uuid4()))
-                await set_cache(approvedKey, userId, ttl=approveExpert)
-                await set_cache("sendMail_minute", smc + 1, ttl=mailCerExpert)
-                stmp_send_thread(email, "l-blog 邮箱验证", certivateMailHtml.format(
-                    targetUserName=uname, 
-                    describ="欢迎注册，您现在可以通过点击下方的按钮完成邮箱验证。",
-                    certificateButtonTxt="验证邮箱",
-                    certificateHref=f"{ self.request.url }{ approvedKey }/"
-                    ))
-                rtd = rtData(error_code=-1, error_msg=f"一封邮件已发送至您的邮箱,\r\n请于{ int(approveExpert / 60) }分钟内完成验证。", data=None)
-            else:
-                ttl = await get_cache_ttl("sendMail_minute")
-                rtd = rtData(error_code=10008,
-                                     error_msg=f"验证邮件发送受限，请于 {ttl}秒后再试", data=dict(waits=ttl))
+            rtd = await sendCerMain(cerUrl=self.request.url, userId=userId, uname=uname, mailAddr=email)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
