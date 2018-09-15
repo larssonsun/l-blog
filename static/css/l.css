@@ -103,6 +103,10 @@ li.l-active>a>span {
     color: #3895F2;
 }
 
+.l-article-image {
+    
+}
+
 .l-article-list article{
     background-color:#FFF;
     padding:15px 30px;
@@ -113,10 +117,7 @@ li.l-active>a>span {
     margin-top:15px !important; 
 }
 
-.l-article-title > a{
-    font-size:26px;
-    color:#000
-}
+
 
 .l-atricalContent {
     padding-top:20px;
@@ -627,8 +628,13 @@ footer .l-tel, footer .l-mail {
         margin-top: 4px !important;
     }
 
+    .l-article-title > a{
+        font-size:26px;
+        color:#000
+    }
+
     .l-article-title > a, .l-article-title > span{
-        font-size: 18px;
+        font-size: 18px
     }
 
     .l-background-color .uk-container {

@@ -45,34 +45,41 @@
                     </ul>
                 </div>
                 {% for artical in articals %}
-                <article class="uk-article uk-margin-remove uk-box-shadow-large">
-                    <h2 class="uk-margin-remove l-article-title">
-                        <span class="uk-border-rounded uk-text-middle uk-margin-small-right l-cirlcle-icon {{artical.source_from|fmtCatelog('cssType')}}"
-                            uk-tooltip="title:{{artical.source_from|fmtCatelog('tooltipType')}};pos:top-right">
-                            {{artical.source_from|fmtCatelog('iconType')}}
-                        </span>
-                        <a class="uk-link-reset" href="{{ url('BlogDetail', id=artical.name_en) }}">{{artical.name}}</a></h2>
-                    <hr class="uk-margin-remove">
-                    <p class="uk-article-meta l-meta">
-                        <i uk-icon="icon:clock;ratio:0.6"></i>
-                        <span>{{ artical.created_at|fmtDatetimeFromFloat }}</span>
-                        <i uk-icon="icon:user;ratio:0.6"></i>
-                        <span><a href="">{{ artical.user_name }}</a></span>
-                    </p>
-                    <p>{{ artical.summary|getArticalFull(size=170) }}</p>
-                    <div class="uk-grid-small uk-child-width-auto l-bottom-bar" uk-grid>
-                        <div class="uk-text-small">
-                            <span uk-tooltip="title:{{ None|fmtLabel('read_count_t2') }};pos:bottom">
-                                <i uk-icon="icon:users;ratio:0.7"></i>
-                                {{ artical.readCount }}
+                <article class="uk-article uk-margin-remove uk-flex uk-box-shadow-large">
+                    <div class="uk-width-3-4@l">
+                        <h2 class="uk-margin-remove l-article-title">
+                            <span class="uk-border-rounded uk-text-middle uk-margin-small-right l-cirlcle-icon {{artical.source_from|fmtCatelog('cssType')}}"
+                                uk-tooltip="title:{{artical.source_from|fmtCatelog('tooltipType')}};pos:top-right">
+                                {{artical.source_from|fmtCatelog('iconType')}}
                             </span>
-                            <span class="uk-margin-small-left" uk-tooltip="title:{{ None|fmtLabel('comment_count_t2') }};pos:bottom">
-                                <i uk-icon="icon:comments;ratio:0.7"></i>
-                                {{ artical.commentCount}}
-                            </span>
-                            <span class="uk-margin-small-left" uk-tooltip="title:{{ None|fmtLabel('watchfor_detail') }};pos:bottom">
-                                <a href="{{ url('BlogDetail', id=artical.name_en) }}"><i uk-icon="icon:more;ratio:0.7"></i></a>
-                            </span>
+                            <a class="uk-link-reset" href="{{ url('BlogDetail', id=artical.name_en) }}">{{artical.name}}</a></h2>
+                        <hr class="uk-margin-remove">
+                        <p class="uk-article-meta l-meta">
+                            <i uk-icon="icon:clock;ratio:0.6"></i>
+                            <span>{{ artical.created_at|fmtDatetimeFromFloat }}</span>
+                            <i uk-icon="icon:user;ratio:0.6"></i>
+                            <span><a href="">{{ artical.user_name }}</a></span>
+                        </p>
+                        <p>{{ artical.summary|getArticalFull(size=150) }}</p>
+                        <div class="uk-grid-small uk-child-width-auto l-bottom-bar" uk-grid>
+                            <div class="uk-text-small">
+                                <span uk-tooltip="title:{{ None|fmtLabel('read_count_t2') }};pos:bottom">
+                                    <i uk-icon="icon:users;ratio:0.7"></i>
+                                    {{ artical.readCount }}
+                                </span>
+                                <span class="uk-margin-small-left" uk-tooltip="title:{{ None|fmtLabel('comment_count_t2') }};pos:bottom">
+                                    <i uk-icon="icon:comments;ratio:0.7"></i>
+                                    {{ artical.commentCount}}
+                                </span>
+                                <span class="uk-margin-small-left" uk-tooltip="title:{{ None|fmtLabel('watchfor_detail') }};pos:bottom">
+                                    <a href="{{ url('BlogDetail', id=artical.name_en) }}"><i uk-icon="icon:more;ratio:0.7"></i></a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-width-1-4@l uk-visible@l l-article-image">
+                        <div class="uk-flex uk-flex-center uk-flex-middle uk-padding-small uk-height-1-1">
+                            <img src="http://yanshi.sucaihuo.com/modals/39/3978/demo/img/header.jpg" class="uk-box-shadow-large" alt="{{ artical.name }}">
                         </div>
                     </div>
                 </article>
