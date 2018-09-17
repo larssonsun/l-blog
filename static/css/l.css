@@ -54,13 +54,14 @@ body {
     background-color:#FFF
 }
 
-.l-article-image > div {
-    padding: 2px;
+.l-article-image {
+    padding: 8px;
 }
 
 .l-article-image > div > img{
+    width:245px;
     background-color:#fff;
-    padding:5px;
+    padding:15px;
     border: #E5E5E5 1px solid;
     
 }
@@ -242,13 +243,13 @@ div.l-bottom-bar a {
     font-size:14px;
 }
 
-.l-comment-button span {
-    font-size: 14px;
+.l-comment-button{
+    padding: 0 0 0 5px;
+    line-height: 15px;
 }
 
-.l-comment-button{
-    padding: 1px 9px;
-    line-height: 20px;
+.l-comment-button span {
+    font-size: 12px;
 }
 
 .l-comment-button:hover {
@@ -341,7 +342,14 @@ div.l-bottom-bar a {
 .l-menu-login span{
     background-color: #1e87f0;
     color:#fff;
+    border: #fff 1px solid;
     padding:5px 15px;
+}
+
+.l-menu-login:hover span{
+    background-color: #fff;
+    color:#1e87f0;
+    border: #1e87f0 1px solid
 }
 
 .l-order-tab {

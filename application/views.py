@@ -320,7 +320,7 @@ class Index(web.View):
 class BlogDetail(web.View):
 
     def setAvatar(self, comms):
-        avatarAdmin = "../static/images/avatardemo.png"
+        avatarAdmin = "/static/images/avatardemo.png"
         size = 40
         gravatar_url = "http://www.gravatar.com/avatar/{0}?"
         gravatar_url += urllib.parse.urlencode({'d': "mm", 's': str(size)})
