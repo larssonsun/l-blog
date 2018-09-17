@@ -370,7 +370,7 @@ class BlogDetail(web.View):
             if uid and blog.get("user_id") != uid:
                 readBeginTime = session.get(blogId)
                 if readBeginTime:
-                    if datetime.now().timestamp() - readBeginTime > 20 * 60:
+                    if datetime.now().timestamp() - readBeginTime > 5 * 60:
                         i = await exeNonQuery("update `blogs` set `browse_count` = `browse_count` + 1 where `id` = %s", blogId)
                         if 1 == i:
                             session[blogId] = datetime.now().timestamp()

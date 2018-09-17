@@ -618,6 +618,16 @@ footer .l-tel, footer .l-mail {
 }
 
 @media (max-width: 960px) {
+
+    .uk-grid {
+        margin:0
+    }
+
+    .uk-section-small {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
     .uk-margin-large-left {
         margin-left: 4px!important;
     }
@@ -667,5 +677,16 @@ footer .l-tel, footer .l-mail {
 
     .l-prev-next-pagi {
         font-size:12px
+    }
+
+    #artclAndCmmDiv {
+        background-color:#FFF;
+        padding:5px 5px
+    }
+    
+    #artclAndCmmDiv2 {
+        padding:5px 5px;
+        margin-top:5px;
+        background-color:#FFF
     }
 }

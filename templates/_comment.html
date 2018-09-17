@@ -17,16 +17,21 @@
                         <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
                             <a l-field-cmmNo class="uk-link-reset" href="#">{{ cmmNo.send(None) }}</a>
                             <a l-field-createdAt class="uk-link-reset" href="#">{{ comment.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
+                            <a l-field-cmmId class="uk-button uk-button-default uk-button-small uk-margin-small-left l-comment-button" data-ForCommId="{{ comment.id }}"
+                                data-to-cmm-username="{{ comment.user_name }}" href="">
+                                <span uk-icon="icon: reply; ratio: 0.7"></span>
+                                <span>{{ ""|fmtLabel('reply') }}</span>
+                            </a>
                         </p>
                     </div>
                 </div>
-                <div class="uk-position-top-right uk-position-small uk-hidden-hover">
+                <!-- <div class="uk-position-top-right uk-position-small">
                     <a l-field-cmmId class="uk-button uk-button-default uk-button-small l-comment-button" data-ForCommId="{{ comment.id }}" 
                         data-to-cmm-username="{{ comment.user_name }}" href="">
                         <span uk-icon="icon: reply; ratio: 0.7"></span>
                         <span>{{ ""|fmtLabel('reply') }}</span>
                     </a>
-                </div>
+                </div> -->
                 <hr>
             </header>
             <div class="uk-comment-body l-comment-body">
@@ -58,17 +63,23 @@
                                 </h4>
                                 <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
                                     <a class="uk-link-reset" href="#">{{ cfc.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
+                                    <a class="uk-button uk-button-default uk-button-small uk-margin-small-left l-comment-button l-comment-button-chd" 
+                                        data-ForCommId="{{ comment.id }}" data-isLevelCmm="1" data-to-cmm-username="{{ cfc.user_name }}" href="#">
+                                        <span uk-icon="icon: reply; ratio: 0.7"></span>
+                                        <span>{{ None|fmtLabel('reply') }}</span>
+                                    </a>
                                 </p>
+                                
                             </div>
                         </div>
-                        <div class="uk-position-top-right uk-position-small uk-hidden-hover">
+                        <!-- <div class="uk-position-top-right uk-position-small">
                             <a class="uk-button uk-button-default uk-button-small l-comment-button l-comment-button-chd" 
                                 data-ForCommId="{{ comment.id }}" data-isLevelCmm="1" 
                                 data-to-cmm-username="{{ cfc.user_name }}" href="#">
                                 <span uk-icon="icon: reply; ratio: 0.7"></span>
                                 <span>{{ None|fmtLabel('reply') }}</span>
                             </a>
-                        </div>
+                        </div> -->
                     </header>
                     <div class="uk-comment-body l-comment-body">
                         <p>{{ cfc.content }}</p>
