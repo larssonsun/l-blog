@@ -78,8 +78,8 @@
                         </div>
                     </div>
                     <div class="uk-width-1-4@l uk-visible@l l-article-image">
-                        <div class="uk-flex uk-flex-center uk-flex-middle uk-padding-small uk-height-1-1">
-                            <img src="http://yanshi.sucaihuo.com/modals/39/3978/demo/img/header.jpg" class="uk-box-shadow-large" alt="{{ artical.name }}">
+                        <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
+                            <img data-src="{{ artical.title_image|fmtgetTitleImg('img') }}" style="background-color:{{ artical.title_image|fmtgetTitleImg('bgc') }}" alt="" uk-img>
                         </div>
                     </div>
                 </article>

@@ -54,6 +54,17 @@ body {
     background-color:#FFF
 }
 
+.l-article-image > div {
+    padding: 2px;
+}
+
+.l-article-image > div > img{
+    background-color:#fff;
+    padding:5px;
+    border: #E5E5E5 1px solid;
+    
+}
+
 .l-vertical-divider {
     margin-top: 10px;
     border-left: 1px solid;

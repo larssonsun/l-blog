@@ -48,7 +48,8 @@ def setupTemplateRoutes(app):
         "getCommentForComments" : filters.getCommentForComments,
         "getArticalLead" : filters.getArticalLead,
         "getArticalMain" : filters.getArticalMain,
-        "getArticalFull" : filters.getArticalFull},
+        "getArticalFull" : filters.getArticalFull,
+        "fmtgetTitleImg" : filters.fmtgetTitleImg},
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR))
 
 def setupSession(app, redis_pool):

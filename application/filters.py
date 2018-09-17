@@ -6,6 +6,8 @@ from datetime import datetime
 
 REC_LEAD = re.compile(r"\|lead\|(.*)\|leadend\|")
 REC_MAIN = re.compile(r".*\|main\|(.*)\|mainend\|")
+TITLE_IMG_IMG = re.compile(r".*(\|bgc\|.*\|bgcend\|)")
+TITLE_IMG_BGC = re.compile(r".*\|bgc\|(.*)\|bgcend\|")
 CATLOG_ICONTYPE = dict(
     original="原",
     transfer="转")
@@ -85,6 +87,20 @@ def fmtLabel(content, typeName, *contentY):
     else:
         return do(content, contentY[0]) if contentY else do(content)
 
+def fmtgetTitleImg(content , typeName):
+    if 'img'==typeName:
+        m = re.match(TITLE_IMG_IMG, content)
+        if m:
+            return content.replace(m.group(1), "")
+        else:
+            return content
+    else:
+        m = re.match(TITLE_IMG_BGC, content)
+        if m:
+            return m.group(1)
+        else:
+            return "#fff"
+        
 
 def __getDateTimeDiff(t):
     delta = (datetime.now() - t).total_seconds()

@@ -292,7 +292,7 @@ class Index(web.View):
         #blog
         articals = await select(f"""
             select a.`id`, a.`user_name`, a.`name`, a.`summary`, a.`created_at`, count(b.`id`) as `commentCount`,
-                a.`browse_count` as `readCount`, a.`source_from`, a.`name_en`
+                a.`browse_count` as `readCount`, a.`source_from`, a.`name_en`, a.`title_image`
             from `blogs` a
             left join `comments` b on a.`id` = b.`blog_id` and LENGTH(b.`parent_comment_id`)=0
             where a.`id` is not null
