@@ -35,13 +35,13 @@
                         <div class="uk-navbar-right content">
                             <ul class="uk-navbar-nav">
                                 <li class="{{ 'uk-active l-active' if app.site_status.currMenuItem and app.site_status.currMenuItem.lower()=='index' else '' }}">
-                                    <a href="{{ url('Index') }}">
+                                    <a class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1" href="{{ url('Index') }}">
                                         <span uk-icon="icon: home; ratio: 0.7" class="uk-margin-small-right"></span>
                                         <span class="uk-text-middle">{{ None|fmtLabel("home_page") }}</span>
                                     </a>
                                 </li>
                                 <li class="{{ 'uk-active l-active' if app.site_status.currMenuItem and app.site_status.currMenuItem.lower()=='archive' else '' }}">
-                                    <a href="{{ url('archive') }}">
+                                    <a class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1" href="{{ url('archive') }}">
                                         <span uk-icon="icon: table; ratio: 0.7" class="uk-margin-small-right"></span>
                                         <span class="uk-text-middle">{{ None|fmtLabel("archive_menu_href") }}</span>
                                     </a>
@@ -81,29 +81,33 @@
                                         </ul>
                                     </div>
                                 </li>
+                                {% if app.l_data %}
+                                <li>
+                                    <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1 l-context-search">
+                                        <form class="uk-search uk-search-default">
+                                            <a href="" class="uk-search-icon-flip" uk-search-icon></a>
+                                            <input class="uk-input uk-form-width-smal" type="search" placeholder="站内搜索">
+                                        </form>
+                                    </div>
+                                </li>
+                                {% endif %}
                             </ul>
-                            {% if app.l_data %}
-                            <div class="uk-navbar-item">
-                                <form class="uk-search uk-search-default">
-                                    <a href="" class="uk-search-icon-flip" uk-search-icon></a>
-                                    <input class="uk-input uk-form-width-smal" type="search" placeholder="站内搜索">
-                                </form>
-                            </div>
-                            {% endif %}
                             <ul class="uk-navbar-nav">
                                 {% if app.l_data %}
-                                <div>
-                                    <span uk-icon="icon:user;ratio:0.6" class="uk-icon l-icon"></span>
-                                    <a href="{{ url('logout') }}" class="l-static">{{ app.l_data.name }}</a></li>
-                                </div>
+                                <li>
+                                    <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
+                                        <span uk-icon="icon:user;ratio:0.6" class="uk-icon l-icon"></span>
+                                        <a href="{{ url('logout') }}" class="l-static">{{ app.l_data.name }}</a></li>
+                                    </div>
+                                </li>
                                 {% else %}
                                 <li>
-                                    <a href="#loginModel" uk-toggle>
-                                        <span class="uk-text-middle">{{ None|fmtLabel("login_menu_href") }}</span>
+                                    <a href="#loginModel" class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1 l-menu-login" uk-toggle>
+                                        <span class="uk-text-middle uk-border-rounded">{{ None|fmtLabel("login_menu_href") }}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#registeModel" uk-toggle>
+                                    <a href="#registeModel" class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1" uk-toggle>
                                         <span class="uk-text-middle">{{ None|fmtLabel("registe_menu_href") }}</span>
                                     </a>
                                 </li>

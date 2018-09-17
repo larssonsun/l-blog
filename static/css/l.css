@@ -65,6 +65,10 @@ body {
     
 }
 
+.l-context-search {
+    margin:0 15px;
+}
+
 .l-vertical-divider {
     margin-top: 10px;
     border-left: 1px solid;
@@ -332,6 +336,12 @@ div.l-bottom-bar a {
 
 .l-form-Cmm legend {
     font-size: 13px
+}
+
+.l-menu-login span{
+    background-color: #1e87f0;
+    color:#fff;
+    padding:5px 15px;
 }
 
 .l-order-tab {
