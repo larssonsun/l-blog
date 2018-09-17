@@ -296,8 +296,9 @@ $(document).ready(function () {
                     usernameCtl.val("");
                     pwdCtl.val("");
                     repwdCtl.val("");
+                    registMsg.text(" ");
+                    waits = result.data["waits"];
                     persec(submitBttn, submitBttn.text(), waits, function(){
-                        registMsg.text(" ");
                         submitBttn.removeAttr("disabled");
                     });
                     //close
