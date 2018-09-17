@@ -112,7 +112,7 @@ async def sendCerMain(*, cerUrl, userId, uname, mailAddr):
             certificateHref=f"{ cerUrl }{ approvedKey }/"
         ))
         rtd = rtData(
-            error_code=-1, error_msg=f"一封邮件已发送至您的邮箱,\r\n请于{ int(approveExpert / 60) }分钟内完成验证。", data=None)
+            error_code=-1, error_msg=f"一封邮件已发送至您的邮箱,\r\n请于{ int(approveExpert / 60) }分钟内完成验证。", data=dict(waits=mailCerExpert))
     else:
         ttl = await get_cache_ttl("sendMail_minute")
         rtd = rtData(error_code=10008,
@@ -234,7 +234,7 @@ class Registe(web.View):
             rtd = rtData(error_code=10001, error_msg="邮箱格式不正确", data=None)
         elif not userNameRc.match(uname):
             rtd = rtData(error_code=10004,
-                         error_msg="昵称必须是6到12位的字母或数字", data=None)
+                         error_msg="昵称必须是6到18位的字母或数字", data=None)
         elif not pwd == repwd:
             rtd = rtData(error_code=10003, error_msg="两次密码输入不一致", data=None)
         elif not pwdRc.match(pwd) or not pwdRc.match(repwd):
@@ -244,7 +244,7 @@ class Registe(web.View):
         if rtd.error_code == -1:
             try:
                 i = await exeNonQuery("INSERT INTO users (`id`, `email`, `passwd`, `admin`, \
-                `name`, `image`, `created_at`, `approved`) VALUES (%s, %s, %s, 0, %s, '', %s, 0);",
+                `name`, `image`, `created_at`, `approved`) VALUES (%s, %s, %s, 0, LOWER(%s), '', %s, 0);",
                                       userId, email, hash_md5(pwd), uname, datetime.now().timestamp())
                 if 1 != i:
                     rtd = rtData(error_code=10009,

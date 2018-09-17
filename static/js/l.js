@@ -296,8 +296,10 @@ $(document).ready(function () {
                     usernameCtl.val("");
                     pwdCtl.val("");
                     repwdCtl.val("");
-                    registMsg.text(" ");
-                    submitBttn.removeAttr("disabled");
+                    persec(submitBttn, submitBttn.text(), waits, function(){
+                        registMsg.text(" ");
+                        submitBttn.removeAttr("disabled");
+                    });
                     //close
                     UIkit.modal($("#registeModel")).hide();
                 }
@@ -350,8 +352,12 @@ $(document).ready(function () {
                 if (new Number(result.error_code) < 0) {
                     approveMsg.text(" ");
                     showMsg(result.error_msg, "success");
-                    // spin.addClass("l-spinner");
-                    approveBttn.removeAttr("disabled");
+                    waits = result.data["waits"];
+                    persec(approveBttn, approveBttn.text(), waits, function(){
+                        approveMsg.text(" ");
+                        // spin.addClass("l-spinner");
+                        approveBttn.removeAttr("disabled");
+                    });
                 }
                 else if(new Number(result.error_code) == 10008) {
                     approveMsg.text(result.error_msg);
