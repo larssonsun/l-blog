@@ -88,5 +88,6 @@ def setAvatar(emailAddr):
     size = 40
     gravatar_url = "http://www.gravatar.com/avatar/{0}?"
     gravatar_url += urllib.parse.urlencode({'d': "mm", 's': str(size)})
-    gravatar_url.format(hashlib.md5(emailAddr.encode("utf-8").lower()).hexdigest())
+    if emailAddr and len(emailAddr)>0:
+        gravatar_url = gravatar_url.format(hashlib.md5(emailAddr.encode("utf-8").lower()).hexdigest())
     return dict(avatarAdmin=avatarAdmin, avatarNormal=gravatar_url)
