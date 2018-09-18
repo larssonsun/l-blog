@@ -4,6 +4,7 @@
 import hashlib
 import re
 import smtplib
+import urllib
 import uuid
 from collections import namedtuple
 from email.mime.text import MIMEText
@@ -12,7 +13,7 @@ from threading import Thread
 from markdown import Markdown
 from markdown.extensions.toc import TocExtension
 
-from config.settings import MAIL_SMTPCLIENT, HASH_KEY
+from config.settings import HASH_KEY, MAIL_SMTPCLIENT
 
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
 
@@ -81,3 +82,11 @@ def stmp_send_thread(toAddr, subject, html):
     t = Thread(target=stmp_send, args=(toAddr, subject, html))
     t.start()
     return t
+
+def setAvatar(emailAddr):
+    avatarAdmin = "/static/images/avatardemo.png"
+    size = 40
+    gravatar_url = "http://www.gravatar.com/avatar/{0}?"
+    gravatar_url += urllib.parse.urlencode({'d': "mm", 's': str(size)})
+    gravatar_url.format(hashlib.md5(emailAddr.encode("utf-8").lower()).hexdigest())
+    return dict(avatarAdmin=avatarAdmin, avatarNormal=gravatar_url)

@@ -6,7 +6,6 @@ import datetime
 import hashlib
 import json
 import re
-import urllib
 import uuid
 from collections import namedtuple
 from datetime import datetime
@@ -16,10 +15,11 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
 
-from application.utils import (addDictProp, duplicateSqlRc, emailRc, hash_md5,
-                               mdToHtml, pwdRc, rtData, stmp_send_thread,
-                               userNameRc, certivateMailHtml)
-from models.db import exeNonQuery, exeScalar, get_cache, select, set_cache, get_cache_ttl, expert_cache
+from application.utils import (addDictProp, certivateMailHtml, duplicateSqlRc,
+                               emailRc, hash_md5, mdToHtml, pwdRc, rtData,
+                               setAvatar, stmp_send_thread, userNameRc)
+from models.db import (exeNonQuery, exeScalar, expert_cache, get_cache,
+                       get_cache_ttl, select, set_cache)
 
 
 async def hello(request):
@@ -59,6 +59,8 @@ def login_required(*a):
                     if cls.request.app.get("l_data"):
                         cls.request.app.pop("l_data")
                 else:
+                    ava = setAvatar(user[0].get("email"))
+                    user[0]["avatar"] = ava.get("avatarAdmin") if user[0].get("name")=="larsson" else ava.get("avatarNormal")
                     cls.request.app.l_data = user[0]
                 return await func(cls, *args, **kw)
             else:
@@ -319,15 +321,12 @@ class Index(web.View):
 
 class BlogDetail(web.View):
 
-    def setAvatar(self, comms):
-        avatarAdmin = "/static/images/avatardemo.png"
-        size = 40
-        gravatar_url = "http://www.gravatar.com/avatar/{0}?"
-        gravatar_url += urllib.parse.urlencode({'d': "mm", 's': str(size)})
+    def setAvatarIntoCmm(self, comms):
+        ava = setAvatar(None)
 
         [addDictProp(cmm, "avatar",
-                     gravatar_url.format(hashlib.md5(cmm.get("email").encode("utf-8").lower()).hexdigest()) if cmm.get("user_name") != "larsson"
-                     else avatarAdmin)
+                     ava.get("avatarNormal").format(hashlib.md5(cmm.get("email").encode("utf-8").lower()).hexdigest()) if cmm.get("user_name") != "larsson"
+                     else ava.get("avatarAdmin"))
             for cmm in comms]
 
     def setAdminTag(self, comms):
@@ -409,7 +408,7 @@ class BlogDetail(web.View):
             commentCount = len(comments)
             cmmNo = (f'{str(x)} 楼' for x in range(commentCount, 0, -1))
             #comm avatar
-            self.setAvatar(comments)
+            self.setAvatarIntoCmm(comments)
             self.setAdminTag(comments)
             #comments for comments
             if commentCount > 0:
@@ -421,7 +420,7 @@ class BlogDetail(web.View):
                 where a.`parent_comment_id` in ({inStr}) order by a.`parent_comment_id`, a.`created_at` asc
                 """,  *cmmIdList)
                 #comm for comm avatar
-                self.setAvatar(cfcsList)
+                self.setAvatarIntoCmm(cfcsList)
                 self.setAdminTag(cfcsList)
 
         #current url

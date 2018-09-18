@@ -37,6 +37,7 @@ SWITCH_i18n = dict(
     login_ph_username=lambda x: "邮箱/昵称",
     login_ph_pwd=lambda x: "密码",
     registe_menu_href=lambda x: "注册",
+    right_slide_bar_logout=lambda x:"登出",
     created_at=lambda x: f" {x}",
     read_count=lambda x: f"阅读 {x}",
     read_count_t2=lambda x: f"阅读次数 {x}",

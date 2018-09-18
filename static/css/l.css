@@ -29,11 +29,11 @@ textarea {
     resize:vertical
 }
 
-body {
+/* body {
     display: flex ;
     flex-direction: column;
     height: 100%;
-}
+} */
 
 .codehilite pre {
     border: none;
@@ -354,6 +354,19 @@ div.l-bottom-bar a {
     background-color: #fff;
     color:#1e87f0;
     border: #1e87f0 1px solid
+}
+
+.l-menu-userinfo-title >div >div{
+    overflow: hidden;
+}
+
+.l-menu-userinfo-title >div:nth-child(2){
+    padding-left:20px;
+}
+
+.l-menu-userinfo-title img {
+    width:60px;
+
 }
 
 .l-order-tab {

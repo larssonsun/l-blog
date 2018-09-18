@@ -8,13 +8,13 @@
     <meta name="description" content="{% block description %}{% endblock %}">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     <!-- UIkit CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.14/css/uikit.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.16/css/uikit.min.css" />
     <link rel="stylesheet" href="/static/css/l.css">
     {% block head_css %}
     {% endblock %}
     <!-- UIkit JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.14/js/uikit.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.14/js/uikit-icons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.16/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.16/js/uikit-icons.min.js"></script>
     <!--jQuery JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="/static/js/l.js"></script>
@@ -48,7 +48,7 @@
                                         <span class="uk-text-middle">{{ None|fmtLabel("archive_menu_href") }}</span>
                                     </a>
                                 </li>
-                                <li style="display:none">
+                                <!-- <li style="display:none">
                                     <a href="" aria-expanded="false">Servay</a>
                                     <div class="uk-navbar-dropdown uk-navbar-dropdown-bottom-left uk-animation-fade uk-animation-enter" style="left: 340.125px; top: 80px; animation-duration: 200ms;">
                                         <ul class="uk-nav uk-navbar-dropdown-nav">
@@ -82,7 +82,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
+                                </li> -->
                                 {% if app.l_data %}
                                 <li>
                                     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1 l-context-search">
@@ -98,8 +98,43 @@
                                 {% if app.l_data %}
                                 <li>
                                     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
-                                        <span uk-icon="icon:user;ratio:0.6" class="uk-icon l-icon"></span>
-                                        <a href="{{ url('logout') }}" class="l-static">{{ app.l_data.name }}</a></li>
+                                        <!-- <a href="{{ url('logout') }}" class="l-static">{{ app.l_data.name }}</a></li> -->
+                                        <button class="uk-button uk-button-primary" type="button" uk-toggle="target: #offcanvas-userInfo">
+                                            <span uk-icon="icon: info; ratio: 0.7"></span>
+                                            <span>{{ app.l_data.name }}</span>
+                                        </button>
+                                        <div id="offcanvas-userInfo" uk-offcanvas="mode: push; flip: true ">
+                                            <div class="uk-offcanvas-bar l-menu-userinfo">
+                                                <button class="uk-offcanvas-close" type="button" uk-close></button>
+                                                <div class="uk-flex uk-flex-center uk-margin-medium-top l-menu-userinfo-title">
+                                                    <div class="uk-width-2-3">
+                                                        <h3>{{ app.l_data.name }}</h3>
+                                                        <div>{{ app.l_data.email }}{{ app.l_data.email }}{{ app.l_data.email }}</div>
+                                                    </div>
+                                                    <div class="uk-width-1-3">
+                                                        <a href="{{ app.l_data.avatar }}">
+                                                            <img class="uk-border-rounded" src="{{ app.l_data.avatar }}" alt="">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <ul class="uk-nav uk-nav-default">
+                                                    <li class="uk-active"><a href="#">Active</a></li>
+                                                    <li class="uk-parent">
+                                                        <a href="#">Parent</a>
+                                                        <ul class="uk-nav-sub">
+                                                            <li><a href="#">Sub item</a></li>
+                                                            <li><a href="#">Sub item</a></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li class="uk-nav-header">Header</li>
+                                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: table"></span> Item</a></li>
+                                                    <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Item</a></li>
+                                                    <li class="uk-nav-divider"></li>
+                                                    <li><a href="{{ url('logout') }}"><span class="uk-margin-small-right" uk-icon="icon: sign-out"></span>{{ None|fmtLabel("right_slide_bar_logout") }}</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                                 {% else %}
@@ -204,6 +239,7 @@
     {% endblock %}
     {% include "_login.html" %}
     {% include "_register.html" %}
+    
     {% block bottom_js %}
     {% endblock %}
     {% endblock %}
