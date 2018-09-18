@@ -65,7 +65,7 @@ def login_required(*a):
                 cls.request.app.l_data = None
                 pth = cls.request.path
                 if a:
-                    if pth in "/blogdetail/addComment":
+                    if pth in ("/blogdetail/addComment", "/blogdetail/delComment"):
                         rtd = rtData(error_code=30001,
                                      error_msg="请先登录", data=None)
                         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
@@ -173,19 +173,19 @@ class Approve(web.View):
                          error_msg="请输入正确格式的email或昵称", data=None)
         else:
             user = await select("select `id`, `name`, `email`, `approved` from `users` where `name`=%s or `email`=%s limit 0, 1", loginName, loginName)
-            if not user or len(user)!=1:
+            if not user or len(user) != 1:
                 rtd = rtData(error_code=40002,
-                         error_msg="未注册该邮箱或昵称", data=None)
+                             error_msg="未注册该邮箱或昵称", data=None)
             else:
                 user = user[0]
                 if b"\x01" == user.get('approved'):
                     rtd = rtData(error_code=40003,
-                            error_msg="目标账号已经激活，无需重复操作", data=None)
+                                 error_msg="目标账号已经激活，无需重复操作", data=None)
                 else:
                     rtd = await sendCerMain(
-                        cerUrl=f"{self.request.scheme}:/{self.request.host}{self.request.app.router['registe'].url_for()}", 
-                        userId=user.get("id"), 
-                        uname=user.get("name"), 
+                        cerUrl=f"{self.request.scheme}:/{self.request.host}{self.request.app.router['registe'].url_for()}",
+                        userId=user.get("id"),
+                        uname=user.get("name"),
                         mailAddr=user.get("email"))
 
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
@@ -203,7 +203,7 @@ class Registe(web.View):
         userId = await get_cache(approvedKey)
         if not userId:
             keyCur = False
-        
+
         if keyCur:
             i = await exeNonQuery("update `users` set `approved`=1 where `id`=%s", userId)
             if i == 1:
@@ -370,7 +370,7 @@ class BlogDetail(web.View):
             if uid and blog.get("user_id") != uid:
                 readBeginTime = session.get(blogId)
                 if readBeginTime:
-                    if datetime.now().timestamp() - readBeginTime > 5 * 60:
+                    if datetime.now().timestamp() - readBeginTime > 1 * 60:
                         i = await exeNonQuery("update `blogs` set `browse_count` = `browse_count` + 1 where `id` = %s", blogId)
                         if 1 == i:
                             session[blogId] = datetime.now().timestamp()
@@ -472,6 +472,33 @@ class AddComment(web.View):
                     rtd = rtData(error_code=10001,
                                  error_msg="未能成功提交评论", data=None)
 
+            return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class DelComment(web.View):
+
+    @login_required(True)
+    async def post(self):
+        data = await self.request.post()
+        l_data = self.request.app.l_data
+        if data and l_data:
+            operUserId = l_data.get("id")
+            cmmId = data.get("id")
+            hideStatus = data.get("hide_status")
+            curUserId = await exeScalar("select `user_id` from `comments` where `id` = %s limit 0, 1", cmmId)
+            isAdmin = await exeScalar("select `admin` from `users` where `id` = %s limit 0, 1", operUserId)
+            if curUserId == operUserId or (isAdmin == "1"):
+                newStatus = "0" if hideStatus != "0" else (
+                    "1" if (isAdmin == "1") else "2")
+                ic = await exeNonQuery("update `comments` set `hide_status`=%s where `id` = %s", newStatus, cmmId)
+                if(ic == 1):
+                    rtd = rtData(error_code=-1, error_msg="操作成功", data=None)
+                else:
+                    rtd = rtData(error_code=50002,
+                                 error_msg="未能成功提交评论", data=None)
+            else:
+                rtd = rtData(error_code=50001,
+                             error_msg="您不能操作其他人的评论", data=None)
             return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 

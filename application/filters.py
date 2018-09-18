@@ -3,6 +3,7 @@
 
 import re
 from datetime import datetime
+from enum import Enum, unique
 
 REC_LEAD = re.compile(r"\|lead\|(.*)\|leadend\|")
 REC_MAIN = re.compile(r".*\|main\|(.*)\|mainend\|")
@@ -18,6 +19,7 @@ CATLOG_TOOTIP = dict(
     original="原创",
     transfer="转帖")
 SWITCH_i18n = dict(
+    blog_master=lambda x: "博主",
     default_meta_desctiption=lambda x: "本blog是由无证程序员开发. L-blog 基于协程(异步非阻塞), 使用asyncio标准库, aiohttp异步http框架(仅服务端), 不断完善中.",
     default_meta_keywords=lambda x: "l-blog,各人博客,web开发,python开发,python自学",
     default_title=lambda x: "L-blog 基于aiohttp和uikit搭建的各人博客",
@@ -42,6 +44,7 @@ SWITCH_i18n = dict(
     comment_count_t2=lambda x: f"评论次数 {x}",
     comment_count_right=lambda x: f"{x} 条评论",
     reply=lambda x: "回复",
+    operate_reply=lambda x, y: "删除" if y==0 else "恢复",
     send_reply=lambda x: "发表回复",
     cancel=lambda x: "取消",
     submit=lambda x: "发表",
@@ -60,6 +63,22 @@ SWITCH_i18n = dict(
     welcome_toIndex=lambda x: "登录")
 
 
+@unique
+class CommHideStatus(Enum):
+    Normal = 0
+    HideByAdmin = 1
+    HideBySelf = 2
+
+
+def fmtGetHideInfo(content, hideType):
+    if hideType == CommHideStatus.HideByAdmin.value:
+        return "(此回复已由管理员删除。)"
+    elif hideType == CommHideStatus.HideBySelf.value:
+        return "(此回复已由本人删除。)"
+    else:
+        return content
+
+
 def fmtCatelog(content, doType):
     if "iconType" == doType:
         return CATLOG_ICONTYPE.get(content)
@@ -76,9 +95,11 @@ def fmtDatetimeFromFloat(flt, *, diff=False):
         else:
             return datetime.fromtimestamp(flt).strftime("%Y-%m-%d %H:%M")
 
+
 def fmtMonthDateFromFloat(flt):
     if isinstance(flt, float):
         return datetime.fromtimestamp(flt).strftime("%m-%d")
+
 
 def fmtLabel(content, typeName, *contentY):
     do = SWITCH_i18n.get(typeName)
@@ -87,8 +108,9 @@ def fmtLabel(content, typeName, *contentY):
     else:
         return do(content, contentY[0]) if contentY else do(content)
 
-def fmtgetTitleImg(content , typeName):
-    if 'img'==typeName:
+
+def fmtgetTitleImg(content, typeName):
+    if 'img' == typeName:
         m = re.match(TITLE_IMG_IMG, content)
         if m:
             return content.replace(m.group(1), "")
@@ -100,7 +122,7 @@ def fmtgetTitleImg(content , typeName):
             return m.group(1)
         else:
             return "#fff"
-        
+
 
 def __getDateTimeDiff(t):
     delta = (datetime.now() - t).total_seconds()

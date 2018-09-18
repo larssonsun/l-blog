@@ -100,6 +100,38 @@ $(document).ready(function () {
     //准备回复次回贴
     $(".l-comment-button-chd").click(showCmmForCmm);
 
+    //删除回复
+    $(".l-comment-button-delete").click(function(){
+        var URL = $(this).attr('url-del-cmm');
+        var cmmId = $(this).attr("data-cmm-id");
+        var hideStatus=$(this).attr("data-cmm-hide-status");
+        
+        $.ajax({
+            type: 'post',
+            url: URL,
+            data: {
+                'id': cmmId,
+                'hide_status': hideStatus
+            },
+            dataType: 'json',
+            success: function (result) {
+                if (new Number(result.error_code) < 0) {
+                    window.location.reload();
+                }
+                else {
+                    if ("50001" == result.error_code)
+                        showMsg(result.error_msg, "warning")
+                    else {
+                        showMsg(result.error_msg, "danger")
+                    }
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus + XMLHttpRequest + errorThrown, "danger")
+            }
+        });
+    });
+
     //提交回复
     $("#sendCommentBttn").click(function () {
 

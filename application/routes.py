@@ -11,8 +11,9 @@ from aiohttp_session.redis_storage import RedisStorage
 
 from application import filters
 from application.utils import hash_sha256
-from application.views import (AddComment, Archive, BlogDetail, Index, Login, Approve,
-                               Logout, Registe, hello)
+from application.views import (AddComment, Approve, Archive, BlogDetail,
+                               DelComment, Index, Login, Logout, Registe,
+                               hello)
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 
 
@@ -27,6 +28,7 @@ def setupRoutes(app):
     app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/" + r"{type:[hot|time]+}/", Index, name="index_catelog_sort")
     app.router.add_view("/blogdetail/" + r"{id:[0-9a-zA-Z\-]+}/", BlogDetail, name="BlogDetail")
     app.router.add_view("/blogdetail/addComment", AddComment, name="add-comment")
+    app.router.add_view("/blogdetail/delComment", DelComment, name="delete-comment")
     app.router.add_view("/login/", Login, name="Login")
     app.router.add_view("/logout/", Logout, name="logout")
     app.router.add_view("/registe/", Registe, name="registe")
@@ -49,7 +51,8 @@ def setupTemplateRoutes(app):
         "getArticalLead" : filters.getArticalLead,
         "getArticalMain" : filters.getArticalMain,
         "getArticalFull" : filters.getArticalFull,
-        "fmtgetTitleImg" : filters.fmtgetTitleImg},
+        "fmtgetTitleImg" : filters.fmtgetTitleImg,
+        "fmtGetHideInfo" : filters.fmtGetHideInfo},
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR))
 
 def setupSession(app, redis_pool):

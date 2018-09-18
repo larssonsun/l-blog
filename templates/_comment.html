@@ -11,7 +11,7 @@
                         <h4 class="uk-comment-title uk-margin-remove l-comment-title">
                             <a l-field-userName class="uk-link-reset" href="#">{{ comment.user_name}}</a>
                             {% if comment.admintag %}
-                            <span class="uk-label">博主</span>
+                            <span class="uk-label">{{ None|fmtLabel('blog_master') }}</span>
                             {% endif %}
                         </h4>
                         <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
@@ -20,7 +20,12 @@
                             <a l-field-cmmId class="l-comment-button" data-ForCommId="{{ comment.id }}"
                                 data-to-cmm-username="{{ comment.user_name }}" href="">
                                 <span class="uk-padding-remove" uk-icon="icon: reply; ratio: 0.7"></span>
-                                <span class="uk-padding-remove">{{ ""|fmtLabel('reply') }}</span>
+                                <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
+                            </a>
+                            <a class="l-comment-button-delete" data-cmm-id="{{ comment.id }}"  
+                                data-cmm-hide-status="{{ comment.hide_status }}" url-del-cmm="{{ url('delete-comment') }}">
+                                <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
+                                <span class="uk-padding-remove">{{ None|fmtLabel('operate_reply', comment.hide_status) }}</span>
                             </a>
                         </p>
                     </div>
@@ -35,7 +40,7 @@
                 <hr>
             </header>
             <div class="uk-comment-body l-comment-body">
-                <p l-field-cmmContent>{{ comment.content }}</p>
+                <p l-field-cmmContent>{{ comment.content|fmtGetHideInfo(comment.hide_status) }}</p>
             </div>
         </article>
         {% set cfcs = cfcsList|getCommentForComments(comment.id) %}
@@ -57,7 +62,7 @@
                                     <span class="uk-label">博主</span>
                                     {% endif %}
                                     {% if cfc.to_userName %}
-                                    <span>{{ ""|fmtLabel('reply') }}</span>
+                                    <span>{{ None|fmtLabel('reply') }}</span>
                                     <a class="uk-link-reset" href="#">{{ cfc.to_userName }}</a>
                                     {% endif %}
                                 </h4>
@@ -67,6 +72,11 @@
                                         data-ForCommId="{{ comment.id }}" data-isLevelCmm="1" data-to-cmm-username="{{ cfc.user_name }}" href="#">
                                         <span class="uk-padding-remove" uk-icon="icon: reply; ratio: 0.7"></span>
                                         <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
+                                    </a>
+                                    <a class="l-comment-button-delete" data-cmm-id="{{ cfc.id }}" data-cmm-hide-status="{{ cfc.hide_status }}"
+                                        url-del-cmm="{{ url('delete-comment') }}">
+                                        <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
+                                        <span class="uk-padding-remove">{{ None|fmtLabel('operate_reply', cfc.hide_status) }}</span>
                                     </a>
                                 </p>
                             </div>
@@ -81,7 +91,7 @@
                         </div> -->
                     </header>
                     <div class="uk-comment-body l-comment-body">
-                        <p>{{ cfc.content }}</p>
+                        <p>{{ cfc.content|fmtGetHideInfo(cfc.hide_status) }}</p>
                     </div>
                     <hr>
                 </article>
