@@ -23,7 +23,7 @@
 </head>
 <body>
     {% block base_body %}
-    <div class="l-offcanvas-content">
+    <div class="uk-offcanvas-content">
         <div uk-sticky="show-on-up: true; animation: uk-animation-slide-top; sel-target: .uk-navbar-container; 
                 cls-active: uk-navbar-sticky; bottom: #scrollup-dropdown" class="uk-sticky">
             <nav class="uk-navbar-container">
@@ -68,7 +68,7 @@
                                             <span uk-icon="icon: info; ratio: 0.7"></span>
                                             <span>{{ app.l_data.name }}</span>
                                         </button>
-                                        <div id="offcanvas-userInfo" uk-offcanvas="mode: push; flip: true ">
+                                        <div id="offcanvas-userInfo" uk-offcanvas="mode: push; flip: true; overlay: true ">
                                             <div class="uk-offcanvas-bar l-menu-userinfo">
                                                 <button class="uk-offcanvas-close" type="button" uk-close></button>
                                                 <div class="uk-flex uk-flex-center uk-margin-medium-top l-menu-userinfo-title">

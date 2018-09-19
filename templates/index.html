@@ -47,13 +47,12 @@
                 {% for artical in articals %}
                 <article class="uk-article uk-margin-remove uk-flex uk-box-shadow-large">
                     <div class="uk-width-3-4@l">
-                        <h2 class="uk-margin-remove l-article-title">
+                        <div class="uk-margin-remove l-article-title">
                             <span class="uk-border-rounded uk-text-middle uk-margin-small-right l-cirlcle-icon {{artical.source_from|fmtCatelog('cssType')}}"
                                 uk-tooltip="title:{{artical.source_from|fmtCatelog('tooltipType')}};pos:top-right">
                                 {{artical.source_from|fmtCatelog('iconType')}}
                             </span>
-                            <a class="uk-link-reset" href="{{ url('BlogDetail', id=artical.name_en) }}">{{artical.name}}</a></h2>
-                        <hr class="uk-margin-remove">
+                            <a class="uk-link-reset" href="{{ url('BlogDetail', id=artical.name_en) }}">{{artical.name}}</a></div>
                         <p class="uk-article-meta l-meta">
                             <i uk-icon="icon:clock;ratio:0.6"></i>
                             <span>{{ artical.created_at|fmtDatetimeFromFloat }}</span>

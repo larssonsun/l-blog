@@ -12,7 +12,7 @@
 {% block content %}
 <div class="uk-section uk-section-small l-background-color">
     <div class="uk-container">
-        <div class="uk-grid">
+        <div class="uk-grid uk-margin-remove-left">
             <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove">
                     {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), blog.catelog_name, 
                     url('catelog', cateId=blog.catelog_id), blog.catelog_name, blog.name) }}
