@@ -30,17 +30,10 @@
                         </p>
                     </div>
                 </div>
-                <!-- <div class="uk-position-top-right uk-position-small">
-                    <a l-field-cmmId class="uk-button uk-button-default uk-button-small l-comment-button" data-ForCommId="{{ comment.id }}" 
-                        data-to-cmm-username="{{ comment.user_name }}" href="">
-                        <span uk-icon="icon: reply; ratio: 0.7"></span>
-                        <span>{{ ""|fmtLabel('reply') }}</span>
-                    </a>
-                </div> -->
                 <hr>
             </header>
             <div class="uk-comment-body l-comment-body">
-                <p l-field-cmmContent>{{ comment.content|fmtGetHideInfo(comment.hide_status) }}</p>
+                <p l-field-cmmContent class="{{ comment.hide_status|fmtGetHideClass() }}">{{ comment.content|fmtGetHideInfo(comment.hide_status) }}</p>
             </div>
         </article>
         {% set cfcs = cfcsList|getCommentForComments(comment.id) %}
@@ -80,17 +73,9 @@
                                 </p>
                             </div>
                         </div>
-                        <!-- <div class="uk-position-top-right uk-position-small">
-                            <a class="uk-button uk-button-default uk-button-small l-comment-button l-comment-button-chd" 
-                                data-ForCommId="{{ comment.id }}" data-isLevelCmm="1" 
-                                data-to-cmm-username="{{ cfc.user_name }}" href="#">
-                                <span uk-icon="icon: reply; ratio: 0.7"></span>
-                                <span>{{ None|fmtLabel('reply') }}</span>
-                            </a>
-                        </div> -->
                     </header>
                     <div class="uk-comment-body l-comment-body">
-                        <p>{{ cfc.content|fmtGetHideInfo(cfc.hide_status) }}</p>
+                        <p class="{{ cfc.hide_status|fmtGetHideClass() }}">{{ cfc.content|fmtGetHideInfo(cfc.hide_status) }}</p>
                     </div>
                     <hr>
                 </article>

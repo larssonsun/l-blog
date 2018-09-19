@@ -54,13 +54,19 @@ def login_required(*a):
             session = await get_session(cls.request)
             uid = session.get("uid")
             if uid:
-                user = await select('select id, name, email from users where id = %s', uid)
+                user = await select("""
+                select a.`id`, a.`name`, a.`email`, count(b.id) as 'cmm_ct' from `users` a 
+                inner join `comments` b on a.`id` = b.`user_id` and b.`hide_status`= 0
+                where a.`id`= %s
+                group by a.`id`, a.`name`, a.`email`
+                """, uid)
                 if not user or len(user) != 1:
                     if cls.request.app.get("l_data"):
                         cls.request.app.pop("l_data")
                 else:
                     ava = setAvatar(user[0].get("email"))
-                    user[0]["avatar"] = ava.get("avatarAdmin") if user[0].get("name")=="larsson" else ava.get("avatarNormal")
+                    user[0]["avatar"] = ava.get("avatarAdmin") if user[0].get(
+                        "name") == "larsson" else ava.get("avatarNormal")
                     cls.request.app.l_data = user[0]
                 return await func(cls, *args, **kw)
             else:
@@ -407,7 +413,7 @@ class BlogDetail(web.View):
                 """, blog.get("id"))
             commentCount = len(comments)
             cmmNo = (f'{str(x)} 楼' for x in range(commentCount, 0, -1))
-            #comm avatar
+            #comm addon set
             self.setAvatarIntoCmm(comments)
             self.setAdminTag(comments)
             #comments for comments

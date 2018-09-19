@@ -36,6 +36,7 @@ SWITCH_i18n = dict(
     login_approveusername=lambda x: "激活帐号",
     login_ph_username=lambda x: "邮箱/昵称",
     login_ph_pwd=lambda x: "密码",
+    logo=lambda x: "博客",
     registe_menu_href=lambda x: "注册",
     right_slide_bar_logout=lambda x:"登出",
     created_at=lambda x: f" {x}",
@@ -45,6 +46,7 @@ SWITCH_i18n = dict(
     comment_count_t2=lambda x: f"评论次数 {x}",
     comment_count_right=lambda x: f"{x} 条评论",
     reply=lambda x: "回复",
+    user_reply_count=lambda x: "回复数",
     operate_reply=lambda x, y: "删除" if y==0 else "恢复",
     send_reply=lambda x: "发表回复",
     cancel=lambda x: "取消",
@@ -73,12 +75,17 @@ class CommHideStatus(Enum):
 
 def fmtGetHideInfo(content, hideType):
     if hideType == CommHideStatus.HideByAdmin.value:
-        return "(此回复已由管理员删除。)"
+        return "(此回复已由管理员删除)"
     elif hideType == CommHideStatus.HideBySelf.value:
-        return "(此回复已由本人删除。)"
+        return "(此回复已由本人删除)"
     else:
         return content
 
+def fmtGetHideClass(content):
+    if content == CommHideStatus.Normal.value:
+        return ""
+    else:
+        return "l-comment-body-banned"
 
 def fmtCatelog(content, doType):
     if "iconType" == doType:

@@ -3,8 +3,10 @@
         <h3 class="uk-heading-divider"><span class="uk-margin-small-right" uk-icon="icon: tag"></span><span>{{ None|fmtLabel("tag") }}</span></h3>
         <div>
             {% for tag in tags %}
-            <a href="{{ url ('tag', tagId=tag.id) }}" class="uk-label {{ 'l-tag' if not tag.current else 'l-tag-select' }}"
-                uk-tooltip="title:{{ tag.tag_name|fmtLabel('blogCountInTag', tag.bct) }};pos:bottom">{{ tag.tag_name }}</a>
+            <span class="{{ 'l-tag' if not tag.current else 'l-tag-select' }}">
+                <a href="{{ url ('tag', tagId=tag.id) }}" uk-tooltip="title:{{ tag.tag_name|fmtLabel('blogCountInTag', tag.bct) }};pos:bottom">{{
+                    tag.tag_name }}</a>
+            </span>
             {% endfor %}
         </div>
     </div>

@@ -52,7 +52,8 @@ def setupTemplateRoutes(app):
         "getArticalMain" : filters.getArticalMain,
         "getArticalFull" : filters.getArticalFull,
         "fmtgetTitleImg" : filters.fmtgetTitleImg,
-        "fmtGetHideInfo" : filters.fmtGetHideInfo},
+        "fmtGetHideInfo" : filters.fmtGetHideInfo,
+        "fmtGetHideClass": filters.fmtGetHideClass},
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR))
 
 def setupSession(app, redis_pool):
