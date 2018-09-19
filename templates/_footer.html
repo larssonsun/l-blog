@@ -2,17 +2,17 @@
     <div class="uk-container uk-margin-auto uk-margin-small-right uk-margin-small-left">
         <div class="uk-grid">
             <div class="uk-width-1-3@m uk-width-1-1@s uk-row-first">
-                <h3>L-Blog</h3>
+                <h3>L-{{ None|fmtLabel("logo") }}</h3>
                 <p>{{ None|fmtLabel("default_meta_desctiption") }}</p>
             </div>
             <div class="uk-width-1-4@m uk-width-1-1@s">
-                <h3>页面</h3>
+                <h3>{{ None|fmtLabel("footer_pages") }}</h3>
                 <ul class="uk-list">
                     <li class="uk-margin-small-bottom l-footer-li">
-                        <a href="{{ url('Index') }}">Blog</a>
+                        <a href="{{ url('Index') }}">{{ None|fmtLabel("home_page") }}</a>
                     </li>
                     <li class="uk-margin-small-bottom l-footer-li">
-                        <a href="#"></a>
+                        <a href="{{ url('archive') }}">{{ None|fmtLabel("archive_label") }}</a>
                     </li>
                     <li class="uk-margin-small-bottom l-footer-li">
                         <a href="#"></a>
@@ -20,10 +20,9 @@
                 </ul>
             </div>
             <div class="uk-width-1-4@m uk-width-1-1@s">
-                <h3>联系方式</h3>
+                <h3>{{ None|fmtLabel("footer_contactme") }}</h3>
                 <ul class="uk-list">
-                    <li>N.A.</li>
-                    <li>
+                    <!-- <li>
                         <ul class="uk-flex-inline uk-padding-remove l-tel">
                             <li class="uk-margin-right l-footer-li2">
                                 <a href="">+021 xxxxxxxx</a>
@@ -35,20 +34,17 @@
                         <div class="uk-grid uk-grid-match">
                             <div class="uk-width-1-1"></div>
                         </div>
-                    </li>
+                    </li> -->
                     <li class="l-mail">
-                        <a href="mailto:info@l-blog.com">info@l-blog.com</a>
+                        <a href="mailto:l@scetia.com">l@scetia.com</a>
                     </li>
                     <li>
                         <ul class="uk-flex-inline uk-padding-remove l-social">
                             <li>
-                                <a href="" class="uk-icon" uk-icon="twitter"></a>
+                                <a href="mailto:l@scetia.com" class="uk-icon" uk-icon="mail"></a>
                             </li>
                             <li>
-                                <a href="" class="uk-icon" uk-icon="facebook"></a>
-                            </li>
-                            <li>
-                                <a href="" class="uk-icon" uk-icon="google-plus"></a>
+                                <a href="" class="uk-icon" uk-icon="github"></a>
                             </li>
                         </ul>
                     </li>
@@ -58,7 +54,7 @@
         <hr class="uk-visible@m l-footer-deliver">
         <div class="uk-grid">
             <div class="uk-width-1-1@s uk-width-1-2@m l-copyright uk-row-first">
-                Copyright © 2018 L-Blog. All rights reserved.
+                Copyright © 2018 L-{{ None|fmtLabel("logo") }}. Powered by Uikit3
             </div>
             <div class="uk-width-1-1@s uk-width-1-2@m">
                 <ul class="uk-list">
