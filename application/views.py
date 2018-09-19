@@ -369,19 +369,6 @@ class BlogDetail(web.View):
             blog["markDownedContent"], blog["toc"] = mdToHtml(
                 blog.get("content"))
 
-            #browse count
-            session = await get_session(self.request)
-            uid = session.get("uid")
-            if uid and blog.get("user_id") != uid:
-                readBeginTime = session.get(blogId)
-                if readBeginTime:
-                    if datetime.now().timestamp() - readBeginTime > 1 * 60:
-                        i = await exeNonQuery("update `blogs` set `browse_count` = `browse_count` + 1 where `id` = %s", blogId)
-                        if 1 == i:
-                            session[blogId] = datetime.now().timestamp()
-                else:
-                    session[blogId] = datetime.now().timestamp()
-
             #blog tags str
             blog["tagsStr"] = blog.get("tags")
 
@@ -404,6 +391,16 @@ class BlogDetail(web.View):
         #blog
         blog = await self.get_blog_cache(name_en)
         if blog:
+
+            #article read count
+            session = await get_session(self.request)
+            uid = session.get("uid")
+            if blog.get("user_id") != uid:
+                readBeginTime = session.get(blog.get("id"))
+                if not readBeginTime or datetime.now().timestamp() - readBeginTime > 30 * 60:
+                    i = await exeNonQuery("update `blogs` set `browse_count` = `browse_count` + 1 where `id` = %s", blog.get("id"))
+                    if 1 == i:
+                        session[blog.get("id")] = datetime.now().timestamp()
 
             #comments
             comments = await select("""
