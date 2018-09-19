@@ -393,14 +393,19 @@ class BlogDetail(web.View):
         if blog:
 
             #article read count
+            currentbrowse_count = 0
             session = await get_session(self.request)
             uid = session.get("uid")
             if blog.get("user_id") != uid:
                 readBeginTime = session.get(blog.get("id"))
-                if not readBeginTime or datetime.now().timestamp() - readBeginTime > 30 * 60:
+                if not readBeginTime or datetime.now().timestamp() - readBeginTime > 40 * 60:
                     i = await exeNonQuery("update `blogs` set `browse_count` = `browse_count` + 1 where `id` = %s", blog.get("id"))
                     if 1 == i:
                         session[blog.get("id")] = datetime.now().timestamp()
+
+            #get newest browse_count
+            currentbrowse_count = await exeScalar("select `browse_count` from `blogs` where `id` = %s", blog.get("id"))
+            blog["browse_count"] = int(currentbrowse_count)
 
             #comments
             comments = await select("""

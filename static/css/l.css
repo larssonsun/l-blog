@@ -49,7 +49,7 @@ textarea {
 }
 
 #artclAndCmmDiv2 {
-    padding:20px 40px;
+    padding:30px 40px;
     margin-top:20px;
     background-color:#FFF
 }
@@ -549,9 +549,12 @@ footer .l-tel, footer .l-mail {
 }
 
 .l-reply-bar span {
-    margin-right: 15px
+    margin-right: 25px;
 }
 
+.l-reply-bar span > a {
+    font-size:17px
+}
 
 .l-sidebar-right {
     margin: 0;
@@ -742,7 +745,7 @@ footer .l-tel, footer .l-mail {
     }
     
     #artclAndCmmDiv2 {
-        padding:5px 5px;
+        padding:15px 5px;
         margin-top:5px;
         background-color:#FFF
     }
