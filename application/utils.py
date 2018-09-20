@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
+import os.path
 import re
 import smtplib
 import urllib
@@ -12,16 +13,22 @@ from threading import Thread
 
 from markdown import Markdown
 from markdown.extensions.toc import TocExtension
+from whoosh.fields import STORED, TEXT, Schema, ID
+from whoosh.index import create_in, exists_in, open_dir
+from whoosh.qparser import QueryParser
+from jieba.analyse import ChineseAnalyzer
 
-from config.settings import HASH_KEY, MAIL_SMTPCLIENT
+from config.settings import HASH_KEY, INDEX_DIR, MAIL_SMTPCLIENT
+from enum import Enum, unique
 
+analyzer = ChineseAnalyzer()
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
 
 emailRc = re.compile(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
 pwdRc = re.compile(r'^[0-9a-zA-Z\_]{6,18}$')
 userNameRc = re.compile(r'^[0-9a-zA-Z]{6,18}$')
 duplicateSqlRc = re.compile(r'[d|D]uplicate entry .+ for key .+')
-certivateMailHtml= '''
+certivateMailHtml = '''
 <div style="background-color:#bbb;padding:30px">
     <div style="padding:20px 5px">L-blog</div>
     <div style="background-color:#fff;border-top:#3F6D98 solid 8px; padding:30px">
@@ -35,6 +42,16 @@ certivateMailHtml= '''
     </div>
 </div>
 '''
+
+INDEXPREFIX="lblog_"
+
+@unique
+class WhooshSchema(Enum):
+    Blogs = Schema(
+        id=ID(unique=True, stored=True),
+        title=TEXT(analyzer=analyzer), 
+        content=TEXT(analyzer=analyzer), 
+        summary=STORED)
 
 def addDictProp(dct, newProp, prpoVal):
     dct[newProp] = prpoVal
@@ -69,7 +86,7 @@ def hash_md5(password):
 def stmp_send(toAddr, subject, html):
     msg = MIMEText(html, "HTML", "utf-8")
     msg['Subject'] = subject
-    # 这里如果不是使用SSL就是smtplib.SMTP 
+    # 这里如果不是使用SSL就是smtplib.SMTP
     smtpServ = smtplib.SMTP_SSL(
         MAIL_SMTPCLIENT['host'], port=MAIL_SMTPCLIENT['port'])
     smtpServ.set_debuglevel(-1)
@@ -83,11 +100,69 @@ def stmp_send_thread(toAddr, subject, html):
     t.start()
     return t
 
+
 def setAvatar(emailAddr):
     avatarAdmin = "/static/images/avatardemo.png"
     size = 40
     gravatar_url = "http://www.gravatar.com/avatar/{0}?"
     gravatar_url += urllib.parse.urlencode({'d': "mm", 's': str(size)})
-    if emailAddr and len(emailAddr)>0:
-        gravatar_url = gravatar_url.format(hashlib.md5(emailAddr.encode("utf-8").lower()).hexdigest())
+    if emailAddr and len(emailAddr) > 0:
+        gravatar_url = gravatar_url.format(hashlib.md5(
+            emailAddr.encode("utf-8").lower()).hexdigest())
     return dict(avatarAdmin=avatarAdmin, avatarNormal=gravatar_url)
+
+
+# def getWhoosh(indexName, searchTxt, docs=None):
+#     result = None
+#     indexPath = INDEX_DIR
+#     idxName = f'lblog_{indexName}'
+#     ext = exists_in(indexPath, indexname=idxName)
+#     idx = None
+#     if ext:
+#         idx = open_dir(indexPath, indexname=idxName)
+#     else:
+#         schema = WhooshSchema.Blogs.value
+#         idx = setWhooshIndex(indexPath, idxName, schema)
+
+#     #doc
+#     with idx.writer() as writer:#it calls commit() when the context exits
+#         with writer.group():
+#             for dct in docs:
+#                 writer.update_document(**dct)
+
+#     # search
+#     with idx.searcher() as searcher:
+#         parser = QueryParser("title", idx.schema)
+#         query = parser.parse(str(searchTxt))
+#         result = searcher.search(query)
+    
+#     return result
+
+def getBlogSearch(partten):
+    indexPath = INDEX_DIR
+    idx = open_dir(indexPath, indexname=f'{INDEXPREFIX}blog')
+    with idx.searcher() as searcher:
+        parser = QueryParser("title", idx.schema)
+        query = parser.parse(str(partten))
+        result = searcher.search(query)
+    return result
+
+def setBlogSearch(blogDocs):
+    schema = WhooshSchema.Blogs.value
+    idx = setWhooshIndex("blog", schema)
+    setWhooshDoc(idx, blogDocs)
+
+def setWhooshIndex(indexName, schema):
+    indexPath = INDEX_DIR
+    idxName = f'{INDEXPREFIX}{indexName}'
+    if not os.path.exists(indexPath):
+        os.mkdir(indexPath)
+    idx = create_in(indexPath, schema, indexname=idxName)
+            
+    return idx
+
+def setWhooshDoc(idx, docs):
+    with idx.writer() as writer:#it calls commit() when the context exits
+        with writer.group():
+            for dct in docs:
+                writer.update_document(**dct)

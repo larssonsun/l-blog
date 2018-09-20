@@ -39,8 +39,6 @@ $(document).ready(function () {
         }
     }
 
-    //----------------评论----------------
-
     var showMsg = function (msg, status, callbackFn) {
 
         var iconStr = status == "danger" ? "<span uk-icon='icon: warning'></span> " :
@@ -56,6 +54,8 @@ $(document).ready(function () {
         }
         $(".uk-notification-message").removeClass("l-notification").addClass("l-notification");
     }
+
+    //----------------评论----------------
 
     var showCmmForBlog = function () {
         $("#artclAndCmmDiv2").append($("#sendCommentFrm"));
@@ -413,6 +413,28 @@ $(document).ready(function () {
                 approveBttn.removeAttr("disabled");
             });
 
+    });
+
+    //----------------全文搜索----------------
+
+    var fullSiteSearch = function(){
+        frm = $("#fullSiteSearch");
+        ipt = $(frm).find("input")[0];
+        keywords = $(ipt).val()
+        if(keywords.length > 0)
+            frm.submit();
+        else
+            showMsg("请输入查询关键字", "warning");
+        return false;
+    }
+
+    $("#fullSiteSearchBttn").click(fullSiteSearch);
+
+    $("#fullSiteSearchIpt").keypress(function(e) {
+        if (e.which == 13) {
+            fullSiteSearch();
+            return false;
+        }
     });
 
 });

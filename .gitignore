@@ -1,4 +1,5 @@
 __pycache__/
 /config/settings.py
+/static/index/
 test/
 env/

@@ -52,9 +52,9 @@
                                 {% if app.l_data %}
                                 <li>
                                     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1 l-context-search">
-                                        <form class="uk-search uk-search-default">
-                                            <a href="" class="uk-search-icon-flip" uk-search-icon></a>
-                                            <input class="uk-input uk-form-width-smal" type="search" placeholder="站内搜索">
+                                        <form id="fullSiteSearch" class="uk-search uk-search-default" method="post" action="{{ url('full-size-search') }}">
+                                            <a id="fullSiteSearchBttn" href="" class="uk-search-icon-flip" uk-search-icon></a>
+                                            <input id="fullSiteSearchIpt" class="uk-input uk-form-width-smal" name="search" type="search" placeholder="站内搜索">
                                         </form>
                                     </div>
                                 </li>

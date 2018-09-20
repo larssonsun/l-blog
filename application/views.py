@@ -16,8 +16,9 @@ from aiohttp import web
 from aiohttp_session import get_session
 
 from application.utils import (addDictProp, certivateMailHtml, duplicateSqlRc,
-                               emailRc, hash_md5, mdToHtml, pwdRc, rtData,
-                               setAvatar, stmp_send_thread, userNameRc)
+                               emailRc, getBlogSearch, hash_md5, mdToHtml,
+                               pwdRc, rtData, setAvatar, setBlogSearch,
+                               stmp_send_thread, userNameRc)
 from models.db import (exeNonQuery, exeScalar, expert_cache, get_cache,
                        get_cache_ttl, select, set_cache)
 
@@ -134,14 +135,8 @@ class Logout(web.View):
         session = await get_session(self.request)
         if session:
             session.clear()
-        headers = self.request.headers
-        host = headers.get("host")
-        referer = headers.get("Referer")
-        if referer:
-            referPath = referer.split(host)[-1]
-        else:
-            referPath = "/"
-        return web.Response(status=302, headers={"location": referPath})
+        location = self.request.app.router["Index"].url_for()
+        return web.HTTPFound(location=location)
 
 
 class Login(web.View):
@@ -542,3 +537,26 @@ class Archive(web.View):
         catelogs = await select("select `id`, `catelog_name`, `blog_count` as `bct` from `catelog` where `blog_count` > 0 order by `id`")
 
         return aiohttp_jinja2.render_template("archive.html", self.request, locals())
+
+
+class FullSiteSearch(web.View):
+    dctTuple = (dict(
+        id="cd4fff43-9ad9-42d9-a286-ca4538728b7a",
+        title=u"aiohttp 部署 Nginx + supervisord",
+        content=u"将aiohttp服务器组运行在nginx之后有好多好处。首先，nginx是个很好的前端服务器。它可以预防很多攻击如格式错误的http协议的攻击。第二，部署nginx后可以同时运行多个aiohttp实例，这样可以有效利用CPU。最后，nginx提供的静态文件服务器要比aiohttp内置的静态文件支持快",
+        summary="将aiohttp服务器组运行在nginx之后有好多好处。首先，nginx是个很好的前端服务器。它可以预防很多攻击如格式错误的http协议的攻击。第二，部署nginx后可以同时运行多个aiohttp实"
+    ),
+        dict(
+        id="46a5451b-5769-4718-8981-3e3530def92b",
+        title=u"Python 切片",
+        content=u"取一个list或tuple的部分元素是非常常见的操作。这里介绍一下python的高级特性之一切",
+        summary="取一个list或tuple的部分元素是非常常见的操作。"
+    ))
+
+    @login_required(True)
+    async def post(self):
+        data = await self.request.post()
+        setBlogSearch(self.dctTuple)
+        result = getBlogSearch(data.get("search"))
+        location = self.request.app.router["Index"].url_for()
+        return web.HTTPFound(location=location)
