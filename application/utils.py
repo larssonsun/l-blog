@@ -9,17 +9,17 @@ import urllib
 import uuid
 from collections import namedtuple
 from email.mime.text import MIMEText
+from enum import Enum, unique
 from threading import Thread
 
+from jieba.analyse import ChineseAnalyzer
 from markdown import Markdown
 from markdown.extensions.toc import TocExtension
-from whoosh.fields import STORED, TEXT, Schema, ID
+from whoosh.fields import ID, STORED, TEXT, Schema
 from whoosh.index import create_in, exists_in, open_dir
-from whoosh.qparser import QueryParser
-from jieba.analyse import ChineseAnalyzer
+from whoosh.qparser import MultifieldParser
 
-from config.settings import HASH_KEY, INDEX_DIR, MAIL_SMTPCLIENT
-from enum import Enum, unique
+from config.settings import HASH_KEY, INDEX_DIR, INDEXPREFIX, MAIL_SMTPCLIENT
 
 analyzer = ChineseAnalyzer()
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
@@ -43,15 +43,16 @@ certivateMailHtml = '''
 </div>
 '''
 
-INDEXPREFIX="lblog_"
 
 @unique
 class WhooshSchema(Enum):
     Blogs = Schema(
+        # stored= meanings that result will contains this filed's content
         id=ID(unique=True, stored=True),
-        title=TEXT(analyzer=analyzer), 
-        content=TEXT(analyzer=analyzer), 
+        title=TEXT(analyzer=analyzer, stored=True),
+        content=TEXT(analyzer=analyzer, stored=True),
         summary=STORED)
+
 
 def addDictProp(dct, newProp, prpoVal):
     dct[newProp] = prpoVal
@@ -112,45 +113,29 @@ def setAvatar(emailAddr):
     return dict(avatarAdmin=avatarAdmin, avatarNormal=gravatar_url)
 
 
-# def getWhoosh(indexName, searchTxt, docs=None):
-#     result = None
-#     indexPath = INDEX_DIR
-#     idxName = f'lblog_{indexName}'
-#     ext = exists_in(indexPath, indexname=idxName)
-#     idx = None
-#     if ext:
-#         idx = open_dir(indexPath, indexname=idxName)
-#     else:
-#         schema = WhooshSchema.Blogs.value
-#         idx = setWhooshIndex(indexPath, idxName, schema)
-
-#     #doc
-#     with idx.writer() as writer:#it calls commit() when the context exits
-#         with writer.group():
-#             for dct in docs:
-#                 writer.update_document(**dct)
-
-#     # search
-#     with idx.searcher() as searcher:
-#         parser = QueryParser("title", idx.schema)
-#         query = parser.parse(str(searchTxt))
-#         result = searcher.search(query)
-    
-#     return result
-
-def getBlogSearch(partten):
+def getWhooshSearch(partten, indexNameLast, fieldList, hightlightFieldList):
+    """hightlightFieldList must be the stored fields and under analyzed"""
+    rt = []
     indexPath = INDEX_DIR
-    idx = open_dir(indexPath, indexname=f'{INDEXPREFIX}blog')
+    idx = open_dir(indexPath, indexname=f'{INDEXPREFIX}{indexNameLast}')
     with idx.searcher() as searcher:
-        parser = QueryParser("title", idx.schema)
+        parser = MultifieldParser(fieldList, idx.schema)
         query = parser.parse(str(partten))
-        result = searcher.search(query)
-    return result
+        results = searcher.search(query)
+        for hit in results:
+            rt.append(dict(hit))
+            if hightlightFieldList:
+                for hf in hightlightFieldList:
+                    rt[-1][hf] = hit.highlights(hf)
 
-def setBlogSearch(blogDocs):
-    schema = WhooshSchema.Blogs.value
-    idx = setWhooshIndex("blog", schema)
-    setWhooshDoc(idx, blogDocs)
+    return rt
+
+
+def setWhooshSearch(indexNameLast, WhooshSchema, docs):
+        schema = WhooshSchema.value
+        idx = setWhooshIndex(indexNameLast, schema)
+        setWhooshDoc(idx, docs)
+
 
 def setWhooshIndex(indexName, schema):
     indexPath = INDEX_DIR
@@ -158,11 +143,12 @@ def setWhooshIndex(indexName, schema):
     if not os.path.exists(indexPath):
         os.mkdir(indexPath)
     idx = create_in(indexPath, schema, indexname=idxName)
-            
+
     return idx
 
+
 def setWhooshDoc(idx, docs):
-    with idx.writer() as writer:#it calls commit() when the context exits
+    with idx.writer() as writer:  # it calls commit() when the context exits
         with writer.group():
             for dct in docs:
                 writer.update_document(**dct)

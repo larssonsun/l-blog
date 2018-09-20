@@ -15,10 +15,10 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
 
-from application.utils import (addDictProp, certivateMailHtml, duplicateSqlRc,
-                               emailRc, getBlogSearch, hash_md5, mdToHtml,
-                               pwdRc, rtData, setAvatar, setBlogSearch,
-                               stmp_send_thread, userNameRc)
+from application.utils import (WhooshSchema, addDictProp, certivateMailHtml,
+                               duplicateSqlRc, emailRc, getWhooshSearch,
+                               hash_md5, mdToHtml, pwdRc, rtData, setAvatar,
+                               setWhooshSearch, stmp_send_thread, userNameRc)
 from models.db import (exeNonQuery, exeScalar, expert_cache, get_cache,
                        get_cache_ttl, select, set_cache)
 
@@ -549,14 +549,24 @@ class FullSiteSearch(web.View):
         dict(
         id="46a5451b-5769-4718-8981-3e3530def92b",
         title=u"Python 切片",
-        content=u"取一个list或tuple的部分元素是非常常见的操作。这里介绍一下python的高级特性之一切",
+        content=u"取一个list或tuple的部分元素是非常常见的操作。这里介绍一下python的高级特性之aiohttp一切",
         summary="取一个list或tuple的部分元素是非常常见的操作。"
     ))
+
+    def getBlogSearch(self, partten):
+        return getWhooshSearch(partten, "blog", ["title", "content"], ["title", "content"])
+
+    def setBlogSearch(self):
+        setWhooshSearch("blog", WhooshSchema.Blogs, self.dctTuple)
 
     @login_required(True)
     async def post(self):
         data = await self.request.post()
-        setBlogSearch(self.dctTuple)
-        result = getBlogSearch(data.get("search"))
+        self.setBlogSearch()
+        results = self.getBlogSearch(data.get("search"))
+        if results:
+            for hit in results:
+                print(hit)
+
         location = self.request.app.router["Index"].url_for()
         return web.HTTPFound(location=location)
