@@ -14,10 +14,12 @@ from utils import hash_sha256
 from main.views import (AddComment, Approve, Archive, BlogDetail,
                                DelComment, Index, Login, Logout, Registe,
                                hello, FullSiteSearch)
+from admin.views import ResetBlogIndex
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 
 
 def setupRoutes(app):
+    #main
     app.router.add_view("/hello", hello, name="Hello")
     app.router.add_view("/", Index, name="Index")
     app.router.add_view("/" + "{type:[hot|time]+}/", Index, name="index_sort")
@@ -35,6 +37,8 @@ def setupRoutes(app):
     app.router.add_view("/registe/" + r"{approvedKey:\w{32}}/", Registe, name="registe_confirm")
     app.router.add_view("/approve/", Approve, name="approve")
     app.router.add_view("/fullsitesearch/", FullSiteSearch, name="full-size-search")
+    #admin
+    app.router.add_view("/admin/resetindex/", ResetBlogIndex, name="admin-resetindex")
     
     
 
