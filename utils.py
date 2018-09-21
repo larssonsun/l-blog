@@ -126,7 +126,7 @@ def getWhooshSearch(partten, indexNameLast, fieldList, hightlightFieldList):
             rt.append(dict(hit))
             if hightlightFieldList:
                 for hf in hightlightFieldList:
-                    hl = hit.highlights(hf)
+                    hl = hit.highlights(hf)# Assume hf field is stored
                     rt[-1][hf] = hl if hl and len(hl)>0 else rt[-1][hf]
 
     return rt
