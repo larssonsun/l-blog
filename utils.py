@@ -15,8 +15,8 @@ from threading import Thread
 from jieba.analyse import ChineseAnalyzer
 from markdown import Markdown
 from markdown.extensions.toc import TocExtension
-from whoosh.fields import ID, STORED, TEXT, Schema
-from whoosh.index import create_in, exists_in, open_dir
+from whoosh.fields import ID, STORED, TEXT, Schema, NUMERIC
+from whoosh.index import create_in, exists_in, open_dir, exists_in
 from whoosh.qparser import MultifieldParser
 
 from config.settings import HASH_KEY, INDEX_DIR, INDEXPREFIX, MAIL_SMTPCLIENT
@@ -49,6 +49,7 @@ class WhooshSchema(Enum):
     Blogs = Schema(
         # stored= meanings that result will contains this filed's content
         id=ID(unique=True, stored=True),
+        createtime=NUMERIC(stored=True),
         title=TEXT(analyzer=analyzer, stored=True),
         content=TEXT(analyzer=analyzer, stored=True))
         # summary=STORED)
@@ -117,17 +118,20 @@ def getWhooshSearch(partten, indexNameLast, fieldList, hightlightFieldList):
     """hightlightFieldList must be the stored fields and under analyzed"""
     rt = []
     indexPath = INDEX_DIR
-    idx = open_dir(indexPath, indexname=f'{INDEXPREFIX}{indexNameLast}')
-    with idx.searcher() as searcher:
-        parser = MultifieldParser(fieldList, idx.schema)
-        query = parser.parse(str(partten))
-        results = searcher.search(query)
-        for hit in results:
-            rt.append(dict(hit))
-            if hightlightFieldList:
-                for hf in hightlightFieldList:
-                    hl = hit.highlights(hf)# Assume hf field is stored
-                    rt[-1][hf] = hl if hl and len(hl)>0 else rt[-1][hf]
+    if not exists_in(indexPath, indexname=f'{INDEXPREFIX}{indexNameLast}'):
+        pass
+    else:
+        idx = open_dir(indexPath, indexname=f'{INDEXPREFIX}{indexNameLast}')
+        with idx.searcher() as searcher:
+            parser = MultifieldParser(fieldList, idx.schema)
+            query = parser.parse(str(partten))
+            results = searcher.search(query)
+            for hit in results:
+                rt.append(dict(hit))
+                if hightlightFieldList:
+                    for hf in hightlightFieldList:
+                        hl = hit.highlights(hf)# Assume hf field is stored
+                        rt[-1][hf] = hl if hl and len(hl)>0 else rt[-1][hf]
 
     return rt
 

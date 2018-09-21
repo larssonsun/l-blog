@@ -116,6 +116,9 @@ def fmtMonthDateFromFloat(flt):
     if isinstance(flt, float):
         return datetime.fromtimestamp(flt).strftime("%m-%d")
 
+def fmtYearMonthDateFromFloat(flt):
+    if isinstance(flt, float):
+        return datetime.fromtimestamp(flt).strftime("%Y-%m-%d")
 
 def fmtLabel(content, typeName, *contentY):
     do = SWITCH_i18n.get(typeName)
@@ -179,7 +182,7 @@ def getArticalFull(content, **kw):
         return content
 
 
-# def getCommentForComments(cfcsList, commentId):
-#     rtList = [cfc if cfc.get("parent_comment_id") ==
-#               commentId else None for cfc in cfcsList]
-#     return filter(lambda x: x, rtList)
+def getCommentForComments(cfcsList, commentId):
+    rtList = [cfc if cfc.get("parent_comment_id") ==
+              commentId else None for cfc in cfcsList]
+    return filter(lambda x: x, rtList)

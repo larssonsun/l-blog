@@ -541,22 +541,24 @@ class Archive(web.View):
 
 class FullSiteSearch(web.View):
 
-    def getBlogSearch(self, partten):
-        return getWhooshSearch(partten, "blog", ["title", "content"], ["title", "content"])
-
     @login_required(True)
     @basePageInfo
     async def post(self):
         vm = {}
         vm["results"] = []
         data = await self.request.post()
-        vm["keywords"] = data.get("search")
-        results = self.getBlogSearch(data.get("search"))
+        partten = data.get("search")
+        if partten and len(partten) > 20:
+            partten = partten[:20]
+        vm["keywords"] = partten
+        results = getWhooshSearch(
+            partten, "blog", ["title", "content"], ["title", "content"])
+        vm["bct"] = 0
         if results:
-            vm["bct"]=len(results)
+            vm["bct"] = len(results)
             for hit in results:
-               vm["results"].append(hit) 
-               
+               vm["results"].append(hit)
+
         #tags
         tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
 
