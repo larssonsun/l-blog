@@ -31,7 +31,7 @@ def basePageInfo(func):
     """This function applies only to class views."""
     @wraps(func)
     async def wrapper(cls, *args, **kw):
-        # do not know how to replace last 3 sentence with one
+        # do not know how to replace after 3 sentence with one
         curr = re.sub("hot", "", cls.request.path)
         curr = re.sub("time", "", curr)
         curr = re.sub("/*", "", curr)
@@ -56,7 +56,7 @@ def login_required(*a):
             uid = session.get("uid")
             if uid:
                 user = await select("""
-                select a.`id`, a.`name`, a.`email`, count(b.id) as 'cmm_ct' from `users` a 
+                select a.`id`, a.`name`, a.`email`, count(b.id) as 'cmm_ct', a.`admin`from `users` a 
                 inner join `comments` b on a.`id` = b.`user_id` and b.`hide_status`= 0
                 where a.`id`= %s
                 group by a.`id`, a.`name`, a.`email`

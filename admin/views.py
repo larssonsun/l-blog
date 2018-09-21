@@ -7,9 +7,26 @@ from functools import wraps
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
-
+from main.views import login_required
 from utils import setWhooshSearch, WhooshSchema
 from models.db import select
+
+def admin_required(func):
+    """This function applies only to class views."""
+    @wraps(func)
+    async def wrapper(cls, *args, **kw):
+        location = cls.request.app.router["Index"].url_for()
+        session = await get_session(cls.request)
+        uid = session.get("uid")
+        user = cls.request.app.l_data
+        if uid and user:
+            if user.get("admin")==1:
+                return await func(cls, *args, **kw)
+            else:
+                return web.HTTPFound(location=location)
+        else:
+            return web.HTTPFound(location=location)
+    return wrapper
 
 class ResetBlogIndex(web.View):
     dctTuple = (dict(
@@ -28,6 +45,7 @@ class ResetBlogIndex(web.View):
     def setBlogSearch(self):
         setWhooshSearch("blog", WhooshSchema.Blogs, self.dctTuple)
 
-    # @login_required(True)
+    @login_required(True)
+    @admin_required
     async def post(self):
         self.setBlogSearch()
