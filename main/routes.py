@@ -9,9 +9,9 @@ from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
-from application import filters
-from application.utils import hash_sha256
-from application.views import (AddComment, Approve, Archive, BlogDetail,
+from main import filters
+from utils import hash_sha256
+from main.views import (AddComment, Approve, Archive, BlogDetail,
                                DelComment, Index, Login, Logout, Registe,
                                hello, FullSiteSearch)
 from config.settings import STATIC_DIR, TEMPLATE_DIR

@@ -8,8 +8,8 @@ import logging
 
 from aiohttp import web
 
-from application.middlewares import setup_middlewares
-from application.routes import (setupRoutes, setupSession, setupStaticRoutes,
+from main.middlewares import setup_middlewares
+from main.routes import (setupRoutes, setupSession, setupStaticRoutes,
                                 setupTemplateRoutes)
 from models.db import create_cache, create_pool, create_redis_pool
 

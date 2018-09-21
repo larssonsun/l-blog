@@ -50,8 +50,8 @@ class WhooshSchema(Enum):
         # stored= meanings that result will contains this filed's content
         id=ID(unique=True, stored=True),
         title=TEXT(analyzer=analyzer, stored=True),
-        content=TEXT(analyzer=analyzer, stored=True),
-        summary=STORED)
+        content=TEXT(analyzer=analyzer, stored=True))
+        # summary=STORED)
 
 
 def addDictProp(dct, newProp, prpoVal):
@@ -126,7 +126,8 @@ def getWhooshSearch(partten, indexNameLast, fieldList, hightlightFieldList):
             rt.append(dict(hit))
             if hightlightFieldList:
                 for hf in hightlightFieldList:
-                    rt[-1][hf] = hit.highlights(hf)
+                    hl = hit.highlights(hf)
+                    rt[-1][hf] = hl if hl and len(hl)>0 else rt[-1][hf]
 
     return rt
 

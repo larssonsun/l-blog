@@ -3,7 +3,7 @@
 
 import aiohttp_jinja2
 from aiohttp import web
-from application.filters import fmtLabel
+from main.filters import fmtLabel
 import logging
 
 # logging.basicConfig(level=logging.ERROR)
