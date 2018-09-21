@@ -545,12 +545,22 @@ class FullSiteSearch(web.View):
         return getWhooshSearch(partten, "blog", ["title", "content"], ["title", "content"])
 
     @login_required(True)
+    @basePageInfo
     async def post(self):
+        vm = {}
+        vm["results"] = []
         data = await self.request.post()
+        vm["keywords"] = data.get("search")
         results = self.getBlogSearch(data.get("search"))
         if results:
+            vm["bct"]=len(results)
             for hit in results:
-                print(hit)
+               vm["results"].append(hit) 
+               
+        #tags
+        tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
 
-        location = self.request.app.router["Index"].url_for()
-        return web.HTTPFound(location=location)
+        #catelogs
+        catelogs = await select("select `id`, `catelog_name`, `blog_count` as `bct` from `catelog` where `blog_count` > 0 order by `id`")
+
+        return aiohttp_jinja2.render_template("searchResult.html", self.request, locals())

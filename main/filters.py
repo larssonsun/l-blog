@@ -30,6 +30,10 @@ SWITCH_i18n = dict(
     archive_discrib=lambda x: "博客归档，按年、月对博客进行分类、归档、排序",
     archive_keywords=lambda x: "博客归档",
     archive_menu_href=lambda x: "归档",
+    search_result_title=lambda x: "搜索结果",
+    search_result_keywords=lambda x: "python,全文搜索,whoosh+jieba基本使用",
+    search_result_discrib=lambda x: "本博客使用whoosh+jieba对博客的标题，内容进行分词存储，然后给每个分词建立索引。搜索时返回标题或者内容中包含目标关键字的博客。",
+    search_result_label=lambda x: "当前搜索：",
     login_menu_href=lambda x: "登录",
     login_cencel=lambda x: "取消",
     login_ifforgetpwd=lambda x: "忘记密码?",
@@ -74,6 +78,8 @@ class CommHideStatus(Enum):
     HideByAdmin = 1
     HideBySelf = 2
 
+def converWith3dot(content):
+    return f"...{content}..."
 
 def fmtGetHideInfo(content, hideType):
     if hideType == CommHideStatus.HideByAdmin.value:
@@ -173,7 +179,7 @@ def getArticalFull(content, **kw):
         return content
 
 
-def getCommentForComments(cfcsList, commentId):
-    rtList = [cfc if cfc.get("parent_comment_id") ==
-              commentId else None for cfc in cfcsList]
-    return filter(lambda x: x, rtList)
+# def getCommentForComments(cfcsList, commentId):
+#     rtList = [cfc if cfc.get("parent_comment_id") ==
+#               commentId else None for cfc in cfcsList]
+#     return filter(lambda x: x, rtList)

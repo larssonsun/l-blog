@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import "_marcos.html" as mcs %}
+
+{% block title %}{{ None|fmtLabel('search_result_title') }}{% endblock %}
+
+{% block description %}{{ None|fmtLabel('search_result_discrib') }}{% endblock %}
+{% block keywords %}{{ None|fmtLabel('search_result_keywords') }}{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-small l-background-color">
+    <div class="uk-container">
+        <div class="uk-grid uk-margin-remove-left">
+            <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove">
+                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel('search_result_label')) }}
+                {{ mcs.filterBar(None|fmtLabel('search_result_label') + vm.keywords, None|fmtLabel('search_result_discrib'), vm.bct) }}
+                <div class="uk-box-shadow uk-box-shadow-large l-searchresult-item">
+                    <dl class="uk-description-list uk-description-list-divider">
+                        {% if not vm.results or (vm.results|length)==0 %}
+                        <span>暂无文章符合条件。</span>
+                        {% else %}
+                        {% for result in vm.results %}
+                        <dt><a href="{{ url('BlogDetail', id=result.id) }}">{{ result.title|safe }}</a></dt>
+                        <dd>{{ result.content|converWith3dot|safe }}</dd>
+                        {% endfor %}
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+            <div class="uk-width-1-4@l uk-visible@l l-rightSideBar">
+                {% include "_tagsform.html" %}
+                {% include "_catelogform.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

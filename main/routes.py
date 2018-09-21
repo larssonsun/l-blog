@@ -52,13 +52,14 @@ def setupTemplateRoutes(app):
         "fmtCatelog" : filters.fmtCatelog,
         "fmtDatetimeFromFloat" : filters.fmtDatetimeFromFloat,
         "fmtMonthDateFromFloat" : filters.fmtMonthDateFromFloat,
-        "getCommentForComments" : filters.getCommentForComments,
+        # "getCommentForComments" : filters.getCommentForComments,
         "getArticalLead" : filters.getArticalLead,
         "getArticalMain" : filters.getArticalMain,
         "getArticalFull" : filters.getArticalFull,
         "fmtgetTitleImg" : filters.fmtgetTitleImg,
         "fmtGetHideInfo" : filters.fmtGetHideInfo,
-        "fmtGetHideClass": filters.fmtGetHideClass},
+        "fmtGetHideClass": filters.fmtGetHideClass,
+        "converWith3dot" :filters.converWith3dot},
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR))
 
 def setupSession(app, redis_pool):

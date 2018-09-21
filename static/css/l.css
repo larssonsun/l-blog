@@ -115,6 +115,16 @@ textarea {
     color:#000
 }
 
+.l-searchresult-item {
+    background-color:#fff;
+    padding:40px;
+    margin-top:20px
+}
+
+.l-searchresult-item .match {
+    background-color:#ffc400;
+}
+
 li.l-active>a>span {
     color: #3895F2;
 }
