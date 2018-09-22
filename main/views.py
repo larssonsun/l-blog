@@ -57,7 +57,7 @@ def login_required(*a):
             if uid:
                 user = await select("""
                 select a.`id`, a.`name`, a.`email`, count(b.id) as 'cmm_ct', a.`admin`from `users` a 
-                inner join `comments` b on a.`id` = b.`user_id` and b.`hide_status`= 0
+                left join `comments` b on a.`id` = b.`user_id` and b.`hide_status`= 0
                 where a.`id`= %s
                 group by a.`id`, a.`name`, a.`email`
                 """, uid)
