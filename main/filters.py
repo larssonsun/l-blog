@@ -53,7 +53,7 @@ SWITCH_i18n = dict(
     comment_count=lambda x: f"评论 {x}",
     comment_count_t2=lambda x: f"评论次数 {x}",
     comment_count_right=lambda x: f"{x} 条评论",
-    comment_need_log=lambda x, y, z: f"请先{y}或{z}，以便进行回复",
+    comment_need_log=lambda x, y, z: f"请先{y}或{z}，以便进行评论",
     reply=lambda x: "回复",
     user_reply_count=lambda x: "回复数",
     operate_reply=lambda x, y: "删除" if y==0 else "恢复",
@@ -95,11 +95,11 @@ def limitCmmLength(content, limitLen, hideType, therest=False):
 
 def fmtGetHideInfo(content, hideType):
     if hideType == CommHideStatus.HideByAdmin.value:
-        return "(此回复已由管理员删除)"
+        return "(此评论已由管理员删除)"
     elif hideType == CommHideStatus.HideBySelf.value:
-        return "(此回复已由本人删除)"
+        return "(此评论已由本人删除)"
     elif hideType == CommHideStatus.HideBySystem.value:
-        return "(回复已提交，请等待管理员审核)"
+        return "(评论已提交，请等待管理员审核)"
     else:
         return content
 

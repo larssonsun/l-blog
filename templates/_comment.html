@@ -24,7 +24,7 @@
                                 <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
                             </a>
                             {% endif %}
-                            {% if comment.hide_status in (0, 1, 2) and app.l_data and comment.user_name == app.l_data.name %}
+                            {% if comment.hide_status in (0, 1, 2) and app.l_data and (comment.user_name == app.l_data.name or app.l_data.admin) %}
                             <a class="l-comment-button-delete" data-cmm-id="{{ comment.id }}"  
                                 data-cmm-hide-status="{{ comment.hide_status }}" url-del-cmm="{{ url('delete-comment') }}">
                                 <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
@@ -62,7 +62,7 @@
                                 <h4 class="uk-comment-title uk-margin-remove l-comment-title">
                                     <a class="uk-link-reset" href="#">{{ cfc.user_name }}</a>
                                     {% if cfc.admintag %}
-                                    <span class="uk-label">博主</span>
+                                    <span class="uk-label">{{ None|fmtLabel("blog_master") }}</span>
                                     {% endif %}
                                     {% if cfc.to_userName %}
                                     <span>{{ None|fmtLabel('reply') }}</span>
@@ -78,7 +78,7 @@
                                         <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
                                     </a>
                                     {% endif %}
-                                    {% if cfc.hide_status in (0, 1, 2) and app.l_data and comment.user_name == app.l_data.name %}
+                                    {% if cfc.hide_status in (0, 1, 2) and app.l_data and (cfc.user_name == app.l_data.name  or app.l_data.admin) %}
                                     <a class="l-comment-button-delete" data-cmm-id="{{ cfc.id }}" data-cmm-hide-status="{{ cfc.hide_status }}"
                                         url-del-cmm="{{ url('delete-comment') }}">
                                         <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
@@ -89,7 +89,7 @@
                             </div>
                         </div>
                     </header>
-                    <div class="uk-cfc-body l-cfc-body">
+                    <div class="uk-comment-body l-comment-body">
                         <p l-field-cmmContent class="{{ cfc.hide_status|fmtGetHideClass() }}">
                             <span>{{ cfc.content|limitCmmLength(commentContentMaxLeng,
                                 cfc.hide_status)|fmtGetHideInfo(cfc.hide_status) }}</span>{%
