@@ -19,6 +19,9 @@ CATLOG_TOOTIP = dict(
     original="原创",
     transfer="转帖")
 SWITCH_i18n = dict(
+    words_please=lambda x: "请",
+    words_or=lambda x: "或者",
+    words_forSendCmm=lambda x: "以便发表评论",
     blog_master=lambda x: "博主",
     default_meta_desctiption=lambda x: "本博客基于协程, 涉及python asyncio标准库、 aiohttp异步http框架等后端技术，前端使用Uikit3进行构建。不断完善中。",
     default_meta_keywords=lambda x: "l-blog,各人博客,web开发,python开发,python自学",
@@ -50,6 +53,7 @@ SWITCH_i18n = dict(
     comment_count=lambda x: f"评论 {x}",
     comment_count_t2=lambda x: f"评论次数 {x}",
     comment_count_right=lambda x: f"{x} 条评论",
+    comment_need_log=lambda x, y, z: f"请先{y}或{z}，以便进行回复",
     reply=lambda x: "回复",
     user_reply_count=lambda x: "回复数",
     operate_reply=lambda x, y: "删除" if y==0 else "恢复",
@@ -130,12 +134,12 @@ def fmtYearMonthDateFromFloat(flt):
     if isinstance(flt, float):
         return datetime.fromtimestamp(flt).strftime("%Y-%m-%d")
 
-def fmtLabel(content, typeName, *contentY):
+def fmtLabel(content, typeName, *parm):
     do = SWITCH_i18n.get(typeName)
     if not do:
         return content
     else:
-        return do(content, contentY[0]) if contentY else do(content)
+        return do(content, *parm) if parm else do(content)
 
 
 def fmtgetTitleImg(content, typeName):

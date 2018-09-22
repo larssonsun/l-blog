@@ -17,14 +17,14 @@
                         <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
                             <a l-field-cmmNo class="uk-link-reset" href="#">{{ cmmNo.send(None) }}</a>
                             <a l-field-createdAt class="uk-link-reset" href="#">{{ comment.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
-                            {% if comment.hide_status in (0,) %}
+                            {% if comment.hide_status in (0,) and app.l_data%}
                             <a l-field-cmmId class="l-comment-button" data-ForCommId="{{ comment.id }}"
                                 data-to-cmm-username="{{ comment.user_name }}" href="">
                                 <span class="uk-padding-remove" uk-icon="icon: reply; ratio: 0.7"></span>
                                 <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
                             </a>
                             {% endif %}
-                            {% if comment.hide_status in (0, 1, 2) %}
+                            {% if comment.hide_status in (0, 1, 2) and app.l_data and comment.user_name == app.l_data.name %}
                             <a class="l-comment-button-delete" data-cmm-id="{{ comment.id }}"  
                                 data-cmm-hide-status="{{ comment.hide_status }}" url-del-cmm="{{ url('delete-comment') }}">
                                 <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
@@ -71,14 +71,14 @@
                                 </h4>
                                 <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
                                     <a class="uk-link-reset" href="#">{{ cfc.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
-                                    {% if cfc.hide_status in (0,) %}
+                                    {% if cfc.hide_status in (0,) and app.l_data %}
                                     <a class="l-comment-button l-comment-button-chd" 
                                         data-ForCommId="{{ comment.id }}" data-isLevelCmm="1" data-to-cmm-username="{{ cfc.user_name }}" href="#">
                                         <span class="uk-padding-remove" uk-icon="icon: reply; ratio: 0.7"></span>
                                         <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
                                     </a>
                                     {% endif %}
-                                    {% if cfc.hide_status in (0, 1, 2) %}
+                                    {% if cfc.hide_status in (0, 1, 2) and app.l_data and comment.user_name == app.l_data.name %}
                                     <a class="l-comment-button-delete" data-cmm-id="{{ cfc.id }}" data-cmm-hide-status="{{ cfc.hide_status }}"
                                         url-del-cmm="{{ url('delete-comment') }}">
                                         <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
@@ -112,10 +112,11 @@
 </ul>
 <div id="sendCommentFrm" class="uk-form uk-box-shadow-small l-form">
     <fieldset class="uk-fieldset">
+        {% if app.l_data %}
         <legend class="uk-legend">{{ None|fmtLabel('send_reply') }}</legend>
         <div class="uk-margin">
             <div class="uk-margin">
-                <textarea id="sendCommentTa" class="uk-textarea l-textarea" rows="5" placeholder="{{ None|fmtLabel('content') }}"></textarea>
+                <textarea id="sendCommentTa" class="uk-textarea" rows="5" placeholder="{{ None|fmtLabel('content') }}"></textarea>
             </div>
         </div>
         <div class="uk-margin">
@@ -123,5 +124,11 @@
                 data-blog-id="{{ blog.id }}" data-blog-username="{{ blog.user_name }}" url-send-cmm="{{ url('add-comment') }}" >{{ None|fmtLabel("reply") }}</button>
             <button class="uk-button uk-button-default uk-button-small l-form-Cmm-BlogCancel">{{ None|fmtLabel("cancel") }}</button>
         </div>
+        {% else %}
+        <div class="uk-flex uk-flex-middle uk-flex-center l-form-custom">
+            <p class="uk-margin-remove uk-padding-large">{{ None|fmtLabel("words_please") }}<a href="#loginModel" uk-toggle>{{ None|fmtLabel("login_menu_href") }}</a>{{
+                None|fmtLabel("words_or") }}<a href="#registeModel" uk-toggle>{{ None|fmtLabel("registe_menu_href") }}</a>{{ None|fmtLabel("words_forSendCmm") }}</p>
+        </div>
+        {% endif %}
     </fieldset>
 </div> 

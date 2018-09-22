@@ -345,7 +345,7 @@ div.l-bottom-bar a {
 .l-form {
     margin-top: 60px;
     padding: 20px 20px;
-    font-size: 9px;
+    font-size: 14px;
 }
 
 .l-form legend {
@@ -366,6 +366,10 @@ div.l-bottom-bar a {
 
 .l-form-Cmm legend {
     font-size: 13px
+}
+
+.l-form-custom {
+    border:dotted 1px #1E87F0
 }
 
 .l-menu-login span{
@@ -521,10 +525,6 @@ footer .l-social > li > a {
 
 footer .l-tel, footer .l-mail {
     margin-top: 5px;
-}
-
-.l-textarea {
-    font-size:14px!important
 }
 
 .l-logo {
