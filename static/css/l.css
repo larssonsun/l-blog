@@ -260,8 +260,8 @@ div.l-bottom-bar a {
 }
 
 .l-comment-body *{
-    padding:4px;
     font-size:14px;
+    margin: 0
 }
 
 .l-comment-body-banned {
@@ -521,6 +521,10 @@ footer .l-social > li > a {
 
 footer .l-tel, footer .l-mail {
     margin-top: 5px;
+}
+
+.l-textarea {
+    font-size:14px!important
 }
 
 .l-logo {

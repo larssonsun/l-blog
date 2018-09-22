@@ -17,23 +17,34 @@
                         <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
                             <a l-field-cmmNo class="uk-link-reset" href="#">{{ cmmNo.send(None) }}</a>
                             <a l-field-createdAt class="uk-link-reset" href="#">{{ comment.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
+                            {% if comment.hide_status in (0,) %}
                             <a l-field-cmmId class="l-comment-button" data-ForCommId="{{ comment.id }}"
                                 data-to-cmm-username="{{ comment.user_name }}" href="">
                                 <span class="uk-padding-remove" uk-icon="icon: reply; ratio: 0.7"></span>
                                 <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
                             </a>
+                            {% endif %}
+                            {% if comment.hide_status in (0, 1, 2) %}
                             <a class="l-comment-button-delete" data-cmm-id="{{ comment.id }}"  
                                 data-cmm-hide-status="{{ comment.hide_status }}" url-del-cmm="{{ url('delete-comment') }}">
                                 <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
                                 <span class="uk-padding-remove">{{ None|fmtLabel('operate_reply', comment.hide_status) }}</span>
                             </a>
+                            {% endif %}
                         </p>
                     </div>
                 </div>
                 <hr>
             </header>
             <div class="uk-comment-body l-comment-body">
-                <p l-field-cmmContent class="{{ comment.hide_status|fmtGetHideClass() }}">{{ comment.content|fmtGetHideInfo(comment.hide_status) }}</p>
+                <p l-field-cmmContent class="{{ comment.hide_status|fmtGetHideClass() }}">
+                    <span>{{ comment.content|limitCmmLength(commentContentMaxLeng, comment.hide_status)|fmtGetHideInfo(comment.hide_status) }}</span>{%
+                    if comment.content|length > commentContentMaxLeng and comment.hide_status==0 %}<span class="toggle" hidden>{{
+                        comment.content|limitCmmLength(commentContentMaxLeng, comment.hide_status, therest=True)|fmtGetHideInfo(comment.hide_status) }}</span>
+                    <a class="toggle" href="" onclick="return false"><i uk-icon="icon:more;ratio:1.0" class="uk-icon uk-padding-remove"
+                            uk-toggle="target: .toggle; animation: uk-animation-slide-bottom-small"></i></a>
+                    {% endif %}
+                </p>
             </div>
         </article>
         {% set cfcs = cfcsList|getCommentForComments(comment.id) %}
@@ -60,22 +71,35 @@
                                 </h4>
                                 <p class="uk-comment-meta uk-margin-remove-top l-comment-meta">
                                     <a class="uk-link-reset" href="#">{{ cfc.created_at|fmtDatetimeFromFloat(diff=True) }}</a>
+                                    {% if cfc.hide_status in (0,) %}
                                     <a class="l-comment-button l-comment-button-chd" 
                                         data-ForCommId="{{ comment.id }}" data-isLevelCmm="1" data-to-cmm-username="{{ cfc.user_name }}" href="#">
                                         <span class="uk-padding-remove" uk-icon="icon: reply; ratio: 0.7"></span>
                                         <span class="uk-padding-remove">{{ None|fmtLabel('reply') }}</span>
                                     </a>
+                                    {% endif %}
+                                    {% if cfc.hide_status in (0, 1, 2) %}
                                     <a class="l-comment-button-delete" data-cmm-id="{{ cfc.id }}" data-cmm-hide-status="{{ cfc.hide_status }}"
                                         url-del-cmm="{{ url('delete-comment') }}">
                                         <span class="uk-padding-remove" uk-icon="icon: ban; ratio: 0.5"></span>
                                         <span class="uk-padding-remove">{{ None|fmtLabel('operate_reply', cfc.hide_status) }}</span>
                                     </a>
+                                    {% endif %}
                                 </p>
                             </div>
                         </div>
                     </header>
-                    <div class="uk-comment-body l-comment-body">
-                        <p class="{{ cfc.hide_status|fmtGetHideClass() }}">{{ cfc.content|fmtGetHideInfo(cfc.hide_status) }}</p>
+                    <div class="uk-cfc-body l-cfc-body">
+                        <p l-field-cmmContent class="{{ cfc.hide_status|fmtGetHideClass() }}">
+                            <span>{{ cfc.content|limitCmmLength(commentContentMaxLeng,
+                                cfc.hide_status)|fmtGetHideInfo(cfc.hide_status) }}</span>{%
+                            if cfc.content|length > commentContentMaxLeng and cfc.hide_status==0 %}<span class="toggleCfc" hidden>{{
+                                cfc.content|limitCmmLength(commentContentMaxLeng, cfc.hide_status,
+                                therest=True)|fmtGetHideInfo(cfc.hide_status) }}</span>
+                            <a class="toggleCfc" href="" onclick="return false"><i uk-icon="icon:more;ratio:1.0" class="uk-icon uk-padding-remove"
+                                    uk-toggle="target: .toggleCfc; animation: uk-animation-slide-bottom-small"></i></a>
+                            {% endif %}
+                        </p>
                     </div>
                     <hr>
                 </article>
@@ -91,7 +115,7 @@
         <legend class="uk-legend">{{ None|fmtLabel('send_reply') }}</legend>
         <div class="uk-margin">
             <div class="uk-margin">
-                <textarea id="sendCommentTa" class="uk-textarea" rows="5" placeholder="{{ None|fmtLabel('content') }}"></textarea>
+                <textarea id="sendCommentTa" class="uk-textarea l-textarea" rows="5" placeholder="{{ None|fmtLabel('content') }}"></textarea>
             </div>
         </div>
         <div class="uk-margin">

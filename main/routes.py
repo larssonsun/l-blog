@@ -60,6 +60,7 @@ def setupTemplateRoutes(app):
         "fmtgetTitleImg" : filters.fmtgetTitleImg,
         "fmtGetHideInfo" : filters.fmtGetHideInfo,
         "fmtGetHideClass": filters.fmtGetHideClass,
+        "limitCmmLength": filters.limitCmmLength,
         "converWith3dot" :filters.converWith3dot},
     loader=jinja2.FileSystemLoader(TEMPLATE_DIR))
 

@@ -34,6 +34,7 @@ SWITCH_i18n = dict(
     search_result_keywords=lambda x: "python,全文搜索,whoosh+jieba基本使用",
     search_result_discrib=lambda x: "本博客使用whoosh+jieba对博客的标题，内容进行分词存储，然后给每个分词建立索引。搜索时返回标题或者内容中包含目标关键字的博客。",
     search_result_label=lambda x: "当前搜索：",
+    search_menu_href=lambda x: "博客搜索..",
     login_menu_href=lambda x: "登录",
     login_cencel=lambda x: "取消",
     login_ifforgetpwd=lambda x: "忘记密码?",
@@ -77,15 +78,24 @@ class CommHideStatus(Enum):
     Normal = 0
     HideByAdmin = 1
     HideBySelf = 2
+    HideBySystem = 3
 
 def converWith3dot(content):
     return f"...{content}..."
+
+def limitCmmLength(content, limitLen, hideType, therest=False):
+    if hideType == CommHideStatus.Normal.value:
+        return content[limitLen:] if therest else content[:limitLen]
+    else:
+        return "" if therest else content
 
 def fmtGetHideInfo(content, hideType):
     if hideType == CommHideStatus.HideByAdmin.value:
         return "(此回复已由管理员删除)"
     elif hideType == CommHideStatus.HideBySelf.value:
         return "(此回复已由本人删除)"
+    elif hideType == CommHideStatus.HideBySystem.value:
+        return "(回复已提交，请等待管理员审核)"
     else:
         return content
 

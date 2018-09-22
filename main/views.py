@@ -410,6 +410,7 @@ class BlogDetail(web.View):
                 """, blog.get("id"))
             commentCount = len(comments)
             cmmNo = (f'{str(x)} 楼' for x in range(commentCount, 0, -1))
+            commentContentMaxLeng = 170
             #comm addon set
             self.setAvatarIntoCmm(comments)
             self.setAdminTag(comments)
@@ -434,14 +435,22 @@ class BlogDetail(web.View):
 
 class AddComment(web.View):
 
-    def validateComit(self, user_name, blog_user_name, toCommUserName):
+    def validateComit(self, user_name, blog_user_name, toCommUserName, content):
+        cttLimit = 800
         rtd = None
+
         if not toCommUserName:
             if user_name == blog_user_name:
-                rtd = rtData(error_code=10003,
+                rtd = rtData(error_code=60003,
                              error_msg="不能回复自己的文章", data=None)
-        elif user_name == toCommUserName:
-            rtd = rtData(error_code=10002, error_msg="不能回复自己的评论", data=None)
+
+        if user_name == toCommUserName:
+            rtd = rtData(error_code=60002, error_msg="不能回复自己的评论", data=None)
+
+        if len(content) > cttLimit:
+            rtd = rtData(error_code=60004,
+                         error_msg=f"请精简您的发言，控制在{ cttLimit }字以内", data=None)
+
         return rtd
 
     @login_required(True)
@@ -460,18 +469,19 @@ class AddComment(web.View):
             toCommUserName = data.get("to_comm_username")
             isLv2Cm = data.get("isLv2Cm")
 
-            rtd = self.validateComit(user_name, blog_user_name, toCommUserName)
+            rtd = self.validateComit(
+                user_name, blog_user_name, toCommUserName, content)
             if not rtd:
                 cmmId = str(uuid.uuid1())
                 created_at = datetime.now().timestamp()
-                ic = await exeNonQuery("insert into comments values (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                ic = await exeNonQuery("insert into comments values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                                        cmmId, blog_id, user_id, user_name, "", content, created_at, "" if parent_comment_id is None else parent_comment_id,
-                                       toCommUserName if isLv2Cm == "1" else "")
+                                       toCommUserName if isLv2Cm == "1" else "", 3)  # auto hide comment
 
                 if(ic == 1):
                     rtd = rtData(error_code=-1, error_msg="发布成功", data=None)
                 else:
-                    rtd = rtData(error_code=10001,
+                    rtd = rtData(error_code=60001,
                                  error_msg="未能成功提交评论", data=None)
 
             return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
@@ -489,18 +499,31 @@ class DelComment(web.View):
             hideStatus = data.get("hide_status")
             curUserId = await exeScalar("select `user_id` from `comments` where `id` = %s limit 0, 1", cmmId)
             isAdmin = await exeScalar("select `admin` from `users` where `id` = %s limit 0, 1", operUserId)
-            if curUserId == operUserId or (isAdmin == "1"):
-                newStatus = "0" if hideStatus != "0" else (
-                    "1" if (isAdmin == "1") else "2")
+
+            newStatus = None
+            if curUserId == operUserId and isAdmin != "1":
+                if hideStatus not in ("0", "2"):
+                    rtd = rtData(error_code=50002,
+                                 error_msg="您不能进行此操作", data=None)
+                else:
+                    newStatus = "0" if hideStatus == "2" else "2"
+
+            elif isAdmin == "1":
+                # set to display when status is "1" only
+                newStatus = "0" if hideStatus == "1" else "1"
+
+            else:
+                rtd = rtData(error_code=50003,
+                             error_msg="您不能操作其他人的评论", data=None)
+
+            if newStatus:
                 ic = await exeNonQuery("update `comments` set `hide_status`=%s where `id` = %s", newStatus, cmmId)
                 if(ic == 1):
                     rtd = rtData(error_code=-1, error_msg="操作成功", data=None)
                 else:
-                    rtd = rtData(error_code=50002,
-                                 error_msg="未能成功提交评论", data=None)
-            else:
-                rtd = rtData(error_code=50001,
-                             error_msg="您不能操作其他人的评论", data=None)
+                    rtd = rtData(error_code=50001,
+                                 error_msg="操作失败", data=None)
+
             return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 

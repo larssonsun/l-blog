@@ -19,9 +19,9 @@
                         <span>暂无文章符合条件。</span>
                         {% else %}
                         {% for result in vm.results %}
-                        <dt>
-                            <a href="{{ url('BlogDetail', id=result.id) }}">{{ result.title|safe }}</a>
-                            <span>{{ result.createtime|fmtYearMonthDateFromFloat }}</span>
+                        <dt class="uk-flex uk-flex-left">
+                            <a class="uk-width-3-4 uk-margin-xsmall-bottom" href="{{ url('BlogDetail', id=result.id) }}">{{ result.title|safe }}</a>
+                            <span class="uk-width-1-4 uk-text-right">{{ result.createtime|fmtYearMonthDateFromFloat }}</span>
                         </dt>
                         <dd>{{ result.content|converWith3dot|safe }}</dd>
                         {% endfor %}
