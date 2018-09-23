@@ -10,7 +10,7 @@ from aiohttp import web
 from aiohttp_session import get_session
 
 from main.views import login_required
-from models.db import select
+from models.db import select, delete_cache
 from utils import WhooshSchema, rtData, setWhooshSearch
 
 
@@ -47,3 +47,19 @@ class ResetBlogIndex(web.View):
             rtd = rtData(error_code=11001,
                          error_msg=f"重置blog索引时发生错误{ex}", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+class ResetBlogCache(web.View):
+
+    @login_required(True)
+    @admin_required
+    async def post(self):
+        try:
+            blogs = await select("select `name_en` from blogs")
+            [await delete_cache(blog["name_en"]) for blog in blogs]
+            rtd = rtData(error_code=-1, error_msg="重置blog缓存成功", data=None)
+        except Exception as ex:
+            rtd = rtData(error_code=12001,
+                         error_msg=f"重置blog缓存时发生错误{ex}", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+        
+        

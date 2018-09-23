@@ -73,8 +73,8 @@ async def set_cache(k, v, ttl=None):
     return await _cache.set(k, v, ttl=ttl)
 
 
-async def expert_cache(k):
-    return await _cache.expire(k, 0)
+async def delete_cache(k):
+    return await _cache.delete(k)
 
 
 async def get_cache_ttl(k):

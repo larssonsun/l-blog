@@ -35,7 +35,7 @@
                 <ul id="adminPad" class="uk-nav uk-nav-default">
                     <li class="uk-nav-header"><span class="uk-margin-small-right" uk-icon="icon: list"></span>缓存及索引</li>
                     <li><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></li>
-                    <li><a name="reset-cache" href="javascript:return false;">重建blog缓存</a></li>
+                    <li><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></li>
                 </ul>
                 <hr>
                 {% endif %}

@@ -9,16 +9,16 @@ from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
-from main import filters
-from utils import hash_sha256
-from main.views import (AddComment, Approve, Archive, BlogDetail,
-                               DelComment, Index, Login, Logout, Registe,
-                               hello, FullSiteSearch)
-from admin.views import ResetBlogIndex
+from admin.views import ResetBlogCache, ResetBlogIndex
 from config.settings import STATIC_DIR, TEMPLATE_DIR
+from main import filters
+from main.views import (AddComment, Approve, Archive, BlogDetail, DelComment,
+                        FullSiteSearch, Index, Login, Logout, Registe, hello)
+from utils import hash_sha256
 
 
 def setupRoutes(app):
+    
     #main
     app.router.add_view("/hello", hello, name="Hello")
     app.router.add_view("/", Index, name="Index")
@@ -37,9 +37,10 @@ def setupRoutes(app):
     app.router.add_view("/registe/" + r"{approvedKey:\w{32}}/", Registe, name="registe_confirm")
     app.router.add_view("/approve/", Approve, name="approve")
     app.router.add_view("/fullsitesearch/", FullSiteSearch, name="full-size-search")
+
     #admin
     app.router.add_view("/admin/resetindex/", ResetBlogIndex, name="admin-resetindex")
-    
+    app.router.add_view("/admin/resetblogcache/", ResetBlogCache, name="admin-resetblogcache")
     
 
 def setupStaticRoutes(app):

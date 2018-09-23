@@ -63,6 +63,7 @@ SWITCH_i18n = dict(
     content=lambda x: "内容",
     tag=lambda x: "标签",
     catelog=lambda x: "分类",
+    frientlyConn=lambda x: "友情链接",
     watchfor_detail=lambda x: "查看详细信息",
     blogCountInTag=lambda x, y: f"标签 [{x}] 下有{y}篇blog",
     blogCountInCatelog=lambda x, y: f"分类 [{x}] 下有{y}篇blog",

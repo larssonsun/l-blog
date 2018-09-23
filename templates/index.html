@@ -62,11 +62,15 @@
                         <p>{{ artical.summary|getArticalFull(size=150) }}</p>
                         <div class="uk-grid-small uk-child-width-auto l-bottom-bar" uk-grid>
                             <div class="uk-text-small">
-                                <span uk-tooltip="title:{{ None|fmtLabel('read_count_t2') }};pos:bottom">
+                                <span uk-tooltip="title:{{ None|fmtLabel('catelog') }};pos:bottom">
+                                    <i uk-icon="icon:folder;ratio:0.7"></i>
+                                    {{ artical.catelog_name }}
+                                </span>
+                                <span class="uk-margin-small-left" uk-tooltip="title:{{ artical.readCount|fmtLabel('read_count_t2') }};pos:bottom">
                                     <i uk-icon="icon:users;ratio:0.7"></i>
                                     {{ artical.readCount }}
                                 </span>
-                                <span class="uk-margin-small-left" uk-tooltip="title:{{ None|fmtLabel('comment_count_t2') }};pos:bottom">
+                                <span class="uk-margin-small-left" uk-tooltip="title:{{ artical.commentCount|fmtLabel('comment_count_t2') }};pos:bottom">
                                     <i uk-icon="icon:comments;ratio:0.7"></i>
                                     {{ artical.commentCount}}
                                 </span>
@@ -87,6 +91,7 @@
             <div class="uk-width-1-4@l uk-visible@l l-rightSideBar">
             {% include "_tagsform.html" %}
             {% include "_catelogform.html" %}
+            {% include "_friendlyConn.html" %}
             </div>
         </div>
     </div>

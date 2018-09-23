@@ -15,7 +15,7 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
 
-from models.db import (exeNonQuery, exeScalar, expert_cache, get_cache,
+from models.db import (exeNonQuery, exeScalar, delete_cache, get_cache,
                        get_cache_ttl, select, set_cache)
 from utils import (WhooshSchema, addDictProp, certivateMailHtml,
                    duplicateSqlRc, emailRc, getWhooshSearch, hash_md5,
@@ -127,6 +127,22 @@ async def sendCerMain(*, cerUrl, userId, uname, mailAddr):
         rtd = rtData(error_code=10008,
                      error_msg=f"验证邮件发送受限，请于 {ttl}秒后再试", data=dict(waits=ttl))
     return rtd
+
+
+async def setRightSideInclude(tagId=None, catelogid=None):
+    #tags
+    tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
+    [addDictProp(tg, "current", tg.get("id") == tagId) for tg in tags]
+
+    #catelogs
+    catelogs = await select("select `id`, `catelog_name`, `blog_count` as `bct` from `catelog` where `blog_count` > 0 order by `id`")
+    [addDictProp(cate, "current", cate.get("id") == catelogid)
+        for cate in catelogs]
+
+    #friendly conns
+    friCnns = await select("select `name`, `url` from `friendlyconn`")
+
+    return tags, catelogs, friCnns
 
 
 class Logout(web.View):
@@ -295,8 +311,9 @@ class Index(web.View):
         #blog
         articals = await select(f"""
             select a.`id`, a.`user_name`, a.`name`, a.`summary`, a.`created_at`, count(b.`id`) as `commentCount`,
-                a.`browse_count` as `readCount`, a.`source_from`, a.`name_en`, a.`title_image`
+                a.`browse_count` as `readCount`, a.`source_from`, a.`name_en`, a.`title_image`, c.`catelog_name`
             from `blogs` a
+            inner join `catelog` c on c.`id` = a.`catelog`
             left join `comments` b on a.`id` = b.`blog_id` and LENGTH(b.`parent_comment_id`)=0
             where a.`id` is not null
             and { "`tags` like (%s)" if tag else "0=%s" }
@@ -305,14 +322,8 @@ class Index(web.View):
             order by {"a.`created_at` desc" if not sortType or sortType == "time" else "a.`browse_count` desc" }
             """, f'%{tagId}%' if tag else int("0"), catelogid if catelog else int("0"))
 
-        #tags
-        tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
-        [addDictProp(tg, "current", tg.get("id") == tagId) for tg in tags]
-
-        #catelogs
-        catelogs = await select("select `id`, `catelog_name`, `blog_count` as `bct` from `catelog` where `blog_count` > 0 order by `id`")
-        [addDictProp(cate, "current", cate.get("id") == catelogid)
-         for cate in catelogs]
+        #right side include
+        tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("index.html", self.request, locals())
 
