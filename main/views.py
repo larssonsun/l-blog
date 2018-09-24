@@ -323,7 +323,7 @@ class Index(web.View):
             """, f'%{tagId}%' if tag else int("0"), catelogid if catelog else int("0"))
 
         #right side include
-        tags, catelogs, friCnns = await setRightSideInclude()
+        tags, catelogs, friCnns = await setRightSideInclude(tagId, catelogid)
 
         return aiohttp_jinja2.render_template("index.html", self.request, locals())
 
@@ -564,11 +564,8 @@ class Archive(web.View):
         archiveVM["archives"] = archivesInY
         archiveVM["bct"] = len(archives)
 
-        #tags
-        tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
-
-        #catelogs
-        catelogs = await select("select `id`, `catelog_name`, `blog_count` as `bct` from `catelog` where `blog_count` > 0 order by `id`")
+        #right side include
+        tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("archive.html", self.request, locals())
 
@@ -593,10 +590,7 @@ class FullSiteSearch(web.View):
             for hit in results:
                vm["results"].append(hit)
 
-        #tags
-        tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
-
-        #catelogs
-        catelogs = await select("select `id`, `catelog_name`, `blog_count` as `bct` from `catelog` where `blog_count` > 0 order by `id`")
+        #right side include
+        tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("searchResult.html", self.request, locals())
