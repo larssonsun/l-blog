@@ -23,6 +23,7 @@ SWITCH_i18n = dict(
     words_or=lambda x: "或者",
     words_forSendCmm=lambda x: "以便发表评论",
     blog_master=lambda x: "博主",
+    blog_name_hide=lambda x: "当前位置",
     default_meta_desctiption=lambda x: "本博客基于协程, 涉及python asyncio标准库、 aiohttp异步http框架等后端技术，前端使用Uikit3进行构建。不断完善中。",
     default_meta_keywords=lambda x: "l-blog,各人博客,web开发,python开发,python自学",
     default_title=lambda x: "L-blog 基于aiohttp和uikit搭建的各人博客",

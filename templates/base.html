@@ -26,6 +26,7 @@
     {% endblock %}
 </head>
 <body>
+    {% set curMenuItm = app.site_status.currMenuItem.lower() if app.site_status.currMenuItem else "" %}
     {% block base_body %}
     <div class="uk-offcanvas-content">
         <div uk-sticky="show-on-up: true; animation: uk-animation-slide-top; sel-target: .uk-navbar-container; 
@@ -39,15 +40,15 @@
                             </a>
                             <span>{{None|fmtLabel("logo")}}</span>
                         </div>
-                        <div class="uk-navbar-right content">
+                        <div class="uk-navbar-right uk-visible@l content">
                             <ul class="uk-navbar-nav">
-                                <li class="{{ 'uk-active l-active' if app.site_status.currMenuItem and app.site_status.currMenuItem.lower()=='index' else '' }}">
+                                <li class="{{ 'uk-active l-active' if curMenuItm=='index' else '' }}">
                                     <a class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1" href="{{ url('Index') }}">
                                         <span uk-icon="icon: home; ratio: 0.7" class="uk-margin-small-right"></span>
                                         <span class="uk-text-middle">{{ None|fmtLabel("home_page") }}</span>
                                     </a>
                                 </li>
-                                <li class="{{ 'uk-active l-active' if app.site_status.currMenuItem and app.site_status.currMenuItem.lower()=='archive' else '' }}">
+                                <li class="{{ 'uk-active l-active' if curMenuItm=='archive' else '' }}">
                                     <a class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1" href="{{ url('archive') }}">
                                         <span uk-icon="icon: table; ratio: 0.7" class="uk-margin-small-right"></span>
                                         <span class="uk-text-middle">{{ None|fmtLabel("archive_menu_href") }}</span>
@@ -56,9 +57,9 @@
                                 {% if app.l_data %}
                                 <li>
                                     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1 l-context-search">
-                                        <form id="fullSiteSearch" class="uk-search uk-search-default" method="post" action="{{ url('full-size-search') }}">
-                                            <a id="fullSiteSearchBttn" href="" class="uk-search-icon-flip" uk-search-icon></a>
-                                            <input id="fullSiteSearchIpt" class="uk-search-input uk-form-width-medium" name="search" type="search" placeholder="{{ None|fmtLabel('search_menu_href') }}">
+                                        <form class="fullSiteSearch uk-search uk-search-default" method="post" action="{{ url('full-size-search') }}">
+                                            <a class="fullSiteSearchBttn uk-search-icon-flip" href="" uk-search-icon></a>
+                                            <input class="fullSiteSearchIpt uk-search-input uk-form-width-medium" name="search" type="search" placeholder="{{ None|fmtLabel('search_menu_href') }}">
                                         </form>
                                     </div>
                                 </li>
@@ -81,7 +82,39 @@
                                 {% endif %}
                             </ul>
                         </div>
-                        
+                        <div class="uk-navbar-right uk-flex-right uk-hidden@l">
+                            <a href="" class="l-mobi-menu"><span uk-icon="icon: menu; ratio: 1"></a>
+                            <div uk-dropdown="mode: click; animation: uk-animation-slide-top-small; duration:100">
+                                <ul class="uk-nav uk-dropdown-nav">
+                                    <li class="uk-active{{ ' l-active' if curMenuItm=='index' else '' }}">
+                                        <a href="{{ url('Index') }}">{{ None|fmtLabel("home_page") }}</a>
+                                    </li>
+                                    <li class="uk-active{{ ' l-active' if curMenuItm=='archive' else '' }}">
+                                        <a href="{{ url('archive') }}">{{ None|fmtLabel("archive_menu_href") }}</a>
+                                    </li>
+                                    {% if app.l_data %}
+                                    <li class="uk-nav-divider uk-nav-header"></li>
+                                    <li>
+                                        <form class="fullSiteSearch uk-search uk-search-default" method="post" action="{{ url('full-size-search') }}">
+                                            <a class="fullSiteSearchBttn uk-search-icon-flip" href="" uk-search-icon></a>
+                                            <input class="fullSiteSearchIpt uk-search-input" name="search" type="search" placeholder="{{ None|fmtLabel('search_menu_href') }}">
+                                        </form>
+                                    </li>
+                                    {% endif %}
+                                    {% if app.l_data %}
+                                    {% include "_userInfoSlide.html" %}
+                                    {% else %}
+                                    <li class="uk-nav-divider uk-nav-header"></li>
+                                    <li class="uk-active">
+                                        <a href="#loginModel" uk-toggle>{{ None|fmtLabel("login_menu_href") }}</a>
+                                    </li>
+                                    <li class="uk-active">
+                                        <a href="#registeModel" uk-toggle>{{ None|fmtLabel("registe_menu_href") }}</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </nav>

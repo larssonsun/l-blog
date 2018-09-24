@@ -1,4 +1,4 @@
-<li>
+<li class="uk-visible@l">
     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
         <button class="uk-button uk-button-primary" type="button" uk-toggle="target: #offcanvas-userInfo">
             <span>{{ app.l_data.name }}</span>
@@ -32,8 +32,8 @@
                 </ul>
                 <hr>
                 {% if app.l_data.admin == 1 %}
-                <ul id="adminPad" class="uk-nav uk-nav-default">
-                    <li class="uk-nav-header"><span class="uk-margin-small-right" uk-icon="icon: list"></span>缓存及索引</li>
+                <ul class="adminPad uk-nav uk-nav-default">
+                    <li class="uk-nav-header"><span class="uk-margin-small-right" uk-icon="icon: list"></span>管理员功能</li>
                     <li><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></li>
                     <li><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></li>
                 </ul>
@@ -47,3 +47,22 @@
         </div>
     </div>
 </li>
+<div class="uk-hidden@l l-mobi-uis">
+    <li>
+        <div class="l-mobi-uInfo">
+            <div><span uk-icon="icon: user; ratio: 0.7"></span><span>{{ app.l_data.name }}</span></div>
+            <div><span uk-icon="icon: mail; ratio: 0.7"></span><span>{{ app.l_data.email|truncate(24, True, "..")  }}</span></div>
+            <div><span uk-icon="icon: reply; ratio: 0.7"></span><span>{{ None|fmtLabel("user_reply_count")
+                }}{{ app.l_data.cmm_ct }}</span></div>
+        </div>
+    </li>
+    {% if app.l_data.admin == 1 %}
+    <li class="adminPad uk-active l-mobi-admin">
+        <div class="uk-heading-line uk-text-center"><span>管理员功能</span></div>
+        <div><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></div>
+        <div><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></div>
+    </li>
+    {% endif %}
+    <li class="uk-nav-divider uk-nav-header"></li>
+    <li class="uk-active"><a href="{{ url('logout') }}">{{None|fmtLabel("right_slide_bar_logout") }}</a></li>
+</div>

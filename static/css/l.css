@@ -711,6 +711,10 @@ footer .l-tel, footer .l-mail {
 
 @media (max-width: 1200px) {
 
+    .uk-breadcrumb>:nth-child(n+2):not(.uk-first-column) {
+        padding: 0
+    }
+
     .uk-grid {
         margin:0
     }
@@ -726,6 +730,10 @@ footer .l-tel, footer .l-mail {
 
     .uk-margin-medium-left {
         margin-left: 2px!important;
+    }
+    
+    li.l-active > a{
+        color: #3895F2!important;
     }
 
     .l-archive-item {
@@ -743,7 +751,7 @@ footer .l-tel, footer .l-mail {
     }
 
     .l-article-title > a, .l-article-title > span{
-        font-size: 18px
+        font-size: 16px
     }
 
     .l-background-color .uk-container {
@@ -763,6 +771,41 @@ footer .l-tel, footer .l-mail {
         padding-left: 60px;
     }
 
+    .l-logo {
+        height:30px;
+        width:30px;
+    }
+
+    .l-mobi-menu {
+        color:#666;
+        margin-right:10px;
+    }
+
+    .l-mobi-admin div:nth-child(n + 2) {
+        margin-top: 12px
+    }
+
+    .l-mobi-uInfo {
+        margin-top:20px;
+        padding: 5px;
+        background-color:#f2f2f2;
+        border: #e5e5e5 solid 1px;
+        color:#000
+    }
+
+    .l-mobi-uInfo > div > span {
+        margin-right: 5px;
+    }
+
+    .l-mobi-uis li a{
+        color:#666
+    }
+
+    .l-mobi-uis .uk-heading-line {
+        margin-top:18px;
+        margin-bottom: 10px
+    }
+   
     .l-order-tab:nth-child(3) {
         margin-top: 4px;
     }

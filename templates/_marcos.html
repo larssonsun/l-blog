@@ -8,7 +8,8 @@
         </li>
         {% if cateName and blogName %}
         <li><a class="uk-text-middle" href="{{ cateHref }}">{{ cateName }}</a></li>
-        <li><span class="uk-text-middle">{{ blogName }}</span></li>
+        <li class="uk-visible@l"><span class="uk-text-middle">{{ blogName }}</span></li>
+        <li class="uk-hidden@l"><span class="uk-text-middle">{{ None|fmtLabel("blog_name_hide") }}</span></li>
         {% else %}
         <li><span class="uk-text-middle">{{ firChdName }}</span></li>
         {% endif %}

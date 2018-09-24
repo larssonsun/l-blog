@@ -6,12 +6,13 @@
 $(document).ready(function () {
 
     var redo = true;
-    var adminPad = $("#adminPad");
+    var adminPad = $(".adminPad");
     
     //resetindex
-    var resetIndex = adminPad.find("a[name='reset-index']")[0];
+    var resetIndex = adminPad.find("a[name='reset-index']");
+    
     $(resetIndex).click(function () {
-
+        
         var resetIndexBttn = $(this);
         var URL = resetIndexBttn.attr("url-send-resetindex")
         if (redo) {
@@ -35,7 +36,7 @@ $(document).ready(function () {
     });
 
     //resetblogcache
-    var restBlogCache = adminPad.find("a[name='reset-blog-cache']")[0];
+    var restBlogCache = adminPad.find("a[name='reset-blog-cache']");
     $(restBlogCache).click(function () {
 
         var restBlogCacheBttn = $(this);

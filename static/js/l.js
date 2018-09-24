@@ -368,8 +368,9 @@ $(document).ready(function () {
     //----------------全文搜索----------------
 
     var fullSiteSearch = function(){
-        frm = $("#fullSiteSearch");
-        ipt = $(frm).find("input")[0];
+        
+        frm = $(this).parents("form.fullSiteSearch");
+        ipt = $(frm).find("input");
         keywords = $(ipt).val()
         if(keywords.length > 0)
             frm.submit();
@@ -378,9 +379,9 @@ $(document).ready(function () {
         return false;
     }
 
-    $("#fullSiteSearchBttn").click(fullSiteSearch);
+    $(".fullSiteSearchBttn").click(fullSiteSearch);
 
-    $("#fullSiteSearchIpt").keypress(function(e) {
+    $(".fullSiteSearchIpt").keypress(function(e) {
         if (e.which == 13) {
             fullSiteSearch();
             return false;
