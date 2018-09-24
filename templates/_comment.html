@@ -1,3 +1,4 @@
+{% if comments and comments|length > 0 %}
 <ul class="uk-comment-list l-comment-list">
     {% for comment in comments %}
     <li>
@@ -110,6 +111,7 @@
     </li>
     {% endfor %}
 </ul>
+{% endif %}
 <div id="sendCommentFrm" class="uk-form uk-box-shadow-small l-form">
     <fieldset class="uk-fieldset">
         {% if app.l_data %}
