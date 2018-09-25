@@ -187,7 +187,7 @@ div.l-article-title {
     font-size:18px;
     font-weight:bold;
     padding-bottom:4px;
-    border-bottom: #C1C1C1 2px solid
+    border-bottom: #e5e5e5 1px solid
 }
 
 .l-avatar-img {
@@ -353,6 +353,11 @@ div.l-bottom-bar a {
     padding: 8px;
     background-color: #FFF;
     border:1px solid #e5e5e5
+}
+
+.l-friendly {
+    background-color:#fff;
+    padding:10px;
 }
 
 .l-friendly-conn a{
@@ -545,6 +550,16 @@ footer .l-social > li > a {
     margin-right: 20px;
 }
 
+.l-something {
+    background-color:#fff;
+    padding: 15px;
+}
+
+.l-something img {
+    height:55px;
+    width: 55px;
+}
+
 footer .l-tel, footer .l-mail {
     margin-top: 5px;
 }
@@ -556,6 +571,10 @@ footer .l-tel, footer .l-mail {
 
 .l-meta *{
     font-size:13px;
+}
+
+.l-meta {
+    margin:5px 0
 }
 
 .l-meta > span {
