@@ -30,7 +30,7 @@
                             {% else %}
                             <a href="{{ url('index_sort', type='time') }}">
                             {% endif %}
-                            <span class="uk-margin-small-right" uk-icon="icon: table; ratio: 1"></span>{{ None|fmtLabel("sort_time") }}</a>
+                            <span class="uk-margin-small-right" uk-icon="icon: clock; ratio: 1"></span>{{ None|fmtLabel("sort_time") }}</a>
                         </li>
                         <li class="{% if sortType=='hot' %}uk-active{% endif %}">
                                 {% if tag %}

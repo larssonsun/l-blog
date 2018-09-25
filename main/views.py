@@ -231,7 +231,7 @@ class Registe(web.View):
                     session.pop("uid")
                 session = await get_session(self.request)
                 session['uid'] = userId
-                await expert_cache(approvedKey)
+                await delete_cache(approvedKey)
                 welcomeVm = dict(title="欢迎!", discrib="您已经完成注册。")
                 return aiohttp_jinja2.render_template("welcome.html", self.request, welcomeVm)
             else:
@@ -371,7 +371,6 @@ class BlogDetail(web.View):
         blog = await select("select a.*, b.id as 'catelog_id', b.catelog_name from `blogs` a inner join `catelog` b on a.catelog=b.id where `name_en` = %s limit 1 offset 0", k)
         if len(blog) == 1:
             blog = blog[0]
-            blogId = blog.get("id")
             blog["markDownedContent"], blog["toc"] = mdToHtml(
                 blog.get("content"))
 
@@ -579,7 +578,20 @@ class About(web.View):
         #right side include
         tags, catelogs, friCnns = await setRightSideInclude()
 
-        return aiohttp_jinja2.render_template("about.html", self.request, 
+        return aiohttp_jinja2.render_template("about.html", self.request,
+                                              {"vm": vm, "tags": tags, "catelogs": catelogs, "friCnns": friCnns})
+
+
+class Timeline(web.View):
+    @login_required()
+    @basePageInfo
+    async def get(self):
+        vm = {}
+
+        #right side include
+        tags, catelogs, friCnns = await setRightSideInclude()
+
+        return aiohttp_jinja2.render_template("timeline.html", self.request,
             {"vm": vm, "tags": tags, "catelogs": catelogs, "friCnns": friCnns})
 
 

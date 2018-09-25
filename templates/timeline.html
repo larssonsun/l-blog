@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "_marcos.html" as mcs %}
+
+{% block title %}{{ None|fmtLabel('timeline_title') }}{% endblock %}
+
+{% block description %}{{ None|fmtLabel('timeline_discrib') }}{% endblock %}
+{% block keywords %}{{ None|fmtLabel('timeline_keywords') }}{% endblock %}
+{% block head_css %}
+<link rel="stylesheet" href="/static/css/timeline.css">
+{% endblock %}
+{% block content %}
+<div class="uk-section uk-section-small l-background-color">
+    <div class="uk-container">
+        <div class="uk-grid uk-margin-remove-left">
+            
+            <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove">
+                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel('timeline_label')) }}
+                <div class="l-timeline">
+                        <div class="content">
+                                <div>{{ None|fmtLabel('timeline_label') }}</div>
+                              
+                                <ul class="timeline">
+                                  <li class="event" data-date="65Million B.C.">
+                                    <h3>Dinosaurs Roamed the Earth</h3>
+                                    <p>RAWWWWWWRRR.</p>
+                                  </li>
+                                  <li class="event" data-date="2005">
+                                    <h3>Creative Component Launched</h3>
+                                    <p>Sed posuere consectetur est at lobortis. Nullam quis risus eget urna mollis ornare vel eu leo. Donec sed odio dui. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam quis risus eget urna mollis ornare vel eu leo. Cras mattis consectetur purus sit amet fermentum.</p>    
+                                  </li>
+                                  <li class="event" data-date="2009">
+                                    <h3>Squareflair was Born</h3>
+                                    <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam id dolor id nibh ultricies vehicula ut id elit. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper.</p> <p>Get ready!</p>    
+                                  </li>
+                                  <li class="event" data-date="January 24, 2018">
+                                    <h3>Squareflair Today</h3>
+                                    <p>Our success can be measured by lives changed and enhanced by more than eight years of Squarespace-focused service.</p>    
+                                  </li>
+                                </ul>
+                              </div>
+                </div>
+            </div>
+            <div class="uk-width-1-4@l uk-visible@l l-rightSideBar">
+                    {% include "_tagsform.html" %}
+                    {% include "_catelogform.html" %}
+                    {% include "_friendlyConn.html" %}
+                </div>
+        </div>
+    </div>
+</div>>
+{% endblock %}

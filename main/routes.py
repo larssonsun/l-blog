@@ -14,7 +14,7 @@ from config.settings import STATIC_DIR, TEMPLATE_DIR
 from main import filters
 from main.views import (About, AddComment, Approve, Archive, BlogDetail,
                         DelComment, FullSiteSearch, Index, Login, Logout,
-                        Registe, hello)
+                        Registe, Timeline, hello)
 from utils import hash_sha256
 
 
@@ -26,6 +26,7 @@ def setupRoutes(app):
     app.router.add_view("/" + "{type:[hot|time]+}/", Index, name="index_sort")
     app.router.add_view("/archive/", Archive, name="archive")
     app.router.add_view("/about/", About, name="about")
+    app.router.add_view("/timeline/", Timeline, name="timeline")
     app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\_]+}/", Index, name="tag")
     app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\_]+}/" + r"{type:[hot|time]+}/", Index, name="index_tag_sort")
     app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/", Index, name="catelog")
