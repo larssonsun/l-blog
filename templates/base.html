@@ -54,6 +54,12 @@
                                         <span class="uk-text-middle">{{ None|fmtLabel("archive_menu_href") }}</span>
                                     </a>
                                 </li>
+                                <li class="{{ 'uk-active l-active' if curMenuItm=='about' else '' }}">
+                                    <a class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1" href="{{ url('about') }}">
+                                        <span uk-icon="icon: info; ratio: 0.7" class="uk-margin-small-right"></span>
+                                        <span class="uk-text-middle">{{ None|fmtLabel("about_menu_href") }}</span>
+                                    </a>
+                                </li>
                                 {% if app.l_data %}
                                 <li>
                                     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1 l-context-search">
@@ -91,6 +97,9 @@
                                     </li>
                                     <li class="uk-active{{ ' l-active' if curMenuItm=='archive' else '' }}">
                                         <a href="{{ url('archive') }}">{{ None|fmtLabel("archive_menu_href") }}</a>
+                                    </li>
+                                    <li class="uk-active{{ ' l-active' if curMenuItm=='about' else '' }}">
+                                        <a href="{{ url('about') }}">{{ None|fmtLabel("about_menu_href") }}</a>
                                     </li>
                                     {% if app.l_data %}
                                     <li class="uk-nav-divider uk-nav-header"></li>

@@ -37,8 +37,8 @@ def basePageInfo(func):
         curr = re.sub("/*", "", curr)
         if len(curr) == 0:
             curr = "index"
-        elif curr == "archive":
-            curr = "archive"
+        elif curr in ("archive", "about"):
+            pass
         else:
             curr = None
         cls.request.app.site_status = dict(currMenuItem=curr)
@@ -568,6 +568,19 @@ class Archive(web.View):
         tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("archive.html", self.request, locals())
+
+
+class About(web.View):
+    @login_required()
+    @basePageInfo
+    async def get(self):
+        vm = {}
+
+        #right side include
+        tags, catelogs, friCnns = await setRightSideInclude()
+
+        return aiohttp_jinja2.render_template("about.html", self.request, 
+            {"vm": vm, "tags": tags, "catelogs": catelogs, "friCnns": friCnns})
 
 
 class FullSiteSearch(web.View):

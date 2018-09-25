@@ -129,8 +129,21 @@ body {
     background-color:#ffc400;
 }
 
+.l-about {
+    background-color:#fff;
+    padding:40px
+}
+
+.l-about dl > dd {
+    padding: 5px 0
+}
+
+.l-about .uk-badge {
+    margin-right:10px
+}
+
 li.l-active>a>span {
-    color: #3895F2;
+    color:#3895F2;
 }
 
 .l-article-list article{
@@ -801,7 +814,7 @@ footer .l-tel, footer .l-mail {
 
     .l-mobi-menu {
         color:#666;
-        margin-right:25px;
+        margin-right:20px;
     }
 
     .l-mobi-admin div:nth-child(n + 2) {
