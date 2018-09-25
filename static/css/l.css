@@ -727,8 +727,9 @@ footer .l-tel, footer .l-mail {
         padding-top: 5px;
         padding-bottom: 2px;
         flex-shrink: 0;
+        font-size:12px;
     }
-
+    
     .uk-breadcrumb>:nth-child(n+2):not(.uk-first-column) {
         padding: 0
     }
