@@ -165,34 +165,36 @@ def setBlogFeed(fg, blog, authorName, authorUri, authorEmail):
 
     fe = fg.add_entry()
     fe.title(blog["title"])
-    fe.link(blog["link"])
+    fe.link(link=dict(href=str(blog["link"]),
+                      rel="alternate", type="text/html"))
     fe.id(blog["name_en"])
-    fe.published(blog["created_at"])
-    fe.updated(blog["updated_at"])
+    fe.published(blog["created_at"] + " UTC+8:00")
+    fe.updated(blog["updated_at"] + " UTC+8:00")
     fe.summary(blog["summary"])
-    fe.author(name=authorName, email=authorEmail, uri=authorUri)
-    fe.category(term=blog["cateTerm"], scheme=blog["cateScheme"])
-    fe.content(type="html")
+    fe.author(author=dict(name=authorName,
+                          email=authorEmail, uri=str(authorUri)))
+    fe.category(category=dict(
+        term=blog["catelog"], scheme=str(blog["cateScheme"])))
+    fe.content(type="CDATA", content=blog["content"])
 
 
-def setFeed(feedId, blogSiteUrl, logoUrl, feedUrlPrefix, blogSiteTitle, blogSiteSubTitle, 
-    authorName, authorEmail, blogs):
+def setFeed(feedId, blogSiteUrl, logoUrl, feedUrlPrefix, blogSiteTitle, blogSiteSubTitle,
+            authorName, authorEmail, blogs):
     fg = FeedGenerator()
-    fg.id(feedId)  # 'http://lernfunk.de/media/654321'
-    fg.title(blogSiteTitle)  # 'Some Testfeed'
-    fg.author({'name': authorName, 'email': authorEmail})# {'name':'larsson','email':'john@example.de'}
-    fg.link(href=blogSiteUrl, rel='alternate')  # 'http://example.com'
-    fg.logo(logoUrl)  # 'http://ex.com/logo.jpg'
-    fg.subtitle(blogSiteSubTitle)  # 'This is a cool feed!'
+    fg.id(feedId)
+    fg.title(blogSiteTitle)
+    fg.author({'name': authorName, 'email': authorEmail})
+    fg.link(href=str(blogSiteUrl), rel='alternate')
+    fg.logo(str(logoUrl))
+    fg.subtitle(blogSiteSubTitle)
     fg.language('zh-CN')  # 'en'
 
     if blogs and len(blogs) > 0:
-        [setBlogFeed(fg, blog, authorName, blogSiteUrl, authorEmail) for blog in blogs]
+        [setBlogFeed(fg, blog, authorName, blogSiteUrl, authorEmail)
+         for blog in blogs]
 
-    # 'http://larskiesow.de/test.atom'
     fg.link(href=f'{feedUrlPrefix}atom.xml', rel='self')
-    fg.atom_file(f'{FEED_DIR}atom.xml')  # Write the ATOM feed to a file
+    fg.atom_file(f'{FEED_DIR}/atom.xml')
 
-    # 'http://larskiesow.de/test.atom'
     fg.link(href=f'{feedUrlPrefix}rss.xml', rel='self')
-    fg.rss_file(f'{FEED_DIR}rss.xml')  # Write the RSS feed to a file
+    fg.rss_file(f'{FEED_DIR}/rss.xml')

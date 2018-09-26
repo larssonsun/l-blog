@@ -480,6 +480,10 @@ div.l-bottom-bar a {
     border-width:2px
 }
 
+.l-personal p{
+    margin-bottom:7px
+}
+
 .l-prev-next-pagi a{
     color:#1E7BD8;
     text-decoration: underline

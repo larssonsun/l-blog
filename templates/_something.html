@@ -2,13 +2,24 @@
     <div class="l-placeholder">
         <h3 class="uk-heading-divider"><span class="uk-margin-small-right" uk-icon="icon: album"></span><span>{{
                 None|fmtLabel("something") }}</span></h3>
-        <div class="uk-flex uk-flex-middle uk-flex-center uk-text-center">
-            <div class="uk-width-1-3 uk-animation-toggle"><a href="{{ url('timeline') }}"><img class="uk-animation-scale-down"
-                        src="/static/images/timeline.png" alt="timeline"></a></div>
-            <div class="uk-width-1-3 uk-animation-toggle"><a href="{{ None|fmtLabel('project_git_address') }}" target="blank_"><img
-                        class="uk-animation-scale-down" src="/static/images/github.png" alt="github"></a></div>
-            <div class="uk-width-1-3 uk-animation-toggle"><a href=""><img class="uk-animation-scale-down" src="/static/images/rss.png"
-                        alt="rss"></a></div>
+        <div class="uk-flex uk-flex-middle uk-flex-center uk-text-center l-personal">
+            <div class="uk-width-1-3 uk-animation-toggle">
+                <p><a href="{{ url('timeline') }}"><img class="uk-animation-scale-down" src="/static/images/timeline.png"
+                            alt="timeline"></a>
+                </p>
+                <span>时间轴</span>
+            </div>
+            <div class="uk-width-1-3 uk-animation-toggle">
+                <p><a href="{{ None|fmtLabel('project_git_address') }}" target="blank_"><img class="uk-animation-scale-down"
+                            src="/static/images/github.png" alt="github"></a>
+                </p>
+                <span>github</span>
+            </div>
+            <div class="uk-width-1-3 uk-animation-toggle">
+                <p><a href="{{ url('feeds-atom') }}" target="blank_"><img class="uk-animation-scale-down" src="/static/images/rss.png"
+                            alt="rss"></a></p>
+                <span>RSS</span>
+            </div>
         </div>
         <hr>
         <div class="uk-flex uk-flex-middle uk-flex-center uk-text-center l-siteinfo">

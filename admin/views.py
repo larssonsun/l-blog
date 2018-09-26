@@ -73,16 +73,16 @@ class ResetRss(web.View):
         try:
             rqst = self.request
             router = rqst.app.router
-            urlIndex = f'{ rqst.scheme }://{ rqst.host }/'
+            urlIndex = f'{ rqst.scheme }://{ rqst.host }'
 
             #get blogs
             blogs = await select("""
-                select a.`name_en`, a.`created_at`, a.`updated_at`, a.`summary`, a.`name` as 'title', 
-                a.`content`, b.`catelog_name` as 'cateTerm', a.`catelog` as 'cateId'
-                from `blogs` a inner join `catelog` b on a.`catelog` = b.`id`
+                select `name_en`, `created_at`, `updated_at`, `summary`, `name` as 'title', 
+                `content`,  `catelog`
+                from `blogs` a
                 order by `updated_at`""")
             [addDictProp(blog, "link", router["BlogDetail"].url_for(id=blog["name_en"])) for blog in blogs]
-            [addDictProp(blog, "cateScheme", router["catelog"].url_for(cateId=blog["cateId"])) for blog in blogs]
+            [addDictProp(blog, "cateScheme", f'{urlIndex}{router["catelog"].url_for(cateId=blog["catelog"])}') for blog in blogs]
 
             [addDictProp(blog, "created_at", 
                 datetime.fromtimestamp(float(blog["created_at"])).strftime("%Y-%m-%d %H:%M:%S")) for blog in blogs]
@@ -94,9 +94,9 @@ class ResetRss(web.View):
             #create feed
             setFeed(
                 f'tag:{ rqst.host },{ datetime.now().strftime("%Y-%m-%d %H:%M:%S") }',
-                urlIndex, 
-                str(router["static"].url_for(filename=r"images/favicon.png")), 
-                urlIndex, "l", "l-blog", "larsson", "l@scetia.com", blogs)
+                f'{urlIndex}/', 
+                router["static"].url_for(filename=r"images/favicon.png"), 
+                f'{urlIndex}/', "l", "l-blog", "larsson", "l@scetia.com", blogs)
             rtd = rtData(error_code=-1, error_msg="重置rss成功", data=None)
         except Exception as ex:
             rtd = rtData(error_code=13001,
