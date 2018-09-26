@@ -5,6 +5,10 @@
 
 $(document).ready(function () {
 
+    //----------------博客上线时间----------------
+
+    blogBegin("h2[onlinedays]");
+
     //----------------评论----------------
 
     var showCmmForBlog = function () {

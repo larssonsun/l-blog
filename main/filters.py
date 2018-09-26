@@ -81,6 +81,7 @@ SWITCH_i18n = dict(
     blogCountInTag=lambda x, y: f"标签 [{x}] 下有{y}篇blog",
     blogCountInCatelog=lambda x, y: f"分类 [{x}] 下有{y}篇blog",
     blog_url_left=lambda x: f"本文链接：{x}",
+    blog_online_days=lambda x: "博客上线",
     filter_sum_count=lambda x: f"共 {x} 篇",
     footer_pages=lambda x: "页面",
     footer_contactme=lambda x: "联系方式",

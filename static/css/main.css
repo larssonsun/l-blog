@@ -49,13 +49,15 @@ body {
 
 #artclAndCmmDiv {
     background-color:#FFF;
-    padding:20px 40px
+    padding:20px 40px;
+    border: #c1c1c1 solid 1px;
 }
 
 #artclAndCmmDiv2 {
     padding:30px 40px;
     margin-top:20px;
-    background-color:#FFF
+    background-color:#FFF;
+    border: #c1c1c1 solid 1px;
 }
 
 .l-article-image {
@@ -104,7 +106,8 @@ body {
 .l-archive-item {
     background-color:#fff;
     padding:40px;
-    margin-top:20px
+    margin-top:20px;
+    border: #c1c1c1 solid 1px;
 }
 
 .l-archive-item >h3 >span {
@@ -131,7 +134,8 @@ body {
 
 .l-about {
     background-color:#fff;
-    padding:40px
+    padding:40px;
+    border: #c1c1c1 solid 1px;
 }
 
 .l-about dl > dd {
@@ -208,7 +212,8 @@ div.l-bottom-bar a {
     margin-bottom:15px !important;
     background-color:#fff;
     border-top:2px solid #C1C1C1;
-    font-size: 1.02em
+    font-size: 1.02em;
+    border: #c1c1c1 solid 1px;
 }
 
 .l-breadcrumb ul {
@@ -226,7 +231,8 @@ div.l-bottom-bar a {
 
 .l-cateloglist {
     background-color:#fff;
-    padding:10px
+    padding:10px;
+    border: #c1c1c1 solid 1px;
 }
 
 .l-cateloglist h3 {
@@ -358,6 +364,7 @@ div.l-bottom-bar a {
 .l-friendly {
     background-color:#fff;
     padding:10px;
+    border: #c1c1c1 solid 1px;
 }
 
 .l-friendly-conn a{
@@ -557,6 +564,7 @@ footer .l-social > li > a {
 .l-something {
     background-color:#fff;
     padding: 15px;
+    border: #c1c1c1 solid 1px;
 }
 
 .l-something img {
@@ -630,10 +638,14 @@ footer .l-tel, footer .l-mail {
     font-size:17px;
 }
 
-.l-siteinfo > div > h2 {
+.l-siteinfo > div h2 {
     font-weight:100;
     color:#1E87F0;
     margin-bottom:5px;
+}
+
+.l-siteinfo .days {
+    font-size:12px;
 }
 
 .l-siteinfo > div > h2:nth-child(1),
@@ -680,6 +692,10 @@ footer .l-tel, footer .l-mail {
     display:none
 }
 
+
+.l-rightSideBar > .l-tags {
+    border: #c1c1c1 solid 1px;
+}
 
 .l-tags {
     background-color:#fff;
@@ -792,6 +808,7 @@ footer .l-tel, footer .l-mail {
     .l-archive-item {
         margin-top: 4px;
         padding: 10px;
+        border: #c1c1c1 solid 1px;
     }
 
     .l-article-list article:nth-of-type(n+2) {
@@ -897,12 +914,14 @@ footer .l-tel, footer .l-mail {
 
     #artclAndCmmDiv {
         background-color:#FFF;
-        padding:5px 5px
+        padding:5px 5px;
+        border: #c1c1c1 solid 1px;
     }
     
     #artclAndCmmDiv2 {
         padding:15px 5px;
         margin-top:5px;
-        background-color:#FFF
+        background-color:#FFF;
+        border: #c1c1c1 solid 1px;
     }
 }

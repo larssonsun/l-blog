@@ -3,7 +3,8 @@
     background: #fff;
     font-size: 16px;
     padding:20px;
-    color:#000
+    color:#000;
+    border: #c1c1c1 solid 1px;
  }
   .l-timeline p {
     font-weight: 300;
