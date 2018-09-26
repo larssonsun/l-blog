@@ -3,13 +3,12 @@
 
 import asyncio
 from aiohttp import web
+from config.settings import FEED_DIR
 
 class Feeds_Atom(web.View):
     async def get(self):
-        location = self.request.app.router["static"].url_for(filename="atom.xml")
-        return web.HTTPFound(location=location)
+        return web.FileResponse(f"{FEED_DIR}/atom.xml")
 
 class Feeds_Rss(web.View):
     async def get(self):
-        location = self.request.app.router["static"].url_for(filename="rss.xml")
-        return web.HTTPFound(location=location)
+        return web.FileResponse(f"{FEED_DIR}/rss.xml")
