@@ -12,14 +12,16 @@ from email.mime.text import MIMEText
 from enum import Enum, unique
 from threading import Thread
 
+from feedgen.feed import FeedGenerator
 from jieba.analyse import ChineseAnalyzer
 from markdown import Markdown
 from markdown.extensions.toc import TocExtension
-from whoosh.fields import ID, STORED, TEXT, Schema, NUMERIC
-from whoosh.index import create_in, exists_in, open_dir, exists_in
+from whoosh.fields import ID, NUMERIC, STORED, TEXT, Schema
+from whoosh.index import create_in, exists_in, open_dir
 from whoosh.qparser import MultifieldParser
 
-from config.settings import HASH_KEY, INDEX_DIR, INDEXPREFIX, MAIL_SMTPCLIENT
+from config.settings import (FEED_DIR, HASH_KEY, INDEX_DIR, INDEXPREFIX,
+                             MAIL_SMTPCLIENT)
 
 analyzer = ChineseAnalyzer()
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
@@ -52,7 +54,7 @@ class WhooshSchema(Enum):
         createtime=NUMERIC(stored=True),
         title=TEXT(analyzer=analyzer, stored=True),
         content=TEXT(analyzer=analyzer, stored=True))
-        # summary=STORED)
+    # summary=STORED)
 
 
 def addDictProp(dct, newProp, prpoVal):
@@ -130,8 +132,8 @@ def getWhooshSearch(partten, indexNameLast, fieldList, hightlightFieldList):
                 rt.append(dict(hit))
                 if hightlightFieldList:
                     for hf in hightlightFieldList:
-                        hl = hit.highlights(hf)# Assume hf field is stored
-                        rt[-1][hf] = hl if hl and len(hl)>0 else rt[-1][hf]
+                        hl = hit.highlights(hf)  # Assume hf field is stored
+                        rt[-1][hf] = hl if hl and len(hl) > 0 else rt[-1][hf]
 
     return rt
 
@@ -157,3 +159,40 @@ def setWhooshDoc(idx, docs):
         with writer.group():
             for dct in docs:
                 writer.update_document(**dct)
+
+
+def setBlogFeed(fg, blog, authorName, authorUri, authorEmail):
+
+    fe = fg.add_entry()
+    fe.title(blog["title"])
+    fe.link(blog["link"])
+    fe.id(blog["name_en"])
+    fe.published(blog["created_at"])
+    fe.updated(blog["updated_at"])
+    fe.summary(blog["summary"])
+    fe.author(name=authorName, email=authorEmail, uri=authorUri)
+    fe.category(term=blog["cateTerm"], scheme=blog["cateScheme"])
+    fe.content(type="html")
+
+
+def setFeed(feedId, blogSiteUrl, logoUrl, feedUrlPrefix, blogSiteTitle, blogSiteSubTitle, 
+    authorName, authorEmail, blogs):
+    fg = FeedGenerator()
+    fg.id(feedId)  # 'http://lernfunk.de/media/654321'
+    fg.title(blogSiteTitle)  # 'Some Testfeed'
+    fg.author({'name': authorName, 'email': authorEmail})# {'name':'larsson','email':'john@example.de'}
+    fg.link(href=blogSiteUrl, rel='alternate')  # 'http://example.com'
+    fg.logo(logoUrl)  # 'http://ex.com/logo.jpg'
+    fg.subtitle(blogSiteSubTitle)  # 'This is a cool feed!'
+    fg.language('zh-CN')  # 'en'
+
+    if blogs and len(blogs) > 0:
+        [setBlogFeed(fg, blog, authorName, blogSiteUrl, authorEmail) for blog in blogs]
+
+    # 'http://larskiesow.de/test.atom'
+    fg.link(href=f'{feedUrlPrefix}atom.xml', rel='self')
+    fg.atom_file(f'{FEED_DIR}atom.xml')  # Write the ATOM feed to a file
+
+    # 'http://larskiesow.de/test.atom'
+    fg.link(href=f'{feedUrlPrefix}rss.xml', rel='self')
+    fg.rss_file(f'{FEED_DIR}rss.xml')  # Write the RSS feed to a file
