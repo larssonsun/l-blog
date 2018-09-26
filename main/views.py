@@ -31,8 +31,11 @@ def basePageInfo(func):
     """This function applies only to class views."""
     @wraps(func)
     async def wrapper(cls, *args, **kw):
-        # do not know how to replace after 3 sentence with one
-        curr = re.sub("hot", "", cls.request.path)
+
+        site_status = {}
+
+        #currMenuItem
+        curr = re.sub("hot", "", cls.request.path)# do not know how to replace after 3 sentence with one
         curr = re.sub("time", "", curr)
         curr = re.sub("/*", "", curr)
         if len(curr) == 0:
@@ -41,7 +44,15 @@ def basePageInfo(func):
             pass
         else:
             curr = None
-        cls.request.app.site_status = dict(currMenuItem=curr)
+        site_status["currMenuItem"] = curr
+
+        #blog_count, comment_count
+        blog_count = await exeScalar("select count(1) from `blogs`")
+        comment_count = await exeScalar("select count(1) from `comments` where `hide_status` = 0")
+        site_status["blog_count"] = blog_count
+        site_status["comment_count"] = comment_count
+
+        cls.request.app.site_status = site_status
         return await func(cls, *args, **kw)
 
     return wrapper

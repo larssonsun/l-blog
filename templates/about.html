@@ -20,7 +20,7 @@
                         <dd><span class="uk-badge">2</span>l-blog的诞生源自于python的学习过程, 原本的想法只是将所学之物付诸实践, 没想到最后形成了这个blog</dd>
                         <dd><span class="uk-badge">3</span>l-blog基于协程, 使用 aiohttp + uikit3 搭建, 源码在博主 Github 中, 目前部署在阿里云 ECS</dd>
                         <dd><span class="uk-badge">4</span>目前博客并不完善, 功能还可能有调整</dd>
-                        <dd><span class="uk-badge">5</span>如使用本博客源码作为自己的项目支持的同学请在项目上线后给一个说明, 指向我的 Github 博客项目的地址 https://github.com/larssonsun/l-blog, 谢谢</dd>
+                        <dd><span class="uk-badge">5</span>如使用本博客源码作为自己的项目支持的同学请在项目上线后给一个说明, 指向我的 Github 博客项目的地址 {{ None|fmtLabel("project_git_address") }}, 谢谢</dd>
                         <dd><span class="uk-badge">6</span><b>Bruce Eckel: "Life is short, you need Python"</b></dd>
                         <dt><h4>关于作者</h4></dt>
                         <dd><span class="uk-badge">1</span>本人从事软件开发一线工作将近14年, 还是第一次为自己做一个项目. 接触python 4个月(2018-9-25). </dd>
@@ -29,7 +29,7 @@
                         <dd><span class="uk-badge">4</span>C/S开发能力: c# winform, vb</dd>
                         <dd><span class="uk-badge">5</span>数据库: 常年使用mssql, 熟悉mysql, 了解sqllite, postgresql</dd>
                         <dd><span class="uk-badge">6</span>联系方式: l@scetia.com</dd>
-                        <dd><span class="uk-badge">7</span>本博客github: https://github.com/larssonsun</dd>
+                        <dd><span class="uk-badge">7</span>本博客github: {{ None|fmtLabel('project_git_address') }}</dd>
                         <dt><h4>功能介绍</h4></dt>
                         <dd>没啥亮点..</dd>
                         <dt><h4>技术支撑</h4></dt>
@@ -46,6 +46,7 @@
                 </div>
             </div>
             <div class="uk-width-1-4@l uk-visible@l l-rightSideBar">
+                {% include "_something.html" %}
                 {% include "_tagsform.html" %}
                 {% include "_catelogform.html" %}
                 {% include "_friendlyConn.html" %}

@@ -626,6 +626,17 @@ footer .l-tel, footer .l-mail {
     font-size:17px;
 }
 
+.l-siteinfo > div > h2 {
+    font-weight:100;
+    color:#1E87F0;
+    margin-bottom:5px;
+}
+
+.l-siteinfo > div > h2:nth-child(1),
+.l-siteinfo > div > h2:nth-child(2){
+    border-right:dashed 1px #E5E5E5
+}
+
 .l-nav {
     margin: 0;
     padding-left:0.5em;
@@ -741,7 +752,7 @@ footer .l-tel, footer .l-mail {
 
 
 
-@media (max-width: 1200px) {
+@media (max-width: 960px) {
     footer {
         padding-top: 5px;
         padding-bottom: 2px;

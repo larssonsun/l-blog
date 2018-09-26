@@ -20,33 +20,48 @@
               None|fmtLabel('timeline_label') }}</div>
             <hr>
             <ul class="timeline">
-              <li class="event" data-date="2018-9-25">
-                <div class="uk-flex">
-                  <h3 class="uk-width-5-6">Dinosaurs Roamed the Earth</h3>
-                  <span class="uk-width-1-6" class="">
-                      <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
-                      <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
-                      <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
-                  </span>
-                </div>
-                <p>RAWWWWWWRRR.</p>
-              </li>
               <li class="event" data-date="2018-9-10">
                 <div class="uk-flex">
-                  <h3 class="uk-width-5-6">Dinosaurs Roamed the Earth</h3>
+                  <h3 class="uk-width-5-6">时间轴加入</h3>
                   <span class="uk-width-1-6" class="">
-                      <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
-                      <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
-                      <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
+                    <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
+                    <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
+                    <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
                   </span>
                 </div>
-                <p>RAWWWWWWRRR.</p>
+                <p>
+                  <ul>
+                    <li>博客的全文搜索完成, 加入时间抽页面</li>
+                    <li>调整移动端呈现样式, 兼容各类移动设备</li>
+                    <li>加入发布者对回复的删除、回复等操作.</li>
+                    <li>加入管理员功能, 重建文章全文索引、删除文章缓存</li>
+                  </ul>
+                </p>
               </li>
+              <li class="event" data-date="2018-9-25">
+                <div class="uk-flex">
+                  <h3 class="uk-width-5-6">博客首次发布</h3>
+                  <span class="uk-width-1-6" class="">
+                    <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
+                    <span class="uk-margin-remove" uk-icon="icon: star; ratio: 0.7"></span>
+                  </span>
+                </div>
+                <p>
+                  <ul>
+                    <li>基本的博客功能完成，文章详细页面，文章分类、文章标签、文章的回复、回复的回复</li>
+                    <li>账号注册、登录、邮件方式激活</li>
+                    <li>文章使用redis进行数据缓存, 减少数据库读写</li>
+                    <li>文章使用markdown格式保存时, 前端会render成相应的html</li>
+                  </ul>
+                </p>
+              </li>
+
             </ul>
           </div>
         </div>
       </div>
       <div class="uk-width-1-4@l uk-visible@l l-rightSideBar">
+        {% include "_something.html" %}
         {% include "_tagsform.html" %}
         {% include "_catelogform.html" %}
         {% include "_friendlyConn.html" %}

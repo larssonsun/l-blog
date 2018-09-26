@@ -24,6 +24,8 @@ SWITCH_i18n = dict(
     words_forSendCmm=lambda x: "以便发表评论",
     blog_master=lambda x: "博主",
     blog_name_hide=lambda x: "当前位置",
+    blog_send_count=lambda x: "博客数",
+    blog_reply_count=lambda x: "回复数",
     default_meta_desctiption=lambda x: "本博客基于协程, 涉及python asyncio标准库、 aiohttp异步http框架等后端技术，前端使用Uikit3进行构建, 不断完善中",
     default_meta_keywords=lambda x: "l-blog,各人博客,web开发,python开发,python自学",
     default_title=lambda x: "L-blog 基于aiohttp和uikit搭建的各人博客",
@@ -42,7 +44,7 @@ SWITCH_i18n = dict(
     timeline_title=lambda x: "博客建站历程, 时间轴",
     timeline_discrib=lambda x:"查看博客的建站历程, 时间轴",
     timeline_keywords=lambda x:"建站历程,时间轴,历史",
-    timeline_label=lambda x: "建站历程, 时间轴",
+    timeline_label=lambda x: "时间轴",
     search_result_title=lambda x: "搜索结果",
     search_result_keywords=lambda x: "python,全文搜索,whoosh+jieba基本使用",
     search_result_discrib=lambda x: "本博客使用whoosh+jieba对博客的标题，内容进行分词存储，然后给每个分词建立索引。搜索时返回标题或者内容中包含目标关键字的博客。",
@@ -74,7 +76,7 @@ SWITCH_i18n = dict(
     tag=lambda x: "标签",
     catelog=lambda x: "分类",
     frientlyConn=lambda x: "友情链接",
-    something=lambda x: "一些东西",
+    something=lambda x: "博客相关",
     watchfor_detail=lambda x: "查看详细信息",
     blogCountInTag=lambda x, y: f"标签 [{x}] 下有{y}篇blog",
     blogCountInCatelog=lambda x, y: f"分类 [{x}] 下有{y}篇blog",
@@ -86,7 +88,8 @@ SWITCH_i18n = dict(
     sort_hot=lambda x: "热度排序",
     e404_discrib=lambda x: "未能找到该页面",
     e500_discrib=lambda x: "服务端发生错误",
-    welcome_toIndex=lambda x: "登录")
+    welcome_toIndex=lambda x: "登录",
+    project_git_address=lambda x: "https://github.com/larssonsun/l-blog")
 
 
 @unique
