@@ -3,7 +3,7 @@
 
 import asyncio
 from aiohttp import web
-from config.settings import FEED_DIR
+from config.settings import FEED_DIR, SITEMAP_DIR
 
 class Feeds_Atom(web.View):
     async def get(self):
@@ -12,3 +12,7 @@ class Feeds_Atom(web.View):
 class Feeds_Rss(web.View):
     async def get(self):
         return web.FileResponse(f"{FEED_DIR}/rss.xml")
+
+class Sitemap(web.View):
+    async def get(self):
+        return web.FileResponse(f"{SITEMAP_DIR}/sitemap.xml")

@@ -16,7 +16,7 @@ from main import filters
 from main.views import (About, AddComment, Approve, Archive, BlogDetail,
                         DelComment, FullSiteSearch, Index, Login, Logout,
                         Registe, Timeline, hello)
-from site_ import Feeds_Atom, Feeds_Rss
+from site_ import Feeds_Atom, Feeds_Rss, Sitemap
 from utils import hash_sha256
 
 
@@ -42,8 +42,11 @@ def setupRoutes(app):
     app.router.add_view("/registe/" + r"{approvedKey:\w{32}}/", Registe, name="registe_confirm")
     app.router.add_view("/approve/", Approve, name="approve")
     app.router.add_view("/fullsitesearch/", FullSiteSearch, name="full-size-search")
+
+    #site
     app.router.add_view("/atom.xml", Feeds_Atom, name="feeds-atom")
     app.router.add_view("/rss.xml", Feeds_Rss, name="feeds-rss")
+    app.router.add_view("/sitemap.xml", Sitemap, name="sitemap")
 
     #admin
     app.router.add_view("/admin/resetindex/", ResetBlogIndex, name="admin-resetindex")
