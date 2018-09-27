@@ -4,8 +4,14 @@ html {
     font-weight: normal;
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
-    background:#fff url(http://yanshi.sucaihuo.com/modals/39/3978/demo/img/header.jpg);
-     /* url(https://images.unsplash.com/photo-1519982714547-54ccfb2c121e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8426b2784b877ef59b32c1e50c0bfeb6&auto=format&fit=crop&w=1546&q=80); */
+    background:#fff url(/static/images/bgrepeat.png);
+    /* url(http://pic76.nipic.com/file/20150828/10922672_215320987475_2.jpg); */
+    /* url(https://png.pngtree.com/thumb_back/fw800/back_pic/03/79/33/1957c2939730dd2.jpg); */
+    /* url(https://bluewallpaperbackground.weebly.com/uploads/1/9/7/6/19768865/8774938_orig.jpg); */
+    /* url(http://www.desktopwallpaperhd.net/wallpapers/7/c/wallpaper-background-web-content-back-70652.jpg); */
+    /* url(https://fitzdecarts.com/wp-content/uploads/2018/03/background-website.jpg); */
+    /* url(http://yanshi.sucaihuo.com/modals/39/3978/demo/img/header.jpg); */
+    /* url(https://images.unsplash.com/photo-1519982714547-54ccfb2c121e?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8426b2784b877ef59b32c1e50c0bfeb6&auto=format&fit=crop&w=1546&q=80); */
     color: #000;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
