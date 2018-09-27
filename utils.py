@@ -21,7 +21,7 @@ from whoosh.index import create_in, exists_in, open_dir
 from whoosh.qparser import MultifieldParser
 
 from config.settings import (FEED_DIR, HASH_KEY, INDEX_DIR, INDEXPREFIX,
-                             MAIL_SMTPCLIENT)
+                             MAIL_SMTPCLIENT, SITEMAP_DIR)
 
 analyzer = ChineseAnalyzer()
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
@@ -198,3 +198,21 @@ def setFeed(feedId, blogSiteUrl, logoUrl, feedUrlPrefix, blogSiteTitle, blogSite
 
     fg.link(href=f'{feedUrlPrefix}rss.xml', rel='self')
     fg.rss_file(f'{FEED_DIR}/rss.xml')
+
+
+def saveFileToPath(fileName, sitemapDict):
+    #get xml str
+    header = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    footer = '</urlset>'
+    contents = []
+    content = '<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>'
+    [contents.append(content.format(loc=sd["loc"], lastmod=sd["lastmod"]))
+     for sd in sitemapDict]
+    contentStr = "".join(contents)
+
+    #write to file
+    fileFullName = f"{SITEMAP_DIR}/{fileName}"
+    if os.path.exists(fileFullName):
+        os.remove(fileFullName)
+    with open(file=fileFullName, mode="w", encoding="utf-8") as f:
+        f.write(f'{header}{contentStr}{footer}')

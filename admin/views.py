@@ -3,16 +3,17 @@
 
 import asyncio
 import json
+from datetime import datetime
 from functools import wraps
 
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
-from datetime import datetime
+
 from main.views import login_required
-from models.db import select, delete_cache
-from utils import WhooshSchema, rtData, setWhooshSearch, setFeed, addDictProp
-from config.settings import FEED_DIR
+from models.db import delete_cache, select
+from utils import (WhooshSchema, addDictProp, rtData, saveFileToPath, setFeed,
+                   setWhooshSearch)
 
 
 def admin_required(func):
@@ -65,7 +66,7 @@ class ResetBlogCache(web.View):
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
-class ResetRss(web.View):
+class ResetFeeds(web.View):
 
     @login_required(True)
     @admin_required
@@ -81,24 +82,60 @@ class ResetRss(web.View):
                 `content`,  `catelog`
                 from `blogs` a
                 order by `updated_at`""")
-            [addDictProp(blog, "link", router["BlogDetail"].url_for(id=blog["name_en"])) for blog in blogs]
-            [addDictProp(blog, "cateScheme", f'{urlIndex}{router["catelog"].url_for(cateId=blog["catelog"])}') for blog in blogs]
+            [addDictProp(blog, "link", router["BlogDetail"].url_for(
+                id=blog["name_en"])) for blog in blogs]
+            [addDictProp(
+                blog, "cateScheme", f'{urlIndex}{router["catelog"].url_for(cateId=blog["catelog"])}') for blog in blogs]
 
-            [addDictProp(blog, "created_at", 
-                datetime.fromtimestamp(float(blog["created_at"])).strftime("%Y-%m-%d %H:%M:%S")) for blog in blogs]
+            [addDictProp(blog, "created_at",
+                         datetime.fromtimestamp(float(blog["created_at"])).strftime("%Y-%m-%d %H:%M:%S")) for blog in blogs]
 
-            [addDictProp(blog, "updated_at", 
-                datetime.fromtimestamp(float(blog["updated_at"])).strftime("%Y-%m-%d %H:%M:%S")) for blog in blogs]
+            [addDictProp(blog, "updated_at",
+                         datetime.fromtimestamp(float(blog["updated_at"])).strftime("%Y-%m-%d %H:%M:%S")) for blog in blogs]
 
-            
             #create feed
             setFeed(
                 f'tag:{ rqst.host },{ datetime.now().strftime("%Y-%m-%d %H:%M:%S") }',
-                f'{urlIndex}/', 
-                f'{urlIndex}{router["static"].url_for(filename=r"images/favicon.png")}', 
+                f'{urlIndex}/',
+                f'{urlIndex}{router["static"].url_for(filename=r"images/favicon.png")}',
                 f'{urlIndex}/', "l", "l-blog", "larsson", "l@scetia.com", blogs)
             rtd = rtData(error_code=-1, error_msg="重置rss成功", data=None)
         except Exception as ex:
             rtd = rtData(error_code=13001,
                          error_msg=f"重置rss时发生错误{ex}", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class ResetSitemap(web.View):
+
+    @login_required(True)
+    @admin_required
+    async def post(self):
+        try:
+            rqst = self.request
+            router = rqst.app.router
+            urlIndex = f'{ rqst.scheme }://{ rqst.host }'
+
+            #get blogs
+            blogs = await select("""
+                select `name_en`, `updated_at`
+                from `blogs` a
+                order by `updated_at`""")
+
+            [addDictProp(blog, "lastmod",
+                         datetime.fromtimestamp(float(blog["updated_at"])).strftime("%Y-%m-%d")) for blog in blogs]
+
+            [addDictProp(
+                blog, "loc", f'{urlIndex}/{router["BlogDetail"].url_for(id=blog["name_en"])}') for blog in blogs]
+
+            [blog.pop("name_en") for blog in blogs]
+            [blog.pop("updated_at") for blog in blogs]
+
+            #write to sitemap.xml
+            saveFileToPath("sitemap.xml", blogs)
+
+            rtd = rtData(error_code=-1, error_msg="重置sitemap成功", data=None)
+        except Exception as ex:
+            rtd = rtData(error_code=14001,
+                         error_msg=f"重置sitemap时发生错误{ex}", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)

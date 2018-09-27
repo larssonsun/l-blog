@@ -36,8 +36,8 @@ $(document).ready(function () {
     });
 
     //resetblogcache
-    var resetRss = adminPad.find("a[name='reset-blog-cache']");
-    $(resetRss).click(function () {
+    var resetBlogcache = adminPad.find("a[name='reset-blog-cache']");
+    $(resetBlogcache).click(function () {
 
         var restBlogCacheBttn = $(this);
         var URL = restBlogCacheBttn.attr("url-send-resetblogcache")
@@ -61,12 +61,38 @@ $(document).ready(function () {
         return false;
     });
 
-    //reset rss
-    var resetRss = adminPad.find("a[name='reset-rss']");
-    $(resetRss).click(function () {
+    //reset feeds
+    var resetFeeds = adminPad.find("a[name='reset-feeds']");
+    $(resetFeeds).click(function () {
 
-        var resetRssBttn = $(this);
-        var URL = resetRssBttn.attr("url-send-resetrss")
+        var resetFeedsBttn = $(this);
+        var URL = resetFeedsBttn.attr("url-send-resetfeeds")
+        if (redo) {
+            redo = false;
+            ajxJson(URL, "post", null,
+                function (result) {
+                    if (new Number(result.error_code) < 0) {
+                        showMsg(result.error_msg, "success")
+                    }
+                    else
+                        showMsg(result.error_msg, "warning")
+                    redo = true;
+                },
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    showMsg(textStatus, "danger")
+                    redo = true;
+                });
+        }
+        redo = true;
+        return false;
+    });
+
+    //reset sitemap
+    var resetSitemap = adminPad.find("a[name='reset-sitemap']");
+    $(resetSitemap).click(function () {
+
+        var resetSitemapBttn = $(this);
+        var URL = resetSitemapBttn.attr("url-send-resetsitemap")
         if (redo) {
             redo = false;
             ajxJson(URL, "post", null,
