@@ -13,11 +13,11 @@
 <div class="uk-section uk-section-small l-background-color">
     <div class="uk-container">
         <div class="uk-grid uk-margin-remove-left">
-            <div class="uk-width-3-4@l uk-width-1-1@m uk-section uk-padding-remove">
+            <div class="uk-width-3-4@m uk-width-1-1@s uk-section uk-padding-remove">
                     {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), blog.catelog_name, 
                     url('catelog', cateId=blog.catelog_id), blog.catelog_name, blog.name) }}
             </div>
-            <div id="artclAndCmmDiv" class="uk-width-3-4@l uk-width-1-1@m uk-box-shadow-large">
+            <div id="artclAndCmmDiv" class="uk-width-3-4@m uk-width-1-1@s uk-box-shadow-large">
                 <article class="uk-article uk-margin-small-bottom">
                     <h2 class="uk-margin-medium-top uk-margin-medium-bottom uk-heading-line uk-text-center l-article-title">
                         <span>{{ blog.name }}</span>
@@ -61,7 +61,7 @@
                     {% endif %}
                 </article>
             </div>
-            <div class="uk-width-1-4@l l-sidebar-right uk-visible@l">
+            <div class="uk-width-1-4@m uk-visible@m l-sidebar-right">
                 <div uk-sticky="offset: 160" class="uk-sticky uk-active uk-sticky-fixed">
                     {{ blog.toc|safe }}
                     <ul class="uk-nav uk-nav-default l-nav uk-nav-parent-icon">
@@ -73,7 +73,7 @@
                 </div>
                 <div class="uk-sticky-placeholder" style="height: 232px; margin: 0px;"></div>
             </div>
-            <div id="artclAndCmmDiv2" class="uk-width-3-4@l uk-width-1-1@m uk-box-shadow-large">
+            <div id="artclAndCmmDiv2" class="uk-width-3-4@m uk-width-1-1@s uk-box-shadow-large">
                 <div class="uk-grid-small uk-child-width-auto l-reply-bar" uk-grid>
                     <div>
                         <i uk-icon="icon:comments;ratio:0.9"></i>

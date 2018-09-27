@@ -2,7 +2,7 @@
     <div class="uk-container uk-margin-auto uk-margin-small-right uk-margin-small-left">
         <div class="uk-grid">
             <div class="uk-width-1-3@m uk-width-1-1@s uk-row-first">
-                <h3>L-{{ None|fmtLabel("logo") }}</h3>
+                <h3><img class="l-logo" src="/static/images/favicon.png"></h3>
                 <p>{{ None|fmtLabel("default_meta_desctiption") }}</p>
             </div>
             <div class="uk-width-1-4@m uk-width-1-1@s">
@@ -75,17 +75,16 @@
     </div>
 </footer>
 <footer class="l-dark uk-hidden@l" uk-scrollspy="cls:uk-animation-fade;delay:10;repeat:true">
-    <div class="uk-text-center">Copyright © 2018 L-{{ None|fmtLabel("logo") }}. Powered by Uikit </div>
+    <div class="uk-text-center">Copyright © 2018-2019 larsson L-blog. Powered by Uikit. </div>
     <div class="uk-text-center">
         <a class="uk-margin-small-right" href="https://getuikit.com/" target="blank_"><span uk-icon="icon: uikit; ratio: 0.7"></span></a>
         <a class="uk-margin-small-right" href="{{ url('feeds-atom') }}" target="blank_"><span uk-icon="icon: rss; ratio: 0.7"></span></a>
         <a class="uk-margin-small-right" href="{{ None|fmtLabel('project_git_address') }}" target="blank_"><span
                 uk-icon="icon: github; ratio: 0.7"></span></a>
+        <a class="uk-margin-small-right" href="{{ url('sitemap') }}" target="blank_"><span uk-icon="icon: location; ratio: 0.7"></span></a>
     </div>
-    <hr class="uk-margin-small">
     <div class="uk-text-center">
         <a href="#" class="uk-margin-right">待加入站长统计</a>
         <a href="#" class="uk-margin-right">待备案</a>
-        <a href="{{ url('sitemap') }}" target="blank_">sitemap</a>
     </div>
 </footer>
