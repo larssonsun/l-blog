@@ -5,6 +5,8 @@ import re
 from datetime import datetime
 from enum import Enum, unique
 
+from utils import getCuttedStr
+
 REC_LEAD = re.compile(r"\|lead\|(.*)\|leadend\|")
 REC_MAIN = re.compile(r".*\|main\|(.*)\|mainend\|")
 TITLE_IMG_IMG = re.compile(r".*(\|bgc\|.*\|bgcend\|)")
@@ -42,8 +44,8 @@ SWITCH_i18n = dict(
     about_keywords=lambda x: "关于网站,关于博客,关于作者,关于站长",
     about_menu_href=lambda x: "关于",
     timeline_title=lambda x: "博客建站历程, 时间轴",
-    timeline_discrib=lambda x:"查看博客的建站历程, 时间轴",
-    timeline_keywords=lambda x:"建站历程,时间轴,历史",
+    timeline_discrib=lambda x: "查看博客的建站历程, 时间轴",
+    timeline_keywords=lambda x: "建站历程,时间轴,历史",
     timeline_label=lambda x: "时间轴",
     search_result_title=lambda x: "搜索结果",
     search_result_keywords=lambda x: "python,全文搜索,whoosh+jieba基本使用",
@@ -58,7 +60,7 @@ SWITCH_i18n = dict(
     login_ph_pwd=lambda x: "密码",
     logo=lambda x: "",
     registe_menu_href=lambda x: "注册",
-    right_slide_bar_logout=lambda x:"登出",
+    right_slide_bar_logout=lambda x: "登出",
     created_at=lambda x: f" {x}",
     read_count=lambda x: f"阅读 {x}",
     read_count_t2=lambda x: f"阅读次数 {x}",
@@ -68,7 +70,7 @@ SWITCH_i18n = dict(
     comment_need_log=lambda x, y, z: f"请先{y}或{z}，以便进行评论",
     reply=lambda x: "回复",
     user_reply_count=lambda x: "回复数",
-    operate_reply=lambda x, y: "删除" if y==0 else "恢复",
+    operate_reply=lambda x, y: "删除" if y == 0 else "恢复",
     send_reply=lambda x: "发表回复",
     cancel=lambda x: "取消",
     submit=lambda x: "发表",
@@ -100,14 +102,17 @@ class CommHideStatus(Enum):
     HideBySelf = 2
     HideBySystem = 3
 
+
 def converWith3dot(content):
     return f"...{content}..."
+
 
 def limitCmmLength(content, limitLen, hideType, therest=False):
     if hideType == CommHideStatus.Normal.value:
         return content[limitLen:] if therest else content[:limitLen]
     else:
         return "" if therest else content
+
 
 def fmtGetHideInfo(content, hideType):
     if hideType == CommHideStatus.HideByAdmin.value:
@@ -119,11 +124,13 @@ def fmtGetHideInfo(content, hideType):
     else:
         return content
 
+
 def fmtGetHideClass(content):
     if content == CommHideStatus.Normal.value:
         return ""
     else:
         return "l-comment-body-banned"
+
 
 def fmtCatelog(content, doType):
     if "iconType" == doType:
@@ -146,9 +153,11 @@ def fmtMonthDateFromFloat(flt):
     if isinstance(flt, float):
         return datetime.fromtimestamp(flt).strftime("%m-%d")
 
+
 def fmtYearMonthDateFromFloat(flt):
     if isinstance(flt, float):
         return datetime.fromtimestamp(flt).strftime("%Y-%m-%d")
+
 
 def fmtLabel(content, typeName, *parm):
     do = SWITCH_i18n.get(typeName)
@@ -205,11 +214,11 @@ def getArticalMain(content):
 
 def getArticalFull(content, **kw):
     size = kw.get("size", 1)
-    # ctt = re.sub("[\|lead\||\|main\||\|leadend\||\|mainlead\|]", "", content)
-    if size < len(content):  # ctt and
-        return content[:size] + " ..."  # ctt[:size] + " ..."
+    s = getCuttedStr(content, size)
+    if s != content:
+        return s + " ..."
     else:
-        return content
+        return s
 
 
 def getCommentForComments(cfcsList, commentId):

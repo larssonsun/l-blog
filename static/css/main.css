@@ -51,12 +51,11 @@ body {
     border-radius: 4px;
     font-size: 90%;
     padding: .8rem;
-    margin-top:0
 }
 
-.codehilite .copy-code {
-    width:100%;
-    color:#fff;
+.codehilite pre > a {
+    width: 100%;
+    color:#fff
 }
 
 #artclAndCmmDiv {
@@ -73,14 +72,14 @@ body {
 }
 
 .l-article-image {
-    padding: 8px;
+    padding: 1px;
 }
 
 .l-article-image > div > img{
     width:245px;
     background-color:#fff;
-    padding:15px;
-    border: #E5E5E5 1px solid;
+    padding:5px;
+    border: #E5E5E5 px solid;
     
 }
 
@@ -164,7 +163,7 @@ li.l-active>a>span {
 
 .l-article-list article{
     background-color:#FFF;
-    padding:15px 30px;
+    padding:15px 10px 15px 30px;
     border: #c1c1c1 solid 1px
 }
 
@@ -202,8 +201,6 @@ li.l-active>a>span {
 div.l-article-title {
     font-size:18px;
     font-weight:bold;
-    padding-bottom:4px;
-    border-bottom: #e5e5e5 1px solid
 }
 
 .l-avatar-img {
@@ -665,7 +662,6 @@ footer .l-tel, footer .l-mail {
 
 .l-siteinfo .days {
     font-size:12px;
-    font-weight: bold
 }
 
 .l-siteinfo > div > h2:nth-child(1),
@@ -690,7 +686,7 @@ footer .l-tel, footer .l-mail {
 } */
 
 .l-nav>li>a {
-    color: #3F3F3F;
+    color: #666;
 }
 .l-nav>li>a {
     padding: 5px 0;

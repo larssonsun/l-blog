@@ -19,9 +19,9 @@
             </div>
             <div id="artclAndCmmDiv" class="uk-width-3-4@m uk-width-1-1@s uk-box-shadow-large">
                 <article class="uk-article uk-margin-small-bottom">
-                    <h2 class="uk-margin-medium-top uk-margin-medium-bottom uk-heading-line uk-text-center l-article-title">
-                        <span>{{ blog.name }}</span>
-                    </h2>
+                    <div class="uk-padding uk-heading-line uk-text-center l-article-title">
+                        <h2>{{ blog.name }}</h2>
+                    </div>
                     <p class="uk-article-meta l-meta">
                         <span>{{ blog.user_name|fmtLabel('author') }}</span>
                         <span>{{ blog.browse_count|fmtLabel('read_count') }}</span>

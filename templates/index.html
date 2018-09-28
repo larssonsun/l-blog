@@ -59,7 +59,7 @@
                             <i uk-icon="icon:user;ratio:0.6"></i>
                             <span><a href="">{{ artical.user_name }}</a></span>
                         </p>
-                        <p>{{ artical.summary|getArticalFull(size=150) }}</p>
+                        <p>{{ artical.summary|getArticalFull(size=160) }}</p>
                         <div class="uk-grid-small uk-child-width-auto l-bottom-bar" uk-grid>
                             <div class="uk-text-small">
                                 <span uk-tooltip="title:{{ None|fmtLabel('catelog') }};pos:bottom">
@@ -82,7 +82,8 @@
                     </div>
                     <div class="uk-width-1-4@l uk-visible@l l-article-image">
                         <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
-                            <img data-src="{{ artical.title_image|fmtgetTitleImg('img') }}" style="background-color:{{ artical.title_image|fmtgetTitleImg('bgc') }}" alt="{{ artical.name }}" uk-img>
+                            <img data-src="{{ artical.title_image|fmtgetTitleImg('img') }}" class=" uk-border-rounded"
+                                style="background-color:{{ artical.title_image|fmtgetTitleImg('bgc') }}" alt="{{ artical.name }}" uk-img>
                         </div>
                     </div>
                 </article>
