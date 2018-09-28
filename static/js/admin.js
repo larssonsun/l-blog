@@ -112,4 +112,30 @@ $(document).ready(function () {
         redo = true;
         return false;
     });
+
+    //reset robots
+    var resetRobots = adminPad.find("a[name='reset-robots']");
+    $(resetRobots).click(function () {
+
+        var resetRobotsBttn = $(this);
+        var URL = resetRobotsBttn.attr("url-send-resetrobots")
+        if (redo) {
+            redo = false;
+            ajxJson(URL, "post", null,
+                function (result) {
+                    if (new Number(result.error_code) < 0) {
+                        showMsg(result.error_msg, "success")
+                    }
+                    else
+                        showMsg(result.error_msg, "warning")
+                    redo = true;
+                },
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    showMsg(textStatus, "danger")
+                    redo = true;
+                });
+        }
+        redo = true;
+        return false;
+    });
 });

@@ -10,13 +10,13 @@ from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
-from admin.views import ResetBlogCache, ResetBlogIndex, ResetFeeds, ResetSitemap
+from admin.views import ResetBlogCache, ResetBlogIndex, ResetFeeds, ResetSitemap, ResetRobots
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 from main import filters
 from main.views import (About, AddComment, Approve, Archive, BlogDetail,
                         DelComment, FullSiteSearch, Index, Login, Logout,
                         Registe, Timeline, hello)
-from site_ import Feeds_Atom, Feeds_Rss, Sitemap
+from site_ import Feeds_Atom, Feeds_Rss, Sitemap, Robots
 from utils import hash_sha256
 
 
@@ -47,12 +47,14 @@ def setupRoutes(app):
     app.router.add_view("/atom.xml", Feeds_Atom, name="feeds-atom")
     app.router.add_view("/rss.xml", Feeds_Rss, name="feeds-rss")
     app.router.add_view("/sitemap.xml", Sitemap, name="sitemap")
+    app.router.add_view("/robots.txt", Robots, name="robots")
 
     #admin
     app.router.add_view("/admin/resetindex/", ResetBlogIndex, name="admin-resetindex")
     app.router.add_view("/admin/resetblogcache/", ResetBlogCache, name="admin-resetblogcache")
     app.router.add_view("/admin/ResetRss/", ResetFeeds, name="admin-resetfeeds")
     app.router.add_view("/admin/ResetSitemap/", ResetSitemap, name="admin-resetsitemap")
+    app.router.add_view("/admin/ResetBobots/", ResetRobots, name="admin-resetrobots")
     
 
 def setupStaticRoutes(app):
