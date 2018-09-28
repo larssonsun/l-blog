@@ -163,7 +163,8 @@ li.l-active>a>span {
 }
 
 .l-article-list article{
-    background-color:#FFF;
+    background:#fff url(/static/images/article/bg-fifa19.png) no-repeat right 10px bottom 10px;
+    /* background-color:#FFF; */
     padding:15px 30px;
     border: #c1c1c1 solid 1px
 }
