@@ -79,7 +79,7 @@ body {
 .l-article-image > div > img{
     width:245px;
     background-color:#fff;
-    padding:5px;
+    padding:15px;
     border: #E5E5E5 1px solid;
     
 }
@@ -163,8 +163,7 @@ li.l-active>a>span {
 }
 
 .l-article-list article{
-    background:#fff url(/static/images/article/bg-fifa19.png) no-repeat right 10px bottom 10px;
-    /* background-color:#FFF; */
+    background-color:#FFF;
     padding:15px 30px;
     border: #c1c1c1 solid 1px
 }
