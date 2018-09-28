@@ -21,7 +21,7 @@ from whoosh.index import create_in, exists_in, open_dir
 from whoosh.qparser import MultifieldParser
 
 from config.settings import (FEED_DIR, HASH_KEY, INDEX_DIR, INDEXPREFIX,
-                             MAIL_SMTPCLIENT, SITEMAP_DIR, ROBOTS_DIR)
+                             MAIL_SMTPCLIENT, ROBOTS_DIR, SITEMAP_DIR)
 
 analyzer = ChineseAnalyzer()
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
