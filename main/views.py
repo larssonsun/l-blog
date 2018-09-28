@@ -35,15 +35,12 @@ def basePageInfo(func):
         site_status = {}
 
         #currMenuItem
-        curr = re.sub("hot", "", cls.request.path)# do not know how to replace after 3 sentence with one
-        curr = re.sub("time", "", curr)
-        curr = re.sub("/*", "", curr)
-        if len(curr) == 0:
+        paths = cls.request.path.split("/")
+
+        if len(paths) < 2 or len(paths[1]) == 0:
             curr = "index"
-        elif curr in ("archive", "about"):
-            pass
         else:
-            curr = None
+            curr = paths[1]
         site_status["currMenuItem"] = curr
 
         #blog_count, comment_count

@@ -22,6 +22,9 @@
     {% if app.l_data.admin == 1 %}
     <script src="/static/js/admin.js"></script>
     {% endif %}
+    {% if app.site_status.currMenuItem == "blogdetail" %}
+    <script src="/static/js/blogdetail.js"></script>
+    {% endif %}
     {% if app.site_status.currMenuItem == "about" %}
     <script src="/static/js/about.js"></script>
     {% endif %}

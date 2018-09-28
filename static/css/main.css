@@ -51,6 +51,12 @@ body {
     border-radius: 4px;
     font-size: 90%;
     padding: .8rem;
+    margin-top:0
+}
+
+.codehilite .copy-code {
+    width:100%;
+    color:#fff;
 }
 
 #artclAndCmmDiv {
@@ -683,7 +689,7 @@ footer .l-tel, footer .l-mail {
 } */
 
 .l-nav>li>a {
-    color: #bbb;
+    color: #3F3F3F;
 }
 .l-nav>li>a {
     padding: 5px 0;
