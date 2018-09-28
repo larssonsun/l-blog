@@ -40,17 +40,6 @@ var showMsg = function (msg, status, callbackFn) {
     $(".uk-notification-message").removeClass("l-notification").addClass("l-notification");
 }
 
-var blogBegin = function(pattern){
-    //online days
-    var onlineStart = "2018-9-24 13:56";
-    var startDate = Date.parse(onlineStart.replace('/-/g', '/'));
-    var now = new Date();
-    var diffDate = (now - startDate);//+1*24*60*60*1000;  
-    var diffDaysStr = diffDate / (1 * 24 * 60 * 60 * 1000);
-    var onlinedays = $(pattern);
-    $(onlinedays).text(diffDaysStr.toFixed(0));
-}
-
 $(document).ready(function(){
     //caotm的我不知道如何在markdown生成的toc里面注入class和属性，只能自己用脚本注册
     

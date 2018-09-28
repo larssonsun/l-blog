@@ -665,6 +665,7 @@ footer .l-tel, footer .l-mail {
 
 .l-siteinfo .days {
     font-size:12px;
+    font-weight: bold
 }
 
 .l-siteinfo > div > h2:nth-child(1),

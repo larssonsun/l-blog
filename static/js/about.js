@@ -5,7 +5,7 @@
 
 $(document).ready(function () {
     
-    blogBegin("span[onlinedays]");
+    
 });
 
 

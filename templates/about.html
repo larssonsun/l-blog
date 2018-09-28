@@ -14,7 +14,7 @@
                 {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel('about_menu_href')) }}
                 <div class="uk-box-shadow uk-box-shadow-large l-about">
                     <dl class="uk-description-list uk-description-list-divider">
-                        <dt>l-blog 已经上线 <span onlinedays>0</span> 天了</dt>
+                        <dt>l-blog 已经上线 <span onlinedays>{{ app.site_status.siteonlinedays }}</span> 天了</dt>
                         <dt><h4>关于博客</h4></dt>
                         <dd><span class="uk-badge">1</span>l-blog是一个各人博客, 用来分享生活, 工作, 学习中的一些值得留意的东西</dd>
                         <dd><span class="uk-badge">2</span>l-blog的诞生源自于python的学习过程, 原本的想法只是将所学之物付诸实践, 没想到最后形成了这个blog</dd>

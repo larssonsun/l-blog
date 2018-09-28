@@ -32,7 +32,8 @@ def basePageInfo(func):
     @wraps(func)
     async def wrapper(cls, *args, **kw):
 
-        site_status = {}
+        cls.request.app.site_status = {}
+        site_status = cls.request.app.site_status
 
         #currMenuItem
         paths = cls.request.path.split("/")
@@ -48,6 +49,11 @@ def basePageInfo(func):
         comment_count = await exeScalar("select count(1) from `comments` where `hide_status` = 0")
         site_status["blog_count"] = blog_count
         site_status["comment_count"] = comment_count
+
+        #siteonlinedays
+        beginTime = datetime.strptime("2018-9-24 13:56", "%Y-%m-%d %H:%M")
+        site_status["siteonlinedays"] = (datetime.now() - beginTime).days
+
 
         cls.request.app.site_status = site_status
         return await func(cls, *args, **kw)
@@ -210,7 +216,7 @@ class Approve(web.View):
                                  error_msg="目标账号已经激活，无需重复操作", data=None)
                 else:
                     rtd = await sendCerMain(
-                        cerUrl=f"{self.request.scheme}:/{self.request.host}{self.request.app.router['registe'].url_for()}",
+                        cerUrl=f"{self.request.scheme}://{self.request.host}{self.request.app.router['registe'].url_for()}",
                         userId=user.get("id"),
                         uname=user.get("name"),
                         mailAddr=user.get("email"))
@@ -286,7 +292,11 @@ class Registe(web.View):
                                  error_msg="注册过程中发生错误", data=None)
 
         if rtd.error_code == -1:
-            rtd = await sendCerMain(cerUrl=self.request.url, userId=userId, uname=uname, mailAddr=email)
+            rtd = await sendCerMain(
+                cerUrl=self.request.url, 
+                userId=userId, 
+                uname=uname, 
+                mailAddr=email)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
