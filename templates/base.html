@@ -99,6 +99,9 @@
                             <a href="" class="l-mobi-menu"><span uk-icon="icon: menu; ratio: 1"></a>
                             <div class="l-dropdown-mobi" uk-dropdown="mode: click; animation: uk-animation-slide-top-small; duration:100">
                                 <ul class="uk-nav uk-dropdown-nav">
+                                    {% if app.l_data %}
+                                    {% include "_userInfoSlide.html" %}
+                                    {% endif %}
                                     <li>
                                         <div class="uk-heading-line uk-text-center"><span>页面</span></div>
                                         <div class="uk-column-1-3 uk-column-divider l-mobi-column">
@@ -108,7 +111,6 @@
                                         </div>
                                     </li>
                                     {% if app.l_data %}
-                                    <li class="uk-nav-divider uk-nav-header"></li>
                                     <li>
                                         <div class="uk-heading-line uk-text-center"><span>全文搜索</span></div>
                                         <div>
@@ -118,10 +120,23 @@
                                             </form>
                                         </div>
                                     </li>
+                                    {% if app.l_data.admin == 1 %}
+                                    <li class="adminPad uk-active l-mobi-admin">
+                                        <div class="uk-heading-line uk-text-center"><span>管理员功能</span></div>
+                                        <div class="uk-column-1-3 uk-column-divider l-mobi-column">
+                                            <p><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></p>
+                                            <p><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></p>
+                                            <p><a name="reset-rss" url-send-resetrss="{{ url('admin-resetfeeds') }}" href="">生成rss</a></p>
+                                            <p><a name="reset-sitemap" url-send-resetsitemap="{{ url('admin-resetsitemap') }}" href="">生成sitemap</a></p>
+                                            <p><a name="reset-robots" url-send-resetrobots="{{ url('admin-resetrobots') }}" href="">生成robots.txt</a></p>
+                                        <div>
+                                    </li>
                                     {% endif %}
+                                    <li class="uk-nav-divider uk-nav-header"></li>
+                                    <li><a href="#reset-password-sections{{ _userInfoSlideCount }}" uk-toggle>{{ None|fmtLabel("resetpwd_title") }}</a></li>
+                                    <li class="uk-nav-divider uk-nav-header"></li>
+                                    <li class="uk-active"><a href="{{ url('logout') }}">{{None|fmtLabel("right_slide_bar_logout") }}</a></li>
                                     {% set _userInfoSlideCount = "_mobile" %}
-                                    {% if app.l_data %}
-                                    {% include "_userInfoSlide.html" %}
                                     {% else %}
                                     <li class="uk-nav-divider uk-nav-header"></li>
                                     <li class="uk-active">
