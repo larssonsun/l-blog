@@ -1,9 +1,9 @@
-<li class="uk-visible@l">
+<li class="uk-visible@m">
     <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
         <button class="uk-button uk-button-primary" type="button" uk-toggle="target: #offcanvas-userInfo">
             <span>{{ app.l_data.name }}</span>
         </button>
-        <div id="offcanvas-userInfo" uk-offcanvas="mode: push; flip: true; overlay: true ">
+        <div id="offcanvas-userInfo" uk-offcanvas="mode: push; flip: true; overlay: true">
             <div class="uk-offcanvas-bar l-menu-userinfo">
                 <button class="uk-offcanvas-close" type="button" uk-close></button>
                 <div class="uk-flex uk-flex-center uk-margin-medium-top l-menu-userinfo-title">
@@ -31,6 +31,50 @@
                     </li>
                 </ul>
                 <hr>
+                <ul class="adminPad uk-nav uk-nav-default">
+                    <li><a href="#reset-password-sections{{ _userInfoSlideCount }}" uk-toggle>{{ None|fmtLabel("resetpwd_title") }}</a></li>
+                    <div id="reset-password-sections{{ _userInfoSlideCount }}" resetpasswordsections uk-modal>
+                        <div class="uk-modal-dialog">
+                            <button class="uk-modal-close-default" type="button" uk-close></button>
+                            <div class="uk-modal-header">
+                                <h2 class="uk-modal-title uk-text-large">{{ None|fmtLabel("resetpwd_title") }}</h2>
+                                <span class="l-spinner uk-width-1-6 uk-align-right uk-margin-small-right" uk-spinner="ratio: 1"></span>
+                            </div>
+                            <div class="uk-modal-body uk-padding-medium">
+                                <form class="reset-password-form">
+                                    <fieldset class="uk-fieldset uk-text-center">
+                                        <div class="uk-margin">
+                                            <div class="uk-inline uk-width-4-5">
+                                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock"> </span>
+                                                <input class="uk-input uk-form-medium" name="resetpwd-orgpwd" required="" placeholder="{{ None|fmtLabel('resetpwd_orgpwd') }}" type="password" />
+                                            </div>
+                                        </div>
+                                        <div class="uk-margin">
+                                            <div class="uk-inline uk-width-4-5">
+                                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock"> </span>
+                                                <input class="uk-input uk-form-medium" name="resetpwd-pwd" required="" placeholder="{{ None|fmtLabel('resetpwd_newpwd') }}" type="password" />
+                                            </div>
+                                        </div>
+                                        <div class="uk-margin">
+                                            <div class="uk-inline uk-width-4-5">
+                                                <input class="uk-input uk-form-medium" name="resetpwd-repwd" required="" placeholder="{{ None|fmtLabel('resetpwd_renewpwd') }}" type="password" />
+                                            </div>
+                                        </div>
+                                        <div class="uk-margin">
+                                            <button type="button" class="uk-button uk-button-primary uk-button-primary uk-button-medium 
+                                                uk-width-2-5" url-send-resetpwd="{{ url('reset-pwd') }}" resetpwdBttn>{{ None|fmtLabel('resetpwd_submitchg') }}</button>
+                                            <button type="button" class="uk-button uk-button-medium uk-modal-close uk-width-2-5">{{ None|fmtLabel('resetpwd_cancelchg') }}</button>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            <div class="uk-modal-footer uk-text-small uk-text-left">
+                                <p class="uk-text-danger resetpwd-msg">&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <hr>
                 {% if app.l_data.admin == 1 %}
                 <ul class="adminPad uk-nav uk-nav-default">
                     <li class="uk-nav-header"><span class="uk-margin-small-right" uk-icon="icon: list"></span>管理员功能</li>
@@ -50,9 +94,10 @@
         </div>
     </div>
 </li>
-<div class="uk-hidden@l l-mobi-uis">
+<div class="uk-hidden@m l-mobi-uis">
     <li>
         <div class="l-mobi-uInfo">
+            <div class="uk-heading-line uk-text-center"><span>我的信息</span></div>
             <div><span uk-icon="icon: user; ratio: 0.7"></span><span>{{ app.l_data.name }}</span></div>
             <div><span uk-icon="icon: mail; ratio: 0.7"></span><span>{{ app.l_data.email|truncate(24, True, "..")  }}</span></div>
             <div><span uk-icon="icon: reply; ratio: 0.7"></span><span>{{ None|fmtLabel("user_reply_count")
@@ -62,13 +107,17 @@
     {% if app.l_data.admin == 1 %}
     <li class="adminPad uk-active l-mobi-admin">
         <div class="uk-heading-line uk-text-center"><span>管理员功能</span></div>
-        <div><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></div>
-        <div><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></div>
-        <div><a name="reset-rss" url-send-resetrss="{{ url('admin-resetfeeds') }}" href="">生成rss</a></div>
-        <div><a name="reset-sitemap" url-send-resetsitemap="{{ url('admin-resetsitemap') }}" href="">生成sitemap</a><div>
-        <div><a name="reset-robots" url-send-resetrobots="{{ url('admin-resetrobots') }}" href="">生成robots.txt</a><div>
+        <div class="uk-column-1-3 uk-column-divider l-mobi-column">
+            <p><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></p>
+            <p><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></p>
+            <p><a name="reset-rss" url-send-resetrss="{{ url('admin-resetfeeds') }}" href="">生成rss</a></p>
+            <p><a name="reset-sitemap" url-send-resetsitemap="{{ url('admin-resetsitemap') }}" href="">生成sitemap</a></p>
+            <p><a name="reset-robots" url-send-resetrobots="{{ url('admin-resetrobots') }}" href="">生成robots.txt</a></p>
+        <div>
     </li>
     {% endif %}
+    <li class="uk-nav-divider uk-nav-header"></li>
+    <li><a href="#reset-password-sections{{ _userInfoSlideCount }}" uk-toggle>{{ None|fmtLabel("resetpwd_title") }}</a></li>
     <li class="uk-nav-divider uk-nav-header"></li>
     <li class="uk-active"><a href="{{ url('logout') }}">{{None|fmtLabel("right_slide_bar_logout") }}</a></li>
 </div>

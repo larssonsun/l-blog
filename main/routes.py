@@ -10,13 +10,14 @@ from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
-from admin.views import ResetBlogCache, ResetBlogIndex, ResetFeeds, ResetSitemap, ResetRobots
+from admin.views import (ResetBlogCache, ResetBlogIndex, ResetFeeds,
+                         ResetRobots, ResetSitemap)
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 from main import filters
 from main.views import (About, AddComment, Approve, Archive, BlogDetail,
                         DelComment, FullSiteSearch, Index, Login, Logout,
-                        Registe, Timeline, hello)
-from site_ import Feeds_Atom, Feeds_Rss, Sitemap, Robots
+                        Registe, ResetPwd, Timeline, hello)
+from site_ import Feeds_Atom, Feeds_Rss, Robots, Sitemap
 from utils import hash_sha256
 
 
@@ -38,6 +39,7 @@ def setupRoutes(app):
     app.router.add_view("/blogdetail/delComment", DelComment, name="delete-comment")
     app.router.add_view("/login/", Login, name="Login")
     app.router.add_view("/logout/", Logout, name="logout")
+    app.router.add_view("/resetpwd/", ResetPwd, name="reset-pwd")
     app.router.add_view("/registe/", Registe, name="registe")
     app.router.add_view("/registe/" + r"{approvedKey:\w{32}}/", Registe, name="registe_confirm")
     app.router.add_view("/approve/", Approve, name="approve")

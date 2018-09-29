@@ -309,6 +309,82 @@ $(document).ready(function () {
             });
     });
 
+
+    //----------------密码修改----------------
+
+    var sections = $("div[resetpasswordsections]");
+
+    for (var i = 0; i <= 1; i++) {
+        UIkit.util.on(sections[i], 'shown', function () {
+            $(this).find("input")[0].focus();
+        });
+
+        $(sections[i]).keypress(function (e) {
+            //Enter key
+            if (e.which == 13) {
+                return false;
+            }
+        });
+    }
+
+    var validate_resetpwd = function (orgpwdCtl, pwdCtl, repwdCtl, registMsg) {
+        return true;
+    }
+
+    $("button[resetpwdBttn]").click(function () {
+
+        var submitBttn = $(this);
+        var form = $(submitBttn.parents("form.reset-password-form"));
+        var URL = submitBttn.attr("url-send-resetpwd");
+        var orgpwdCtl = $(form.find("input[name='resetpwd-orgpwd']")[0]);
+        var pwdCtl = $(form.find("input[name='resetpwd-pwd']")[0]);
+        var repwdCtl = $(form.find("input[name='resetpwd-repwd']")[0]);
+        var resetpwdMsg = submitBttn.parents(".uk-modal-dialog")[0]
+        resetpwdMsg = $($(resetpwdMsg).find(".resetpwd-msg"));
+        // var spin = $($("#registModel").find(".l-spinner")[0]);
+
+        if (!validate_resetpwd(orgpwdCtl, pwdCtl, repwdCtl, registMsg)) {
+            return;
+        }
+
+        // spin.removeClass("l-spinner");
+        submitBttn.attr("disabled", "");
+
+        ajxJson(URL, "post", {
+            "orgpwd": orgpwdCtl.val(),
+            "newpwd": pwdCtl.val(),
+            "renewpwd": repwdCtl.val()
+        },
+            function (result) {
+                if (new Number(result.error_code) < 0) {
+                    // window.location.reload();
+                    showMsg(result.error_msg, "success")
+                    
+                    //clear page
+                    orgpwdCtl.val("");
+                    pwdCtl.val("");
+                    repwdCtl.val("");
+                    resetpwdMsg.text("");
+                    
+                    //close
+                    for(var i=0; i <= 1; i++)
+                        UIkit.modal($(sections[i])).hide();
+                }
+                else {
+                    resetpwdMsg.text(result.error_msg);
+                    submitBttn.removeAttr("disabled");
+                }
+
+                // spin.addClass("l-spinner");
+            },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                resetpwdMsg.text(textStatus);
+                // spin.addClass("l-spinner");
+                submitBttn.removeAttr("disabled");
+            });
+    });
+
+
     //----------------激活----------------
 
     var validate_approve = function (usernameCtl) {

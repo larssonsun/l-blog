@@ -46,7 +46,7 @@
                             </a>
                             <span>{{None|fmtLabel("logo")}}</span>
                         </div>
-                        <div class="uk-navbar-right uk-visible@l content">
+                        <div class="uk-navbar-right uk-visible@m content">
                             <ul class="uk-navbar-nav">
                                 <li class="{{ 'uk-active l-active' if curMenuItm=='index' else '' }}">
                                     <a class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1" href="{{ url('Index') }}">
@@ -77,6 +77,7 @@
                                 </li>
                                 {% endif %}
                             </ul>
+                            {% set _userInfoSlideCount = "_console" %}
                             <ul class="uk-navbar-nav">
                                 {% if app.l_data %}
                                 {% include "_userInfoSlide.html" %}
@@ -94,28 +95,31 @@
                                 {% endif %}
                             </ul>
                         </div>
-                        <div class="uk-navbar-right uk-flex-right uk-hidden@l">
+                        <div class="uk-navbar-right uk-flex-right uk-hidden@m l-mobi-uis">
                             <a href="" class="l-mobi-menu"><span uk-icon="icon: menu; ratio: 1"></a>
-                            <div uk-dropdown="mode: click; animation: uk-animation-slide-top-small; duration:100">
+                            <div class="l-dropdown-mobi" uk-dropdown="mode: click; animation: uk-animation-slide-top-small; duration:100">
                                 <ul class="uk-nav uk-dropdown-nav">
-                                    <li class="uk-active{{ ' l-active' if curMenuItm=='index' else '' }}">
-                                        <a href="{{ url('Index') }}">{{ None|fmtLabel("home_page") }}</a>
-                                    </li>
-                                    <li class="uk-active{{ ' l-active' if curMenuItm=='archive' else '' }}">
-                                        <a href="{{ url('archive') }}">{{ None|fmtLabel("archive_menu_href") }}</a>
-                                    </li>
-                                    <li class="uk-active{{ ' l-active' if curMenuItm=='about' else '' }}">
-                                        <a href="{{ url('about') }}">{{ None|fmtLabel("about_menu_href") }}</a>
+                                    <li>
+                                        <div class="uk-heading-line uk-text-center"><span>页面</span></div>
+                                        <div class="uk-column-1-3 uk-column-divider l-mobi-column">
+                                            <p><a href="{{ url('Index') }}">{{ None|fmtLabel("home_page") }}</a></p>
+                                            <p><a href="{{ url('archive') }}">{{ None|fmtLabel("archive_menu_href") }}</a></p>
+                                            <p><a href="{{ url('about') }}">{{ None|fmtLabel("about_menu_href") }}</a></p>
+                                        </div>
                                     </li>
                                     {% if app.l_data %}
                                     <li class="uk-nav-divider uk-nav-header"></li>
                                     <li>
-                                        <form class="fullSiteSearch uk-search uk-search-default" method="post" action="{{ url('full-size-search') }}">
-                                            <a class="fullSiteSearchBttn uk-search-icon-flip" href="" uk-search-icon></a>
-                                            <input class="fullSiteSearchIpt uk-search-input" name="search" type="search" placeholder="{{ None|fmtLabel('search_menu_href') }}">
-                                        </form>
+                                        <div class="uk-heading-line uk-text-center"><span>全文搜索</span></div>
+                                        <div>
+                                            <form class="fullSiteSearch uk-search uk-search-default" method="post" action="{{ url('full-size-search') }}">
+                                                <a class="fullSiteSearchBttn uk-search-icon-flip" href="" uk-search-icon></a>
+                                                <input class="fullSiteSearchIpt uk-search-input" name="search" type="search" placeholder="{{ None|fmtLabel('search_menu_href') }}">
+                                            </form>
+                                        </div>
                                     </li>
                                     {% endif %}
+                                    {% set _userInfoSlideCount = "_mobile" %}
                                     {% if app.l_data %}
                                     {% include "_userInfoSlide.html" %}
                                     {% else %}

@@ -831,8 +831,10 @@ footer .l-tel, footer .l-mail {
         margin-top: 4px !important;
     }
 
-    h2.l-article-title {
+    .l-article-title h2{
         margin: 10px 0 !important;
+        font-size: 16px;
+        font-weight: bold
     }
 
     .l-article-title > a{
@@ -871,6 +873,10 @@ footer .l-tel, footer .l-mail {
         padding-left: 60px;
     }
 
+    .l-dropdown-mobi {
+        width:100%
+    }
+
     footer.l-dark {
         font-size:9px;
     }
@@ -895,25 +901,26 @@ footer .l-tel, footer .l-mail {
         margin:0
     }
 
-    .l-mobi-menu {
-        color:#666;
+    .l-mobi-menu, .l-mobi-menu a {
         margin-right:20px;
     }
 
-    .l-mobi-admin div:nth-child(n + 2) {
-        margin-top: 12px
+    .l-mobi-column{
+        column-gap: 0;
+    }
+
+    .l-mobi-column > p{
+        margin:0;
+        padding:3px;
+        text-align: center
     }
 
     .l-mobi-uInfo {
-        margin-top:20px;
         padding: 5px;
-        background-color:#f2f2f2;
-        border: #e5e5e5 solid 1px;
-        color:#000
     }
 
     .l-mobi-uInfo > div > span {
-        margin-right: 5px;
+        margin: 5px;
     }
 
     .l-mobi-uis li a{
@@ -923,6 +930,10 @@ footer .l-tel, footer .l-mail {
     .l-mobi-uis .uk-heading-line {
         margin-top:18px;
         margin-bottom: 10px
+    }
+
+    .l-mobi-uis  .uk-search-default {
+        width:100%
     }
    
     .l-order-tab:nth-child(3) {

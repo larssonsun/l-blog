@@ -54,7 +54,6 @@ def basePageInfo(func):
         beginTime = datetime.strptime("2018-9-24 13:56", "%Y-%m-%d %H:%M")
         site_status["siteonlinedays"] = (datetime.now() - beginTime).days
 
-
         cls.request.app.site_status = site_status
         return await func(cls, *args, **kw)
 
@@ -293,10 +292,49 @@ class Registe(web.View):
 
         if rtd.error_code == -1:
             rtd = await sendCerMain(
-                cerUrl=self.request.url, 
-                userId=userId, 
-                uname=uname, 
+                cerUrl=self.request.url,
+                userId=userId,
+                uname=uname,
                 mailAddr=email)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class ResetPwd(web.View):
+    async def post(self):
+        postData = await self.request.post()
+        orgpwd = postData["orgpwd"]
+        newpwd = postData["newpwd"]
+        renewpwd = postData["renewpwd"]
+        loginedName = self.request.app.l_data["name"]
+
+        rtd = rtData(error_code=-1,
+                     error_msg="密码修改成功", data=None)
+        if not pwdRc.match(orgpwd) or not pwdRc.match(newpwd) or not pwdRc.match(renewpwd):
+            rtd = rtData(error_code=70002,
+                         error_msg="密码必须是6到18位的字母数字或下划线", data=None)
+        elif not newpwd == renewpwd:
+            rtd = rtData(error_code=70003, error_msg="两次新密码输入不一致", data=None)
+
+        if rtd.error_code == -1:
+            try:
+                orgpwdIndb = await exeScalar(
+                    "select `passwd` from `users` where `name` = %s limit 1 offset 0", loginedName)
+                if orgpwdIndb != hash_md5(orgpwd):
+                    rtd = rtData(error_code=70004,
+                                 error_msg="原始密码输入有误", data=None)
+            except Exception:
+                rtd = rtData(error_code=70005,
+                             error_msg="核实原密码正确性的时候发生错误", data=None)
+
+        if rtd.error_code == -1:
+            try:
+                ic = await exeNonQuery("update `users` set `passwd`= %s where `name` = %s", hash_md5(newpwd), loginedName)
+                if ic != 1:
+                    rtd = rtData(error_code=70006, error_msg="未能成功更新密码", data=None)
+            except Exception:
+                rtd = rtData(error_code=70007,
+                             error_msg="更新密码时发生错误", data=None)
+
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
@@ -610,7 +648,7 @@ class Timeline(web.View):
         tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("timeline.html", self.request,
-            {"vm": vm, "tags": tags, "catelogs": catelogs, "friCnns": friCnns})
+                                              {"vm": vm, "tags": tags, "catelogs": catelogs, "friCnns": friCnns})
 
 
 class FullSiteSearch(web.View):
