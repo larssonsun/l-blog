@@ -614,7 +614,7 @@ footer .l-tel, footer .l-mail {
 }
 
 .l-navbar-container {
-    /* background-color:#fff; */
+    background:#fff url(/static/images/navtitle-scene.png) no-repeat;;
     border-bottom: #C1C1C1 solid 1px;
 }
 
