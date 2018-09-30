@@ -6,7 +6,7 @@
 $(document).ready(function(){
 
     //copy code to clipboard
-    $(".codehilite > pre").prepend("<a href='' class='copy-code uk-text-right' uk-icon='icon: copy; ratio: 0.7'></a><br>")
+    $(".codehilite > pre").prepend("<a href='' class='copy-code' uk-icon='icon: copy; ratio: 0.7'></a><br>")
     $('.copy-code').on('click', function () {
         var code = $(this).parent().text();
         var ta = document.createElement('textarea');

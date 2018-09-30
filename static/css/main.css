@@ -58,6 +58,10 @@ body {
     color:#fff
 }
 
+.codehilite pre > a.copy-code {
+    text-align: right
+}
+
 #artclAndCmmDiv {
     background-color:#FFF;
     padding:20px 40px;
@@ -795,7 +799,15 @@ footer .l-tel, footer .l-mail {
         flex-shrink: 0;
         font-size:12px;
     }
+
+    em {
+        word-break: break-all;
+    }
     
+    .codehilite pre > a.copy-code {
+        text-align: left
+    }
+
     .uk-breadcrumb>:nth-child(n+2):not(.uk-first-column) {
         padding: 0
     }
@@ -906,8 +918,8 @@ footer .l-tel, footer .l-mail {
         margin:0
     }
 
-    .l-mobi-menu, .l-mobi-menu a {
-        margin-right:20px;
+    .l-mobi-menu {
+        margin-right:15px;
     }
 
     .l-mobi-column{
