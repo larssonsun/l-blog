@@ -98,7 +98,7 @@ class ResetFeeds(web.View):
                 f'tag:{ rqst.host },{ datetime.now().strftime("%Y-%m-%d %H:%M:%S") }',
                 f'{urlIndex}/',
                 f'{urlIndex}{router["static"].url_for(filename=r"images/favicon.png")}',
-                f'{urlIndex}/', "l", "l-blog", "larsson", "l@scetia.com", blogs)
+                f'{urlIndex}/', "l", "l-blog", "larsson", "77540975@qq.com", blogs)
             rtd = rtData(error_code=-1, error_msg="重置rss成功", data=None)
         except Exception as ex:
             rtd = rtData(error_code=13001,

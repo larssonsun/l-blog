@@ -119,7 +119,7 @@ async def sendCerMain(*, cerUrl, userId, uname, mailAddr):
     #send certificate mail to registed email address
     rtd = None
     mailCerExpert = 70
-    mailCerPerSec = 2
+    mailCerPerSec = 1
     approveExpert = 320
     smc = await get_cache("sendMail_minute")
     smc = 0 if not smc else smc
