@@ -12,14 +12,14 @@
                         <div class="uk-inline uk-width-4-5">
                             <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: user"> </span>
                             <input class="uk-input uk-form-medium" name="userName" required="" placeholder="{{ None|fmtLabel('login_ph_username') }}"
-                                type="text" value="{{ userName }}" />
+                                type="text" value="{{ userName }}" autocomplete="username" />
                         </div>
                     </div>
                     <div class="uk-margin">
                         <div class="uk-inline uk-width-4-5">
                             <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock"> </span>
                             <input class="uk-input uk-form-medium" name="pwd" required="" placeholder="{{ None|fmtLabel('login_ph_pwd') }}"
-                                type="password" />
+                                type="password" autocomplete="current-password"/>
                         </div>
                     </div>
                     <div class="uk-margin">
@@ -43,7 +43,7 @@
                             <div class="uk-inline uk-width-4-5">
                                 <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: user"></span>
                                 <input class="uk-input" name="userName" placeholder="{{ None|fmtLabel('login_ph_username') }}" required=""
-                                    type="text">
+                                    type="text" autocomplete="username">
                             </div>
                         </div>
                         <div class="uk-margin-small">
@@ -56,7 +56,7 @@
                         <div class="uk-margin-small">
                             <div class="uk-inline uk-width-4-5">
                                 <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: mail"></span>
-                                <input class="uk-input" placeholder="E-mail" required="" type="text">
+                                <input class="uk-input" placeholder="E-mail" required="" type="text" autocomplete="username">
                             </div>
                         </div>
                         <div class="uk-margin-small">

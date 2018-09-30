@@ -444,24 +444,27 @@ $(document).ready(function () {
 
     //----------------全文搜索----------------
 
-    var fullSiteSearch = function(){
+    var fullSiteSearch = function(ths){
         
-        frm = $(this).parents("form.fullSiteSearch");
-        ipt = $(frm).find("input");
-        keywords = $(ipt).val()
-        if(keywords.length > 0)
+        frm = $(ths).parents("form.fullSiteSearch");
+        ipt = frm.find("input");
+        keywords = $(ipt).val();
+        if(keywords.length > 0){
             frm.submit();
+        }
         else
             showMsg("请输入查询关键字", "warning");
         return false;
     }
 
-    $(".fullSiteSearchBttn").click(fullSiteSearch);
+    $(".fullSiteSearchBttn").click(function(e){
+        return fullSiteSearch(this);
+    });
 
     $(".fullSiteSearchIpt").keypress(function(e) {
+
         if (e.which == 13) {
-            fullSiteSearch();
-            return false;
+            return fullSiteSearch(this);
         }
     });
 });

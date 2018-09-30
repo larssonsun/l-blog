@@ -32,7 +32,8 @@
                 </ul>
                 <hr>
                 <ul class="adminPad uk-nav uk-nav-default">
-                    <li><a href="#reset-password-sections{{ _userInfoSlideCount }}" uk-toggle>{{ None|fmtLabel("resetpwd_title") }}</a></li>
+                    <li><a href="#reset-password-sections{{ _userInfoSlideCount }}" uk-toggle>{{
+                            None|fmtLabel("resetpwd_title") }}</a></li>
                     <div id="reset-password-sections{{ _userInfoSlideCount }}" resetpasswordsections uk-modal>
                         <div class="uk-modal-dialog">
                             <button class="uk-modal-close-default" type="button" uk-close></button>
@@ -43,27 +44,39 @@
                             <div class="uk-modal-body uk-padding-medium">
                                 <form class="reset-password-form">
                                     <fieldset class="uk-fieldset uk-text-center">
+                                        <input type="text" name="username" autocomplete="username" class="uk-hidden">
                                         <div class="uk-margin">
                                             <div class="uk-inline uk-width-4-5">
-                                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock"> </span>
-                                                <input class="uk-input uk-form-medium" name="resetpwd-orgpwd" required="" placeholder="{{ None|fmtLabel('resetpwd_orgpwd') }}" type="password" />
+                                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock">
+                                                </span>
+                                                <input class="uk-input uk-form-medium" name="resetpwd-orgpwd" required=""
+                                                    placeholder="{{ None|fmtLabel('resetpwd_orgpwd') }}" type="password"
+                                                    autocomplete="current-password" />
                                             </div>
                                         </div>
                                         <div class="uk-margin">
                                             <div class="uk-inline uk-width-4-5">
-                                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock"> </span>
-                                                <input class="uk-input uk-form-medium" name="resetpwd-pwd" required="" placeholder="{{ None|fmtLabel('resetpwd_newpwd') }}" type="password" />
+                                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock">
+                                                </span>
+                                                <input class="uk-input uk-form-medium" name="resetpwd-pwd" required=""
+                                                    placeholder="{{ None|fmtLabel('resetpwd_newpwd') }}" type="password"
+                                                    autocomplete="new-password" />
                                             </div>
                                         </div>
                                         <div class="uk-margin">
                                             <div class="uk-inline uk-width-4-5">
-                                                <input class="uk-input uk-form-medium" name="resetpwd-repwd" required="" placeholder="{{ None|fmtLabel('resetpwd_renewpwd') }}" type="password" />
+                                                <input class="uk-input uk-form-medium" name="resetpwd-repwd" required=""
+                                                    placeholder="{{ None|fmtLabel('resetpwd_renewpwd') }}" type="password"
+                                                    autocomplete="new-password" />
                                             </div>
                                         </div>
                                         <div class="uk-margin">
                                             <button type="button" class="uk-button uk-button-primary uk-button-primary uk-button-medium 
-                                                uk-width-2-5" url-send-resetpwd="{{ url('reset-pwd') }}" resetpwdBttn>{{ None|fmtLabel('resetpwd_submitchg') }}</button>
-                                            <button type="button" class="uk-button uk-button-medium uk-modal-close uk-width-2-5">{{ None|fmtLabel('resetpwd_cancelchg') }}</button>
+                                                uk-width-2-5"
+                                                url-send-resetpwd="{{ url('reset-pwd') }}" resetpwdBttn>{{
+                                                None|fmtLabel('resetpwd_submitchg') }}</button>
+                                            <button type="button" class="uk-button uk-button-medium uk-modal-close uk-width-2-5">{{
+                                                None|fmtLabel('resetpwd_cancelchg') }}</button>
                                         </div>
                                     </fieldset>
                                 </form>

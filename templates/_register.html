@@ -1,48 +1,51 @@
 <div id="registeModel" uk-modal>
-        <div class="uk-modal-dialog uk-width-1-3@l uk-width-1-2@m uk-width-5-6@s">
-            <button class="uk-modal-close-default" type="button" uk-close></button>
-            <div class="uk-modal-header">
-                <h2 class="uk-modal-title uk-text-large">注册</h2>
-                <span class="l-spinner uk-width-1-6 uk-align-right uk-margin-small-right" uk-spinner="ratio: 1"></span>
-            </div>
-            <div class="uk-modal-body uk-padding-medium">
-                <form class="reg-form">
-                    <fieldset class="uk-fieldset uk-text-center">
-                        <div class="uk-margin">
-                            <div class="uk-inline uk-width-4-5">
-                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: mail"> </span>
-                                <input class="uk-input uk-form-medium" name="reg-email" required="" placeholder="Email地址"
-                                    type="text" value="{{ email }}" />
-                            </div>
+    <div class="uk-modal-dialog uk-width-1-3@l uk-width-1-2@m uk-width-5-6@s">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title uk-text-large">注册</h2>
+            <span class="l-spinner uk-width-1-6 uk-align-right uk-margin-small-right" uk-spinner="ratio: 1"></span>
+        </div>
+        <div class="uk-modal-body uk-padding-medium">
+            <form class="reg-form">
+                <fieldset class="uk-fieldset uk-text-center">
+                    <div class="uk-margin">
+                        <div class="uk-inline uk-width-4-5">
+                            <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: mail"> </span>
+                            <input class="uk-input uk-form-medium" name="reg-email" required="" placeholder="Email地址"
+                                type="text" value="{{ email }}" autocomplete="email" />
                         </div>
-                        <div class="uk-margin">
-                            <div class="uk-inline uk-width-4-5">
-                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: happy"> </span>
-                                <input class="uk-input uk-form-medium" name="reg-username" required="" placeholder="昵称"
-                                    type="text" value="{{ userName }}" />
-                            </div>
+                    </div>
+                    <div class="uk-margin">
+                        <div class="uk-inline uk-width-4-5">
+                            <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: happy"> </span>
+                            <input class="uk-input uk-form-medium" name="reg-username" required="" placeholder="昵称"
+                                type="text" value="{{ userName }}" autocomplete="name" />
                         </div>
-                        <div class="uk-margin">
-                            <div class="uk-inline uk-width-4-5">
-                                <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock"> </span>
-                                <input class="uk-input uk-form-medium" name="reg-pwd" required="" placeholder="登录密码" type="password" />
-                            </div>
+                    </div>
+                    <div class="uk-margin">
+                        <div class="uk-inline uk-width-4-5">
+                            <span class="uk-form-icon uk-form-icon-flip uk-icon" data-uk-icon="icon: lock"> </span>
+                            <input class="uk-input uk-form-medium" name="reg-pwd" required="" placeholder="登录密码" type="password"
+                                autocomplete="new-password" />
                         </div>
-                        <div class="uk-margin">
-                            <div class="uk-inline uk-width-4-5">
-                                <input class="uk-input uk-form-medium" name="reg-repwd" required="" placeholder="再次输入密码" type="password" />
-                            </div>
+                    </div>
+                    <div class="uk-margin">
+                        <div class="uk-inline uk-width-4-5">
+                            <input class="uk-input uk-form-medium" name="reg-repwd" required="" placeholder="再次输入密码"
+                                type="password" autocomplete="new-password" />
                         </div>
-                        <div class="uk-margin">
-                            <button id="registeBttn" type="button" class="uk-button uk-button-primary uk-button-primary uk-button-medium 
-                                uk-width-2-5" url-send-regist="{{ url('registe') }}" >注册</button>
-                            <button class="uk-button uk-button-medium uk-modal-close uk-width-2-5">取消</button>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="uk-modal-footer uk-text-small uk-text-left">
-                <p id="registMsg" class="uk-text-danger">&nbsp;</p>
-            </div>
+                    </div>
+                    <div class="uk-margin">
+                        <button id="registeBttn" type="button" class="uk-button uk-button-primary uk-button-primary uk-button-medium 
+                                uk-width-2-5"
+                            url-send-regist="{{ url('registe') }}">注册</button>
+                        <button class="uk-button uk-button-medium uk-modal-close uk-width-2-5">取消</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-small uk-text-left">
+            <p id="registMsg" class="uk-text-danger">&nbsp;</p>
         </div>
     </div>
+</div>

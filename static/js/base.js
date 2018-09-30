@@ -40,6 +40,16 @@ var showMsg = function (msg, status, callbackFn) {
     $(".uk-notification-message").removeClass("l-notification").addClass("l-notification");
 }
 
+var cnzzScript = function(){
+    var cnzz_s_tag = document.createElement('script');
+    cnzz_s_tag.type = 'text/javascript';
+    cnzz_s_tag.async = true;
+    cnzz_s_tag.charset = 'utf-8';
+    cnzz_s_tag.src = 'https://s19.cnzz.com/z_stat.php?id=1274947737&web_id=1274947737';
+    var root_s = document.getElementsByTagName('script')[0];
+    root_s.parentNode.insertBefore(cnzz_s_tag, root_s);
+}
+
 $(document).ready(function(){
     //caotm的我不知道如何在markdown生成的toc里面注入class和属性，只能自己用脚本注册
     
@@ -49,4 +59,5 @@ $(document).ready(function(){
     //uk-nav uk-nav-default tm-nav uk-nav-parent-icon
     $(".l-sidebar-right > div > div ul").addClass("uk-nav uk-nav-default l-nav uk-nav-parent-icon")
     
+    $(cnzzScript());
 });
