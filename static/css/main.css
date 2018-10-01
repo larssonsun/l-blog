@@ -863,6 +863,10 @@ footer .l-tel, footer .l-mail {
         padding-top: 5px;
     }
 
+    .l-atricalContent > p {
+        word-break: break-all
+    }
+
     .l-atricalContent h1, .l-atricalContent h2, .l-atricalContent h3, .l-atricalContent blockquote > p {
         font-size:17px;
     }
