@@ -15,12 +15,12 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
 
-from models.db import (exeNonQuery, exeScalar, delete_cache, get_cache,
+from models.db import (delete_cache, exeNonQuery, exeScalar, get_cache,
                        get_cache_ttl, select, set_cache)
 from utils import (WhooshSchema, addDictProp, certivateMailHtml,
                    duplicateSqlRc, emailRc, getWhooshSearch, hash_md5,
                    mdToHtml, pwdRc, rtData, setAvatar, setWhooshSearch,
-                   stmp_send_thread, userNameRc)
+                   smtp_send_enable, smtp_send_thread, userNameRc)
 
 
 async def hello(request):
@@ -118,27 +118,22 @@ async def getTags(*blogTags):
 async def sendCerMain(*, cerUrl, userId, uname, mailAddr):
     #send certificate mail to registed email address
     rtd = None
-    mailCerExpert = 70
-    mailCerPerSec = 2
-    approveExpert = 320
-    smc = await get_cache("sendMail_minute")
-    smc = 0 if not smc else smc
-    if smc < mailCerPerSec:
+    eabl, lastExpert = await smtp_send_enable(wilSendMail=True)
+    if eabl:
         approvedKey = hash_md5(str(uuid.uuid4()))
+        approveExpert = 320
         await set_cache(approvedKey, userId, ttl=approveExpert)
-        await set_cache("sendMail_minute", smc + 1, ttl=mailCerExpert)
-        stmp_send_thread(mailAddr, "l-blog 邮箱验证", certivateMailHtml.format(
+        smtp_send_thread(mailAddr, "l-blog 邮箱验证", certivateMailHtml.format(
             targetUserName=uname,
             describ="欢迎注册，您现在可以通过点击下方的按钮完成邮箱验证。",
             certificateButtonTxt="验证邮箱",
             certificateHref=f"{ cerUrl }{ approvedKey }/"
         ))
         rtd = rtData(
-            error_code=-1, error_msg=f"一封邮件已发送至您的邮箱,\r\n请于{ int(approveExpert / 60) }分钟内完成验证。", data=dict(waits=mailCerExpert))
+            error_code=-1, error_msg=f"一封邮件已发送至您的邮箱,\r\n请于{ int(approveExpert / 60) }分钟内完成验证。", data=dict(waits=lastExpert))
     else:
-        ttl = await get_cache_ttl("sendMail_minute")
         rtd = rtData(error_code=10008,
-                     error_msg=f"验证邮件发送受限，请于 {ttl}秒后再试", data=dict(waits=ttl))
+                     error_msg=f"验证邮件发送受限，请于 {lastExpert}秒后再试", data=dict(waits=lastExpert))
     return rtd
 
 
@@ -264,14 +259,23 @@ class Registe(web.View):
             error_code=-1, error_msg="", data=None)
         if not emailRc.match(email):
             rtd = rtData(error_code=10001, error_msg="邮箱格式不正确", data=None)
+
         elif not userNameRc.match(uname):
             rtd = rtData(error_code=10004,
                          error_msg="昵称必须是6到18位的字母或数字", data=None)
+
         elif not pwd == repwd:
             rtd = rtData(error_code=10003, error_msg="两次密码输入不一致", data=None)
+
         elif not pwdRc.match(pwd) or not pwdRc.match(repwd):
             rtd = rtData(error_code=10002,
                          error_msg="密码必须是6到18位的字母数字或下划线", data=None)
+
+        else:
+            sme, lastExpert = await smtp_send_enable(wilSendMail=False)
+            if not sme:
+                rtd = rtData(error_code=10008,
+                            error_msg=f"验证邮件发送受限，请于 {lastExpert}秒后再试", data=dict(waits=lastExpert))
 
         if rtd.error_code == -1:
             try:

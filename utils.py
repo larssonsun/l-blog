@@ -22,6 +22,7 @@ from whoosh.qparser import MultifieldParser
 
 from config.settings import (FEED_DIR, HASH_KEY, INDEX_DIR, INDEXPREFIX,
                              MAIL_SMTPCLIENT, ROBOTS_DIR, SITEMAP_DIR)
+from models.db import get_cache, get_cache_ttl, set_cache
 
 analyzer = ChineseAnalyzer()
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
@@ -128,10 +129,25 @@ def hash_md5(password):
     return md5.hexdigest()
 
 
-def stmp_send(toAddr, subject, html):
+async def smtp_send_enable(wilSendMail=False):
+    mailCerPerInterval = 5
+    mailCerExpert = 70
+    smc = await get_cache("sendMail_minute")
+    smc = 0 if not smc else smc
+    if wilSendMail and smc < mailCerPerInterval:
+        await set_cache("sendMail_minute", smc + 1, ttl=mailCerExpert)
+
+    lastExpert = 0
+    if smc >= mailCerPerInterval:
+        lastExpert = await get_cache_ttl("sendMail_minute")
+
+    return lastExpert <= 0, lastExpert
+
+
+def smtp_send(toAddr, subject, html):
     msg = MIMEText(html, "HTML", "utf-8")
     msg['Subject'] = subject
-    
+
     smtpServ = smtplib.SMTP_SSL(
         MAIL_SMTPCLIENT['host'], port=MAIL_SMTPCLIENT['port'])
     smtpServ.set_debuglevel(-1)
@@ -140,8 +156,8 @@ def stmp_send(toAddr, subject, html):
     smtpServ.quit()
 
 
-def stmp_send_thread(toAddr, subject, html):
-    t = Thread(target=stmp_send, args=(toAddr, subject, html))
+def smtp_send_thread(toAddr, subject, html):
+    t = Thread(target=smtp_send, args=(toAddr, subject, html))
     t.start()
     return t
 
