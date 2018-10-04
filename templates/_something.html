@@ -5,9 +5,9 @@
         <div class="uk-flex uk-flex-middle uk-flex-center uk-text-center l-personal">
             <div class="uk-width-1-3 uk-animation-toggle">
                 <p><a href="{{ url('timeline') }}"><img class="uk-animation-scale-down" src="/static/images/timeline.png"
-                            alt="timeline"></a>
+                            alt="{{ None|fmtLabel('timeline_label') }}"></a>
                 </p>
-                <span>时间轴</span>
+                <span>{{ None|fmtLabel("timeline_label") }}</span>
             </div>
             <div class="uk-width-1-3 uk-animation-toggle">
                 <p><a href="{{ None|fmtLabel('project_git_address') }}" target="blank_"><img class="uk-animation-scale-down"
