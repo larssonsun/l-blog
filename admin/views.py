@@ -82,8 +82,7 @@ class ResetFeeds(web.View):
                 `content`,  `catelog`
                 from `blogs` a
                 order by `updated_at`""")
-            [addDictProp(blog, "link", router["BlogDetail"].url_for(
-                id=blog["name_en"])) for blog in blogs]
+            [addDictProp(blog, "link", f'{urlIndex}{router["BlogDetail"].url_for(id=blog["name_en"])}') for blog in blogs]
             [addDictProp(
                 blog, "cateScheme", f'{urlIndex}{router["catelog"].url_for(cateId=blog["catelog"])}') for blog in blogs]
 
