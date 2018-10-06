@@ -125,7 +125,7 @@ class ResetSitemap(web.View):
                          datetime.fromtimestamp(float(blog["updated_at"])).strftime("%Y-%m-%d")) for blog in blogs]
 
             [addDictProp(
-                blog, "loc", f'{urlIndex}/{router["BlogDetail"].url_for(id=blog["name_en"])}') for blog in blogs]
+                blog, "loc", f'{urlIndex}{router["BlogDetail"].url_for(id=blog["name_en"])}') for blog in blogs]
 
             [blog.pop("name_en") for blog in blogs]
             [blog.pop("updated_at") for blog in blogs]
