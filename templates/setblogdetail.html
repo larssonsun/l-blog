@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% import "_marcos.html" as mcs %}
+
+{% block title %}{{ None|fmtLabel('about_title') }}{% endblock %}
+
+{% block description %}{{ None|fmtLabel('about_discrib') }}{% endblock %}
+{% block keywords %}{{ None|fmtLabel('about_keywords') }}{% endblock %}
+
+{% block content %}
+<div class="uk-section uk-section-small l-background-color">
+    <div class="uk-container">
+        <div class="uk-grid uk-margin-remove-left">
+            <div class="uk-width-3-4@m uk-width-1-1@s uk-section uk-padding-remove">
+                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel('about_menu_href')) }}
+                <div class="uk-box-shadow uk-box-shadow-large l-bloginfo">
+                    <form>
+                        <fieldset class="uk-fieldset">
+                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                <label><input class="uk-radio" type="radio" name="original" checked>原创</label>
+                                <label><input class="uk-radio" type="radio" name="transfer">转载</label>
+                            </div>
+                            <div class="uk-margin"><input class="uk-input uk-form-small" name="name" placeholder="标题 (如:Python 切片)"></div>
+                            <div class="uk-margin"><input class="uk-input uk-form-small" name="name_en" placeholder="索引标题 (如:python-slice)"></div>
+                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid uk-align-middle">
+                                <label>/static/images/article/</label>
+                                <input class="uk-input uk-form-small uk-width-medium" name="title_image_filename" placeholder="文件名 (如:python)">
+                                <label class="uk-padding-remove">.png</label><label class="uk-padding-remove">|bgc|</label>
+                                <input class="uk-input uk-form-small" name="title_image_bgcolor" placeholder="背景色 (缺省:#FFFFFF)">
+                                <label class="uk-padding-remove">|bgcend|</label>
+                            </div>
+                            <div class="uk-margin">
+                                <textarea class="uk-textarea" rows="5" name="summary" placeholder="概要 (缺省则为正文前 160个全角字符)"></textarea>
+                            </div>
+                            <div class="uk-margin">
+                                <textarea class="uk-textarea" rows="10" name="content" placeholder="正文 (支持markdown)"></textarea>
+                            </div>
+                            <div class="uk-flex uk-flex-center uk-margin">
+                                <div class="uk-panel uk-panel-scrollable uk-width-1-2">
+                                    <ul class="uk-list">
+                                        <li><b>分类</b></li>
+                                        <li><label><input class="uk-checkbox" type="checkbox" name="catelog">分类</label></li>
+                                    </ul>
+                                </div>
+                                <div class="uk-panel uk-panel-scrollable uk-margin-small-left uk-width-1-2">
+                                    <ul class="uk-list">
+                                        <li><b>标签</b></li>
+                                        <li><label><input class="uk-checkbox" type="checkbox" name="tags">标签</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr>
+                            <div><button class="uk-button uk-button-primary uk-align-right">保存</button></div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="uk-width-1-4@m uk-visible@m l-rightSideBar">
+                {% include "_something.html" %}
+                {% include "_tagsform.html" %}
+                {% include "_catelogform.html" %}
+                {% include "_friendlyConn.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

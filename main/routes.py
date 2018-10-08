@@ -11,7 +11,7 @@ from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
 from admin.views import (ResetBlogCache, ResetBlogIndex, ResetFeeds,
-                         ResetRobots, ResetSitemap)
+                         ResetRobots, ResetSitemap, SetBlogDetail)
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 from main import filters
 from main.views import (About, AddComment, Approve, Archive, BlogDetail,
@@ -35,8 +35,8 @@ def setupRoutes(app):
     app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/", Index, name="catelog")
     app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/" + r"{type:[hot|time]+}/", Index, name="index_catelog_sort")
     app.router.add_view("/blogdetail/" + r"{id:[0-9a-zA-Z\-]+}/", BlogDetail, name="BlogDetail")
-    app.router.add_view("/blogdetail/addComment", AddComment, name="add-comment")
-    app.router.add_view("/blogdetail/delComment", DelComment, name="delete-comment")
+    app.router.add_view("/blogdetail/addcomment", AddComment, name="add-comment")
+    app.router.add_view("/blogdetail/delcomment", DelComment, name="delete-comment")
     app.router.add_view("/login/", Login, name="Login")
     app.router.add_view("/logout/", Logout, name="logout")
     app.router.add_view("/resetpwd/", ResetPwd, name="reset-pwd")
@@ -54,9 +54,10 @@ def setupRoutes(app):
     #admin
     app.router.add_view("/admin/resetindex/", ResetBlogIndex, name="admin-resetindex")
     app.router.add_view("/admin/resetblogcache/", ResetBlogCache, name="admin-resetblogcache")
-    app.router.add_view("/admin/ResetRss/", ResetFeeds, name="admin-resetfeeds")
-    app.router.add_view("/admin/ResetSitemap/", ResetSitemap, name="admin-resetsitemap")
-    app.router.add_view("/admin/ResetBobots/", ResetRobots, name="admin-resetrobots")
+    app.router.add_view("/admin/resetRss/", ResetFeeds, name="admin-resetfeeds")
+    app.router.add_view("/admin/resetsitemap/", ResetSitemap, name="admin-resetsitemap")
+    app.router.add_view("/admin/resetBobots/", ResetRobots, name="admin-resetrobots")
+    app.router.add_view("/admin/setblogdetail/", SetBlogDetail, name="admin-setblogdetail")
     
 
 def setupStaticRoutes(app):

@@ -32,7 +32,7 @@
                 </ul>
                 <hr>
                 <ul class="adminPad uk-nav uk-nav-default">
-                    <li><a href="#reset-password-sections{{ _userInfoSlideCount }}" uk-toggle>{{
+                    <li class="uk-active"><a href="#reset-password-sections{{ _userInfoSlideCount }}" uk-toggle>{{
                             None|fmtLabel("resetpwd_title") }}</a></li>
                     <div id="reset-password-sections{{ _userInfoSlideCount }}" resetpasswordsections uk-modal>
                         <div class="uk-modal-dialog">
@@ -89,14 +89,14 @@
                 </ul>
                 <hr>
                 {% if app.l_data.admin == 1 %}
-                <ul class="adminPad uk-nav uk-nav-default">
-                    <li class="uk-nav-header"><span class="uk-margin-small-right" uk-icon="icon: list"></span>管理员功能</li>
-                    <li><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></li>
-                    <li><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></li>
-                    <li><a name="reset-feeds" url-send-resetfeeds="{{ url('admin-resetfeeds') }}" href="">生成rss</a></li>
-                    <li><a name="reset-sitemap" url-send-resetsitemap="{{ url('admin-resetsitemap') }}" href="">生成sitemap</a></li>
-                    <li><a name="reset-robots" url-send-resetrobots="{{ url('admin-resetrobots') }}" href="">生成robots.txt</a></li>
-                </ul>
+                <div class="uk-column-1-2 uk-column-divider">
+                    <p><a name="setblogdetail" href="{{ url('admin-setblogdetail') }}">新增文章</a></p>
+                    <p><a name="reset-index" url-send-resetindex="{{ url('admin-resetindex') }}" href="">重建blog索引</a></p>
+                    <p><a name="reset-blog-cache" url-send-resetblogcache="{{ url('admin-resetblogcache') }}" href="">重建blog缓存</a></p>
+                    <p><a name="reset-feeds" url-send-resetfeeds="{{ url('admin-resetfeeds') }}" href="">生成rss</a></p>
+                    <p><a name="reset-sitemap" url-send-resetsitemap="{{ url('admin-resetsitemap') }}" href="">生成sitemap</a></p>
+                    <p><a name="reset-robots" url-send-resetrobots="{{ url('admin-resetrobots') }}" href="">生成robots.txt</a></p>
+                </div>
                 <hr>
                 {% endif %}
                 <ul class="uk-nav uk-nav-default">

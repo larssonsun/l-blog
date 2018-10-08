@@ -221,6 +221,12 @@ div.l-bottom-bar a {
     color:#000
 }
 
+.l-bloginfo {
+    background-color:#fff;
+    padding:40px;
+    border: #c1c1c1 solid 1px;
+}
+
 .l-breadcrumb {
     margin-bottom: 0 !important;
     background-color:#fff;

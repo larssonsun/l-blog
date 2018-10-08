@@ -34,6 +34,13 @@ def admin_required(func):
     return wrapper
 
 
+class SetBlogDetail(web.View):
+    @login_required(True)
+    @admin_required
+    async def get(self):
+        vm = {}
+        return aiohttp_jinja2.render_template("setblogdetail.html", self.request, vm)
+
 class ResetBlogIndex(web.View):
 
     @login_required(True)

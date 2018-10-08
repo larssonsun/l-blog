@@ -87,7 +87,7 @@ def login_required(*a):
                 cls.request.app.l_data = None
                 pth = cls.request.path
                 if a:
-                    if pth in ("/blogdetail/addComment", "/blogdetail/delComment"):
+                    if pth in ("/blogdetail/addcomment", "/blogdetail/delcomment"):
                         rtd = rtData(error_code=30001,
                                      error_msg="请先登录", data=None)
                         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
