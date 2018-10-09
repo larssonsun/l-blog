@@ -52,11 +52,11 @@ $(document).ready(function () {
     $(".l-comment-button-chd").click(showCmmForCmm);
 
     //删除回复
-    $(".l-comment-button-delete").click(function(){
+    $(".l-comment-button-delete").click(function () {
         var URL = $(this).attr('url-del-cmm');
         var cmmId = $(this).attr("data-cmm-id");
-        var hideStatus=$(this).attr("data-cmm-hide-status");
-        
+        var hideStatus = $(this).attr("data-cmm-hide-status");
+
         $.ajax({
             type: 'post',
             url: URL,
@@ -88,7 +88,7 @@ $(document).ready(function () {
 
         //validate commit interval
         t = sessionStorage.getItem("lastCommitTime")
-        if(t){
+        if (t) {
             var diffT = Date.parse(new Date()) - t;
             if (diffT < 30000) {
                 showMsg("两次评论间隔过短，请" + (30 - parseInt(diffT / 1000)) + "s 后再试", "warning");
@@ -168,11 +168,11 @@ $(document).ready(function () {
         var approve = $('#approve');
         var recover = $('#recover');
         approve.attr("hidden", true);
-        approve.find("input[class='uk-input']").each(function(){
+        approve.find("input[class='uk-input']").each(function () {
             $(this).val("");
         });
         recover.attr("hidden", true);
-        recover.find("input[class='uk-input']").each(function(){
+        recover.find("input[class='uk-input']").each(function () {
             $(this).val("");
         });
         $("#loginMsg").text("");
@@ -181,8 +181,8 @@ $(document).ready(function () {
     var validate_login = function (usernameCtl, pwdCtl, msgCtl) {
         return true;
     }
-    
-    $("#loginModel").keypress(function(e) {
+
+    $("#loginModel").keypress(function (e) {
         //Enter key
         if (e.which == 13) {
             return false;
@@ -190,7 +190,7 @@ $(document).ready(function () {
     });
 
     //登录按钮
-    $("#lognBttn").click(function() {
+    $("#lognBttn").click(function () {
 
         var submitBttn = $(this);
         var form = $(submitBttn.parents("form"));
@@ -232,7 +232,7 @@ $(document).ready(function () {
         $('#registeModel').find("input")[0].focus();
     });
 
-    $("#registeModel").keypress(function(e) {
+    $("#registeModel").keypress(function (e) {
         //Enter key
         if (e.which == 13) {
             return false;
@@ -268,7 +268,7 @@ $(document).ready(function () {
             "email": emailCtl.val(),
             "username": usernameCtl.val(),
             "pwd": pwdCtl.val(),
-            "repwd":repwdCtl.val()
+            "repwd": repwdCtl.val()
         },
             function (result) {
                 if (new Number(result.error_code) < 0) {
@@ -281,16 +281,16 @@ $(document).ready(function () {
                     repwdCtl.val("");
                     registMsg.text(" ");
                     waits = result.data["waits"];
-                    persec(submitBttn, submitBttn.text(), waits, function(){
+                    persec(submitBttn, submitBttn.text(), waits, function () {
                         submitBttn.removeAttr("disabled");
                     });
                     //close
                     UIkit.modal($("#registeModel")).hide();
                 }
-                else if(new Number(result.error_code) == 10008) {
+                else if (new Number(result.error_code) == 10008) {
                     registMsg.text(result.error_msg);
                     waits = result.data["waits"];
-                    persec(submitBttn, submitBttn.text(), waits, function(){
+                    persec(submitBttn, submitBttn.text(), waits, function () {
                         registMsg.text(" ");
                         submitBttn.removeAttr("disabled");
                     });
@@ -351,23 +351,23 @@ $(document).ready(function () {
         submitBttn.attr("disabled", "");
 
         ajxJson(URL, "post", {
-            "orgpwd": orgpwdCtl.val(),
-            "newpwd": pwdCtl.val(),
-            "renewpwd": repwdCtl.val()
-        },
+                "orgpwd": orgpwdCtl.val(),
+                "newpwd": pwdCtl.val(),
+                "renewpwd": repwdCtl.val()
+            },
             function (result) {
                 if (new Number(result.error_code) < 0) {
                     // window.location.reload();
                     showMsg(result.error_msg, "success")
-                    
+
                     //clear page
                     orgpwdCtl.val("");
                     pwdCtl.val("");
                     repwdCtl.val("");
                     resetpwdMsg.text("");
-                    
+
                     //close
-                    for(var i=0; i <= 1; i++)
+                    for (var i = 0; i <= 1; i++)
                         UIkit.modal($(sections[i])).hide();
                 }
                 else {
@@ -381,7 +381,7 @@ $(document).ready(function () {
                 resetpwdMsg.text(textStatus);
                 // spin.addClass("l-spinner");
                 submitBttn.removeAttr("disabled");
-            });
+        });
     });
 
 
@@ -391,7 +391,7 @@ $(document).ready(function () {
         return true;
     }
 
-    $("#approveBttn").click(function() {
+    $("#approveBttn").click(function () {
 
         var approveBttn = $(this);
         var form = $(approveBttn.parents("form"));
@@ -413,16 +413,16 @@ $(document).ready(function () {
                     approveMsg.text(" ");
                     showMsg(result.error_msg, "success");
                     waits = result.data["waits"];
-                    persec(approveBttn, approveBttn.text(), waits, function(){
+                    persec(approveBttn, approveBttn.text(), waits, function () {
                         approveMsg.text(" ");
                         // spin.addClass("l-spinner");
                         approveBttn.removeAttr("disabled");
                     });
                 }
-                else if(new Number(result.error_code) == 10008) {
+                else if (new Number(result.error_code) == 10008) {
                     approveMsg.text(result.error_msg);
                     waits = result.data["waits"];
-                    persec(approveBttn, approveBttn.text(), waits, function(){
+                    persec(approveBttn, approveBttn.text(), waits, function () {
                         approveMsg.text(" ");
                         // spin.addClass("l-spinner");
                         approveBttn.removeAttr("disabled");
@@ -444,12 +444,12 @@ $(document).ready(function () {
 
     //----------------全文搜索----------------
 
-    var fullSiteSearch = function(ths){
-        
+    var fullSiteSearch = function (ths) {
+
         frm = $(ths).parents("form.fullSiteSearch");
         ipt = frm.find("input");
         keywords = $(ipt).val();
-        if(keywords.length > 0){
+        if (keywords.length > 0) {
             frm.submit();
         }
         else
@@ -457,11 +457,11 @@ $(document).ready(function () {
         return false;
     }
 
-    $(".fullSiteSearchBttn").click(function(e){
+    $(".fullSiteSearchBttn").click(function (e) {
         return fullSiteSearch(this);
     });
 
-    $(".fullSiteSearchIpt").keypress(function(e) {
+    $(".fullSiteSearchIpt").keypress(function (e) {
 
         if (e.which == 13) {
             return fullSiteSearch(this);
