@@ -10,7 +10,7 @@ from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
-from admin.views import (ResetBlogCache, ResetBlogIndex, ResetFeeds,
+from admin.views import (ResetBlogCache, ResetBlogIndex, ResetFeeds, PublicBlogDetail,
                          ResetRobots, ResetSitemap, SetBlogDetail)
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 from main import filters
@@ -58,6 +58,7 @@ def setupRoutes(app):
     app.router.add_view("/admin/resetsitemap/", ResetSitemap, name="admin-resetsitemap")
     app.router.add_view("/admin/resetBobots/", ResetRobots, name="admin-resetrobots")
     app.router.add_view("/admin/setblogdetail/", SetBlogDetail, name="admin-setblogdetail")
+    app.router.add_view("/admin/publicblogdetail/", PublicBlogDetail, name="admin-publicblogdetail")
     
 
 def setupStaticRoutes(app):

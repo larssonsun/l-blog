@@ -61,18 +61,18 @@ class SetBlogDetail(web.View):
             if data and l_data:
 
                 catelog = data.get("catelog").split(",")
-                tags = data.get("tags")
+                tags = data.get("tags").split(",")
 
                 await set_cache("blogdraft", dict(
-                    source_from = data.get("source_from"),
-                    name = data.get("name"),
-                    name_en = data.get("name_en"),
-                    title_image_filename = data.get("title_image_filename"),
-                    title_image_bgcolor = data.get("title_image_bgcolor"),
-                    summary = data.get("summary"),
-                    content = data.get("content"),
-                    catelog = catelog,
-                    tags = tags))
+                    source_from=data.get("source_from"),
+                    name=data.get("name"),
+                    name_en=data.get("name_en"),
+                    title_image_filename=data.get("title_image_filename"),
+                    title_image_bgcolor=data.get("title_image_bgcolor"),
+                    summary=data.get("summary"),
+                    content=data.get("content"),
+                    catelog=catelog,
+                    tags=tags))
 
                 rtd = rtData(error_code=-1, error_msg="文章草稿保存成功", data=None)
             else:
@@ -90,28 +90,16 @@ class PublicBlogDetail(web.View):
     @admin_required
     async def post(self):
         rtd = None
-        data = await self.request.post()
         l_data = self.request.app.l_data
         try:
-            if data and l_data:
+            if l_data:
                 user_id = l_data.get("id")
                 user_name = l_data.get("name")
-
-                # await set_cache("blogdraft", dict(
-                #     source_from = data.get("source_from"),
-                #     name = data.get("name"),
-                #     name_en = data.get("name_en"),
-                #     title_image_filename = data.get("title_image_filename"),
-                #     title_image_bgcolor = data.get("title_image_bgcolor"),
-                #     summary = data.get("summary"),
-                #     content = data.get("content"),
-                #     catelog = catelog,
-                #     tags = tags))
 
                 blogdraft = await get_cache("blogdraft")
                 if not blogdraft:
                     rtd = rtData(error_code=13004,
-                                    error_msg="未能找到保存的草稿", data=None)
+                                 error_msg="未能找到保存的草稿", data=None)
                 else:
                     source_from = blogdraft["source_from"]
                     name = blogdraft["name"]
@@ -119,22 +107,33 @@ class PublicBlogDetail(web.View):
                     title_image = f"/static/images/article/{ blogdraft['title_image_filename'] }.png|bgc|#{ blogdraft['title_image_bgcolor'] }|bgcend|"
                     summary = blogdraft["summary"]
                     content = blogdraft["content"]
-                    catelog = ",".join(blogdraft["catelog"])
-                    tags = ",".join(blogdraft["tags"])
+                    catelog = (",".join(blogdraft["catelog"]))[:-1]
+                    tags = ",".join(blogdraft["tags"])[:-1]
 
                     blogId = str(uuid.uuid1())
                     created_at = datetime.now().timestamp()
-                    idx = await exeScalar("select `index` + 1 from blogs order by `index` desc limit 1 offset 0")
+                    idx = await exeScalar("select `index` + 1 from `blogs` order by `index` desc limit 1 offset 0")
 
-                    ic = await exeNonQuery("insert into blogs values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                                        blogId, user_id, user_name, title_image, name_en, name, summary, content, created_at,
-                                        created_at, idx, 0, source_from, tags, catelog)
-                    if(ic == 1):
+                    # blog
+                    sqls = [["insert into `blogs` values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                             blogId, user_id, user_name, title_image, name_en, name, summary, content, created_at,
+                             created_at, idx, 0, source_from, tags, catelog]]
+
+                    # catelog
+                    sqls.append(
+                        ["update `catelog` set `blog_count` = `blog_count` + 1", ])
+
+                    # tags
+                    sqls.append(
+                        ["update `tags` set `blog_count` = `blog_count` + 1", ])
+
+                    ic = await exeNonQuery(sqls)
+                    if(ic == 3):
                         rtd = rtData(
-                            error_code=-1, error_msg="文章草稿保存成功", data=None)
+                            error_code=-1, error_msg="文章发布成功", data=None)
                     else:
                         rtd = rtData(error_code=12002,
-                                    error_msg="未能成功保存草稿", data=None)
+                                     error_msg="未能成功发布文章", data=None)
             else:
                 rtd = rtData(error_code=13003,
                              error_msg="未能成功需要的文章信息或登录信息", data=None)

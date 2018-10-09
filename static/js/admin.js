@@ -138,7 +138,7 @@ $(document).ready(function () {
     });
 
     //setblogdetail
-    $("#setblogtoTmp").click(function () {
+    $("#setblogdetailBttn").click(function () {
 
         $(this).attr("disabled", "");
 
@@ -160,7 +160,7 @@ $(document).ready(function () {
             if (cbs[i].checked)
                 catelog += $(cbs[i]).attr("catename") + ",";
         }
-        
+
         var tags = "";
         var tagsCtl = frm.find("ul[name='tags']")[0];
         cbs = $(tagsCtl).find("input[type='checkbox']");
@@ -182,6 +182,28 @@ $(document).ready(function () {
         }
 
         ajxJson(URL, "post", shit, function (result) {
+            if (new Number(result.error_code) < 0) {
+                // window.location.reload();
+                showMsg(result.error_msg, "success")
+            }
+            else {
+                showMsg(result.error_msg, "danger")
+            }
+        },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus, "danger")
+            });
+
+        $(this).removeAttr("disabled");
+    });
+
+    //publicblogdetailB
+    $("#publicblogdetailBttn").click(function () {
+
+        $(this).attr("disabled", "");
+
+        var URL = $(this).attr("url-send-publicblog");
+        ajxJson(URL, "post", {}, function (result) {
             if (new Number(result.error_code) < 0) {
                 // window.location.reload();
                 showMsg(result.error_msg, "success")
