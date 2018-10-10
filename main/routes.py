@@ -58,6 +58,7 @@ def setupRoutes(app):
     app.router.add_view("/admin/resetsitemap/", ResetSitemap, name="admin-resetsitemap")
     app.router.add_view("/admin/resetBobots/", ResetRobots, name="admin-resetrobots")
     app.router.add_view("/admin/setblogdetail/", SetBlogDetail, name="admin-setblogdetail")
+    app.router.add_view("/admin/setblogdetail/" + r"{id:[0-9a-zA-Z\-]+}/", SetBlogDetail, name="admin-editblogdetail")
     app.router.add_view("/admin/publicblogdetail/", PublicBlogDetail, name="admin-publicblogdetail")
     
 

@@ -27,6 +27,9 @@
                         <span>{{ blog.browse_count|fmtLabel('read_count') }}</span>
                         <span>{{ commentCount|fmtLabel('comment_count') }}</span>
                         <span>{{ blog.created_at|fmtDatetimeFromFloat }}</span>
+                        {% if app.l_data.admin == 1 %}
+                        <span class="uk-align-right"><a href="{{ url('admin-editblogdetail', id=blog.name_en) }}" class="uk-icon-button l-icon-button" uk-icon="file-edit"></a></span>
+                        {% endif %}
                     </p>
                     <div class="l-atricalContent">{{ blog.markDownedContent|safe }}</div>
                     <hr class="uk-divider-icon">

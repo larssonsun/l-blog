@@ -27,6 +27,11 @@ html {
     color: #1E87F0;
 }
 
+.l-icon-button {
+    width: auto; height: auto;
+    margin: 2px
+}
+
 h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6 {
     margin: 0 0 20px 0;
     font-family: ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;

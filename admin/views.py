@@ -14,7 +14,7 @@ from aiohttp_session import get_session
 from main.views import basePageInfo, login_required
 from models.db import delete_cache, exeNonQuery, exeScalar, select, set_cache, get_cache
 from utils import (WhooshSchema, addDictProp, rtData, setFeed, setRobots,
-                   setSitemap, setWhooshSearch)
+                   setSitemap, setWhooshSearch, titleImageRc)
 
 
 def admin_required(func):
@@ -41,12 +41,34 @@ class SetBlogDetail(web.View):
     @login_required(True)
     @admin_required
     async def get(self):
+
         vm = {}
+
         # tags
         vm["tags"] = await select("select `id`, `tag_name`, `blog_count` from `tags`")
         # catelogs
         vm["catelogs"] = await select("select `id`, `catelog_name`, `blog_count` from `catelog`")
+
         # blogdraft
+        if "id" in self.request.match_info:
+            blog = await select("select `source_from`, `name`, `name_en`, `title_image`, `summary`, `content`, `catelog`, `tags` from `blogs` \
+                where `name_en` = %s limit 1 offset 0", self.request.match_info["id"])
+            blog = blog[0]
+
+            catelog = str(blog.get("catelog")).split(",")
+            tags = str(blog.get("tags")).split(",")
+            m = titleImageRc.match(blog.get("title_image"))
+            await set_cache("blogdraft", dict(
+                source_from=blog.get("source_from"),
+                name=blog.get("name"),
+                name_en=blog.get("name_en"),
+                title_image_filename= m.group(1) if m else "",
+                title_image_bgcolor=m.group(2) if m else "",
+                summary=blog.get("summary"),
+                content=blog.get("content"),
+                catelog=catelog,
+                tags=tags))
+        
         vm["blogdraft"] = await get_cache("blogdraft")
 
         return aiohttp_jinja2.render_template("setblogdetail.html", self.request, vm)
@@ -107,8 +129,8 @@ class PublicBlogDetail(web.View):
                     title_image = f"/static/images/article/{ blogdraft['title_image_filename'] }.png|bgc|#{ blogdraft['title_image_bgcolor'] }|bgcend|"
                     summary = blogdraft["summary"]
                     content = blogdraft["content"]
-                    catelog = (",".join(blogdraft["catelog"]))[:-1]
-                    tags = ",".join(blogdraft["tags"])[:-1]
+                    catelog = ",".join(blogdraft["catelog"])
+                    tags = ",".join(blogdraft["tags"])
 
                     blogId = str(uuid.uuid1())
                     created_at = datetime.now().timestamp()
@@ -120,12 +142,16 @@ class PublicBlogDetail(web.View):
                              created_at, idx, 0, source_from, tags, catelog]]
 
                     # catelog
+                    catelist = blogdraft["catelog"]
+                    st = ",".join(["%s" for cate in catelist])
                     sqls.append(
-                        ["update `catelog` set `blog_count` = `blog_count` + 1", ])
+                        [f"update `catelog` set `blog_count` = `blog_count` + 1 where `id` in ({st})", *catelist])
 
                     # tags
+                    taglist = blogdraft["tags"]
+                    st = ",".join(["%s" for tag in taglist])
                     sqls.append(
-                        ["update `tags` set `blog_count` = `blog_count` + 1", ])
+                        [f"update `tags` set `blog_count` = `blog_count` + 1 where `id` in ({st})", *taglist])
 
                     ic = await exeNonQuery(sqls)
                     if(ic == 3):

@@ -160,6 +160,8 @@ $(document).ready(function () {
             if (cbs[i].checked)
                 catelog += $(cbs[i]).attr("catename") + ",";
         }
+        if(cbs.length > 0)
+            catelog = catelog.substring(0, catelog.length - 1);
 
         var tags = "";
         var tagsCtl = frm.find("ul[name='tags']")[0];
@@ -168,6 +170,8 @@ $(document).ready(function () {
             if (cbs[i].checked)
                 tags += $(cbs[i]).attr("tagname") + ",";
         }
+        if(cbs.length > 0)
+            tags = tags.substring(0, tags.length - 1);
 
         var shit = {
             "source_from": source_from,

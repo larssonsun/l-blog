@@ -31,6 +31,7 @@ emailRc = re.compile(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
 pwdRc = re.compile(r'^[0-9a-zA-Z\_]{6,18}$')
 userNameRc = re.compile(r'^[0-9a-zA-Z]{6,18}$')
 duplicateSqlRc = re.compile(r'[d|D]uplicate entry .+ for key .+')
+titleImageRc = re.compile(r"^/static/images/article/(\w+).png\|bgc\|#(\w{6})\|bgcend\|$")
 certivateMailHtml = '''
 <div style="background-color:#bbb;padding:30px">
     <div style="padding:20px 5px">L-blog</div>

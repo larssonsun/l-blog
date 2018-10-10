@@ -88,6 +88,7 @@ class MyPyAioMysql(object):
 		cur = None
 		rown = 0
 		async with self.__pool.acquire() as conn:
+			await conn.autocommit(self.__autocommit)# maybe some bugs here
 			async with conn.cursor() as cur:
 				try:
 					if isinstance(sqlStrs, list):

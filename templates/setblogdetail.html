@@ -29,7 +29,7 @@
                                 <label>/static/images/article/</label>
                                 <input class="uk-input uk-form-small uk-width-medium" name="title_image_filename" value="{{ blogdraft.title_image_filename }}"
                                     placeholder="文件名 (如:python)">
-                                <label class="uk-padding-remove">.png</label><label class="uk-padding-remove">|bgc|</label>
+                                <label class="uk-padding-remove">.png</label><label class="uk-padding-remove">|bgc|#</label>
                                 <input class="uk-input uk-form-small" name="title_image_bgcolor" placeholder="背景色 (缺省:#FFFFFF)"
                                     value="{{ blogdraft.title_image_bgcolor }}">
                                 <label class="uk-padding-remove">|bgcend|</label>
@@ -64,9 +64,9 @@
                             </div>
                             <hr>
                             <div class="uk-flex uk-flex-right">
-                                <button type="button" class="uk-button uk-button-primary uk-align-right" id="setblogdetailBttn"
+                                <button type="button" class="uk-button uk-button-primary uk-margin-small-right" id="setblogdetailBttn"
                                     url-send-blogtmp="{{ url('admin-setblogdetail') }}">保存到草稿</button>
-                                <button type="button" class="uk-button uk-button-primary uk-align-right" id="publicblogdetailBttn"
+                                <button type="button" class="uk-button uk-button-primary" id="publicblogdetailBttn"
                                     url-send-publicblog="{{ url('admin-publicblogdetail') }}">发布文章</button>
                             </div>
                         </fieldset>
