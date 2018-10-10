@@ -51,7 +51,7 @@ class SetBlogDetail(web.View):
 
         # blogdraft
         if "id" in self.request.match_info:
-            blog = await select("select `source_from`, `name`, `name_en`, `title_image`, `summary`, `content`, `catelog`, `tags` from `blogs` \
+            blog = await select("select `id`, `source_from`, `name`, `name_en`, `title_image`, `summary`, `content`, `catelog`, `tags` from `blogs` \
                 where `name_en` = %s limit 1 offset 0", self.request.match_info["id"])
             blog = blog[0]
 
@@ -59,17 +59,20 @@ class SetBlogDetail(web.View):
             tags = str(blog.get("tags")).split(",")
             m = titleImageRc.match(blog.get("title_image"))
             await set_cache("blogdraft", dict(
+                blogid=blog.get("id"),
                 source_from=blog.get("source_from"),
                 name=blog.get("name"),
                 name_en=blog.get("name_en"),
-                title_image_filename= m.group(1) if m else "",
+                title_image_filename=m.group(1) if m else "",
                 title_image_bgcolor=m.group(2) if m else "",
                 summary=blog.get("summary"),
                 content=blog.get("content"),
                 catelog=catelog,
                 tags=tags))
-        
+
         vm["blogdraft"] = await get_cache("blogdraft")
+        if "id" not in self.request.match_info and vm["blogdraft"]:
+            vm["blogdraft"]["blogid"] = None
 
         return aiohttp_jinja2.render_template("setblogdetail.html", self.request, vm)
 
@@ -86,11 +89,14 @@ class SetBlogDetail(web.View):
                 tags = data.get("tags").split(",")
 
                 await set_cache("blogdraft", dict(
+                    blogid=data.get("blogid"),
                     source_from=data.get("source_from"),
                     name=data.get("name"),
                     name_en=data.get("name_en"),
-                    title_image_filename=data.get("title_image_filename"),
-                    title_image_bgcolor=data.get("title_image_bgcolor"),
+                    title_image_filename="" if len(
+                        data.get("title_image_filename")) == 0 else data.get("title_image_filename"),
+                    title_image_bgcolor="" if len(
+                        data.get("title_image_filename")) == 0 else data.get("title_image_bgcolor"),
                     summary=data.get("summary"),
                     content=data.get("content"),
                     catelog=catelog,
@@ -123,38 +129,64 @@ class PublicBlogDetail(web.View):
                     rtd = rtData(error_code=13004,
                                  error_msg="未能找到保存的草稿", data=None)
                 else:
+                    blogid = blogdraft["blogid"]
                     source_from = blogdraft["source_from"]
                     name = blogdraft["name"]
                     name_en = blogdraft["name_en"]
-                    title_image = f"/static/images/article/{ blogdraft['title_image_filename'] }.png|bgc|#{ blogdraft['title_image_bgcolor'] }|bgcend|"
+                    title_image = "" if blogdraft[
+                        'title_image_filename'] == None else f"/static/images/article/{ blogdraft['title_image_filename'] }.png|bgc|#{ blogdraft['title_image_bgcolor'] }|bgcend|"
                     summary = blogdraft["summary"]
                     content = blogdraft["content"]
                     catelog = ",".join(blogdraft["catelog"])
                     tags = ",".join(blogdraft["tags"])
+                    
+                    sqls=[]
+                    orgcatelist = None
+                    orgtaglist = None
 
-                    blogId = str(uuid.uuid1())
-                    created_at = datetime.now().timestamp()
-                    idx = await exeScalar("select `index` + 1 from `blogs` order by `index` desc limit 1 offset 0")
+                    # add new blog
+                    if not blogid or len(blogid) == 0:
+                        blogid = str(uuid.uuid1())
+                        created_at = datetime.now().timestamp()
+                        idx = await exeScalar("select `index` + 1 from `blogs` order by `index` desc limit 1 offset 0")
+                        sqls.append(["insert into `blogs` values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                                 blogid, user_id, user_name, title_image, name_en, name, summary, content, created_at,
+                                 created_at, idx, 0, source_from, tags, catelog])
 
-                    # blog
-                    sqls = [["insert into `blogs` values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                             blogId, user_id, user_name, title_image, name_en, name, summary, content, created_at,
-                             created_at, idx, 0, source_from, tags, catelog]]
+                    # update blog
+                    else:
+                        # clear old catelog and tags
+                        tc = await select("select `tags`, `catelog` from `blogs` where `id` = %s limit 1 offset 0", blogid)
+                        tc = tc[0]
+                        
+                        orgcatelist = tc["catelog"].split(",")
+                        orgtaglist = tc["tags"].split(",")
+                        
+                        # update blog
+                        updated_at = datetime.now().timestamp()
+                        sqls = [["UPDATE `blogs` SET `title_image` = %s, `name_en` = %s, `name` = %s, `summary` = %s, `content` = %s, `updated_at` = %s, `source_from` = %s, \
+                            `tags` = %s, `catelog` = %s WHERE `id` = %s;", title_image, name_en, name, summary, content, updated_at, source_from, tags, catelog, blogid]]
 
                     # catelog
                     catelist = blogdraft["catelog"]
+                    [(catelist.remove(orgcate) if orgcate in catelist else None) for orgcate in orgcatelist]
                     st = ",".join(["%s" for cate in catelist])
-                    sqls.append(
-                        [f"update `catelog` set `blog_count` = `blog_count` + 1 where `id` in ({st})", *catelist])
+                    if len(st) > 0:
+                        sqls.append(
+                            [f"update `catelog` set `blog_count` = `blog_count` + 1 where `id` in ({st})", *catelist])
 
                     # tags
                     taglist = blogdraft["tags"]
+                    [(taglist.remove(orgtag) if orgtag in taglist else None) for orgtag in orgtaglist]
                     st = ",".join(["%s" for tag in taglist])
-                    sqls.append(
-                        [f"update `tags` set `blog_count` = `blog_count` + 1 where `id` in ({st})", *taglist])
+                    if len(st) > 0:
+                        sqls.append(
+                            [f"update `tags` set `blog_count` = `blog_count` + 1 where `id` in ({st})", *taglist])
 
                     ic = await exeNonQuery(sqls)
-                    if(ic == 3):
+                    if(ic > 0):
+                        # renew cache
+
                         rtd = rtData(
                             error_code=-1, error_msg="文章发布成功", data=None)
                     else:

@@ -144,6 +144,7 @@ $(document).ready(function () {
 
         var URL = $(this).attr("url-send-blogtmp");
         var frm = $("#setblogdetail");
+        var blogid = frm.find("[name='blogid']")[0];
         var source_from = frm.find("[name='source_from']");
         source_from = source_from[0].checked ? "original" : "transfer";
         var name = frm.find("[name='name']")[0];
@@ -174,6 +175,7 @@ $(document).ready(function () {
             tags = tags.substring(0, tags.length - 1);
 
         var shit = {
+            "blogid":$(blogid).val(),
             "source_from": source_from,
             "name": $(name).val(),
             "name_en": $(name_en).val(),
