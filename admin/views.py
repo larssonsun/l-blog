@@ -70,10 +70,20 @@ class SetBlogDetail(web.View):
                 content=blog.get("content"),
                 catelog=catelog,
                 tags=tags))
+        else:
+            await set_cache("blogdraft", dict(
+                blogid=None,
+                source_from="original",
+                name="",
+                name_en="",
+                title_image_filename="",
+                title_image_bgcolor="",
+                summary="",
+                content="",
+                catelog="",
+                tags=""))
 
         vm["blogdraft"] = await get_cache("blogdraft")
-        if "id" not in self.request.match_info and vm["blogdraft"]:
-            vm["blogdraft"]["blogid"] = None
 
         return aiohttp_jinja2.render_template("setblogdetail.html", self.request, vm)
 
@@ -115,6 +125,9 @@ class SetBlogDetail(web.View):
 
 class PublicBlogDetail(web.View):
 
+    def validateBlog(self, blog):
+        return False
+
     @login_required(True)
     @admin_required
     async def post(self):
@@ -129,6 +142,9 @@ class PublicBlogDetail(web.View):
                 if not blogdraft:
                     rtd = rtData(error_code=13004,
                                  error_msg="未能找到保存的草稿", data=None)
+                elif not self.validateBlog(blogdraft):
+                    rtd = rtData(error_code=13005,
+                                 error_msg="内容或格式有误, 请检查", data=None)
                 else:
                     blogid = blogdraft["blogid"]
                     source_from = blogdraft["source_from"]
@@ -199,7 +215,7 @@ class PublicBlogDetail(web.View):
                         rtd = rtData(
                             error_code=-1, error_msg="文章发布成功", data=None)
                     else:
-                        rtd = rtData(error_code=12002,
+                        rtd = rtData(error_code=13002,
                                      error_msg="未能成功发布文章", data=None)
             else:
                 rtd = rtData(error_code=13003,
