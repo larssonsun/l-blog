@@ -428,7 +428,8 @@ class BlogDetail(web.View):
             return await self.set_blog_cache(k)
 
     async def set_blog_cache(self, k):
-        blog = await select("select a.*, b.id as 'catelog_id', b.catelog_name from `blogs` a inner join `catelog` b on a.catelog=b.id where `name_en` = %s limit 1 offset 0", k)
+        blog = await select("select a.*, b.id as 'catelog_id', b.catelog_name from `blogs` a inner join `catelog` b on a.catelog=b.id \
+            where `name_en` = %s limit 1 offset 0", k)
         if len(blog) == 1:
             blog = blog[0]
             blog["markDownedContent"], blog["toc"] = mdToHtml(

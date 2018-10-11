@@ -203,7 +203,31 @@ $(document).ready(function () {
         $(this).removeAttr("disabled");
     });
 
-    //publicblogdetailB
+    //deleteblogBttn
+    $("#deleteblogBttn").click(function(){
+        $(this).attr("disabled", "");
+
+        var URL = $(this).attr("url-send-deleteblog");
+        var id = $(this).attr("data-blog-id");
+        ajxJson(URL, "post", {"id": id}, function (result) {
+            if (new Number(result.error_code) < 0) {
+                // window.location.reload();
+                showMsg(result.error_msg, "success")
+            }
+            else {
+                showMsg(result.error_msg, "danger")
+            }
+        },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus, "danger")
+            });
+
+        $(this).removeAttr("disabled");
+
+        return false;
+    });
+
+    //publicblogdetail
     $("#publicblogdetailBttn").click(function () {
 
         $(this).attr("disabled", "");

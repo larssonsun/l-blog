@@ -64,7 +64,7 @@
                             </div>
                             <hr>
                             <div class="uk-flex uk-flex-right">
-                                <input type="hidden" name="blogid" value="{{ blogdraft.blogid }}">
+                                <input type="hidden" name="blogid" value="{{ blogdraft.blogid if blogdraft.blogid else '' }}">
                                 <button type="button" class="uk-button uk-button-primary uk-margin-small-right" id="setblogdetailBttn"
                                     url-send-blogtmp="{{ url('admin-setblogdetail') }}">保存到草稿</button>
                                 <button type="button" class="uk-button uk-button-primary" id="publicblogdetailBttn"

@@ -31,7 +31,8 @@ emailRc = re.compile(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
 pwdRc = re.compile(r'^[0-9a-zA-Z\_]{6,18}$')
 userNameRc = re.compile(r'^[0-9a-zA-Z]{6,18}$')
 duplicateSqlRc = re.compile(r'[d|D]uplicate entry .+ for key .+')
-titleImageRc = re.compile(r"^/static/images/article/(\w+).png\|bgc\|#(\w{6})\|bgcend\|$")
+titleImageRc = re.compile(
+    r"^/static/images/article/(\w+).png\|bgc\|#(\w{6})\|bgcend\|$")
 certivateMailHtml = '''
 <div style="background-color:#bbb;padding:30px">
     <div style="padding:20px 5px">L-blog</div>
@@ -111,8 +112,8 @@ def mdToHtml(mdStr):
         'markdown.extensions.codehilite',
         'markdown.extensions.toc'
     ])
-    #TocExtension实例用替代'markdown.extensions.toc'时
-    #slugify 参数可以接受一个函数作为参数，这个函数将被用于处理标题的锚点值。Markdown 内置的处理方法不能处理中文标题
+    # TocExtension实例用替代'markdown.extensions.toc'时
+    # slugify 参数可以接受一个函数作为参数，这个函数将被用于处理标题的锚点值。Markdown 内置的处理方法不能处理中文标题
     html = md.convert(mdStr)
     toc = md.toc
     return html, toc
@@ -163,6 +164,13 @@ def smtp_send_thread(toAddr, subject, html):
     return t
 
 
+def smtp_send_thread_self(subject, content):
+    t = Thread(target=smtp_send, args=(
+        MAIL_SMTPCLIENT['fromAddr'], subject, content))
+    t.start()
+    return t
+
+
 def setAvatar(emailAddr):
     avatarAdmin = "/static/images/avatardemo.png"
     size = 40
@@ -197,9 +205,9 @@ def getWhooshSearch(partten, indexNameLast, fieldList, hightlightFieldList):
 
 
 def setWhooshSearch(indexNameLast, WhooshSchema, docs):
-        schema = WhooshSchema.value
-        idx = setWhooshIndex(indexNameLast, schema)
-        setWhooshDoc(idx, docs)
+    schema = WhooshSchema.value
+    idx = setWhooshIndex(indexNameLast, schema)
+    setWhooshDoc(idx, docs)
 
 
 def setWhooshIndex(indexName, schema):
@@ -259,7 +267,7 @@ def setFeed(feedId, blogSiteUrl, logoUrl, feedUrlPrefix, blogSiteTitle, blogSite
 
 
 def setSitemap(fileName, sitemapDict):
-    #get xml str
+    # get xml str
     header = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     footer = '</urlset>'
     contents = []
@@ -268,7 +276,7 @@ def setSitemap(fileName, sitemapDict):
      for sd in sitemapDict]
     contentStr = "".join(contents)
 
-    #write to file
+    # write to file
     fileFullName = f"{SITEMAP_DIR}/{fileName}"
     writeFileToSite(fileFullName, f'{header}{contentStr}{footer}')
 

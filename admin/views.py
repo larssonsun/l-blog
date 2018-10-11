@@ -12,9 +12,10 @@ from aiohttp import web
 from aiohttp_session import get_session
 
 from main.views import basePageInfo, login_required
-from models.db import delete_cache, exeNonQuery, exeScalar, select, set_cache, get_cache
+from models.db import (delete_cache, exeNonQuery, exeScalar, get_cache, select,
+                       set_cache)
 from utils import (WhooshSchema, addDictProp, rtData, setFeed, setRobots,
-                   setSitemap, setWhooshSearch, titleImageRc)
+                   setSitemap, setWhooshSearch, smtp_send_thread_self, titleImageRc)
 
 
 def admin_required(func):
@@ -139,10 +140,11 @@ class PublicBlogDetail(web.View):
                     content = blogdraft["content"]
                     catelog = ",".join(blogdraft["catelog"])
                     tags = ",".join(blogdraft["tags"])
-                    
-                    sqls=[]
+
+                    sqls = []
                     orgcatelist = None
                     orgtaglist = None
+                    orgname_en = None
 
                     # add new blog
                     if not blogid or len(blogid) == 0:
@@ -150,18 +152,18 @@ class PublicBlogDetail(web.View):
                         created_at = datetime.now().timestamp()
                         idx = await exeScalar("select `index` + 1 from `blogs` order by `index` desc limit 1 offset 0")
                         sqls.append(["insert into `blogs` values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                                 blogid, user_id, user_name, title_image, name_en, name, summary, content, created_at,
-                                 created_at, idx, 0, source_from, tags, catelog])
+                                     blogid, user_id, user_name, title_image, name_en, name, summary, content, created_at,
+                                     created_at, idx, 0, source_from, tags, catelog])
 
                     # update blog
                     else:
                         # clear old catelog and tags
-                        tc = await select("select `tags`, `catelog` from `blogs` where `id` = %s limit 1 offset 0", blogid)
+                        tc = await select("select `tags`, `catelog`, `name_en` from `blogs` where `id` = %s limit 1 offset 0", blogid)
                         tc = tc[0]
-                        
+
                         orgcatelist = tc["catelog"].split(",")
                         orgtaglist = tc["tags"].split(",")
-                        
+                        orgname_en = tc["name_en"]
                         # update blog
                         updated_at = datetime.now().timestamp()
                         sqls = [["UPDATE `blogs` SET `title_image` = %s, `name_en` = %s, `name` = %s, `summary` = %s, `content` = %s, `updated_at` = %s, `source_from` = %s, \
@@ -169,7 +171,9 @@ class PublicBlogDetail(web.View):
 
                     # catelog
                     catelist = blogdraft["catelog"]
-                    [(catelist.remove(orgcate) if orgcate in catelist else None) for orgcate in orgcatelist]
+                    if orgcatelist:
+                        [(catelist.remove(orgcate) if orgcate in catelist else None)
+                         for orgcate in orgcatelist]
                     st = ",".join(["%s" for cate in catelist])
                     if len(st) > 0:
                         sqls.append(
@@ -177,7 +181,9 @@ class PublicBlogDetail(web.View):
 
                     # tags
                     taglist = blogdraft["tags"]
-                    [(taglist.remove(orgtag) if orgtag in taglist else None) for orgtag in orgtaglist]
+                    if orgtaglist:
+                        [(taglist.remove(orgtag) if orgtag in taglist else None)
+                         for orgtag in orgtaglist]
                     st = ",".join(["%s" for tag in taglist])
                     if len(st) > 0:
                         sqls.append(
@@ -185,7 +191,10 @@ class PublicBlogDetail(web.View):
 
                     ic = await exeNonQuery(sqls)
                     if(ic > 0):
-                        # renew cache
+
+                        # delete cache
+                        if orgname_en:
+                            await delete_cache(orgname_en)
 
                         rtd = rtData(
                             error_code=-1, error_msg="文章发布成功", data=None)
@@ -198,6 +207,57 @@ class PublicBlogDetail(web.View):
         except Exception as ex:
             rtd = rtData(error_code=13001,
                          error_msg=f"文章发布时发生错误{ex}", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class DeleteBlog(web.View):
+    @login_required(True)
+    @admin_required
+    async def post(self):
+        rtd = None
+        data = await self.request.post()
+        try:
+            if data and "id" in data:
+                # get blog
+                blog = await select("select * from `blogs` where `name_en` = %s limit 1 offset 0", data.get("id"))
+                blog = blog[0]
+
+                # delete blog
+                sqls = [
+                    ["delete from `blogs` where `name_en`=%s", data.get("id")]]
+
+                # update catelog
+                catelist = blog["catelog"].split(",")
+                st = ",".join(["%s" for cate in catelist])
+                if len(st) > 0:
+                    sqls.append(
+                        [f"update `catelog` set `blog_count` = `blog_count` - 1 where `id` in ({st})", *catelist])
+
+                # update tags
+                taglist = blog["tags"].split(",")
+                st = ",".join(["%s" for tag in taglist])
+                if len(st) > 0:
+                    sqls.append(
+                        [f"update `tags` set `blog_count` = `blog_count` - 1 where `id` in ({st})", *taglist])
+
+                ic = await exeNonQuery(sqls)
+                if ic > 0:
+                    # delete blog cache
+                    await delete_cache(data.get("id"))
+                    # send to mail
+                    smtp_send_thread_self(
+                        f"已删除博客备份:{blog.get('name')}", str(blog))
+                    rtd = rtData(error_code=-1,
+                                 error_msg="删除文章成功, 被删除的内容已发送到邮箱", data=None)
+                else:
+                    rtd = rtData(error_code=15003,
+                                 error_msg="未能成功删除文章", data=None)
+            else:
+                rtd = rtData(error_code=15002,
+                             error_msg="未能找到目标文章", data=None)
+        except Exception as ex:
+            rtd = rtData(error_code=15001,
+                         error_msg=f"删除文章时发生错误{ex}", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
