@@ -42,7 +42,13 @@ def basePageInfo(func):
             curr = "index"
         else:
             curr = paths[1]
+            #lastpath
+            if len(paths) > 1:
+                site_status["lastpath"] = paths[-2]
+                site_status["last2path"] = paths[-3]
         site_status["currMenuItem"] = curr
+
+        
 
         #blog_count, comment_count
         blog_count = await exeScalar("select count(1) from `blogs`")

@@ -11,7 +11,8 @@
     <div class="uk-container">
         <div class="uk-grid uk-margin-remove-left">
             <div class="uk-width-3-4@m uk-width-1-1@s uk-section uk-padding-remove">
-                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel('about_menu_href')) }}
+                {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel(app.site_status.last2path) +
+                " - " + None|fmtLabel(app.site_status.lastpath)) }}
                 <div class="uk-box-shadow uk-box-shadow-large l-bloginfo">
                     <form id="setblogdetail">
                         <fieldset class="uk-fieldset">
@@ -42,22 +43,33 @@
                             </div>
                             <div class="uk-flex uk-flex-center uk-margin">
                                 <div class="uk-panel uk-panel-scrollable uk-width-1-2">
-                                    <ul class="uk-list" name="catelog">
+                                    <div class="uk-flex">
+                                        <textarea class="uk-textarea" rows="2" placeholder="添加分类（如：live|市井|市井杂文，粗如爵蜡。）"></textarea>
+                                        <button id="addcatelog" type="button" class="uk-button uk-padding-small"></button>
+                                    </div>
+                                    <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="catelog">
                                         <li><b>分类</b></li>
                                         {% for catelog in catelogs %}
                                         <li><label><input class="uk-radio" type="radio" name="catelog" catename="{{ catelog.id }}"
                                                     {% if catelog.id in blogdraft.catelog %} checked {% endif %}>{{
-                                                catelog.catelog_name }}</label></li>
+                                                " " + catelog.catelog_name }}</label><a href="" delcatename="{{ catelog.id }}"
+                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: trash; ratio: 0.8"></a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
                                 <div class="uk-panel uk-panel-scrollable uk-margin-small-left uk-width-1-2">
-                                    <ul class="uk-list" name="tags">
+                                    <div class="uk-flex">
+                                        <textarea class="uk-textarea" rows="2" placeholder="添加分类（如：uikit|Uikit|UIkit 是 YOOtheme）"></textarea>
+                                        <button id="addtag" type="button" class="uk-button uk-padding-small"></button>
+                                    </div>
+                                    <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="tags">
                                         <li><b>标签</b></li>
                                         {% for tag in tags %}
                                         <li><label><input class="uk-checkbox" type="checkbox" tagname="{{ tag.id }}" {%
-                                                    if tag.id in blogdraft.tags %} checked {% endif %}>{{ tag.tag_name
-                                                }}</label></li>
+                                                    if tag.id in blogdraft.tags %} checked {% endif %}>{{ " " +
+                                                tag.tag_name
+                                                }}</label><a href="" deltagname="{{ tag.id }}" class="uk-icon-link uk-margin-small-left"
+                                                uk-icon="icon: trash; ratio: 0.8"></a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
@@ -65,9 +77,9 @@
                             <hr>
                             <div class="uk-flex uk-flex-right">
                                 <input type="hidden" name="blogid" value="{{ blogdraft.blogid if blogdraft.blogid else '' }}">
-                                <button type="button" class="uk-button uk-button-primary uk-margin-small-right" id="setblogdetailBttn"
+                                <button type="button" class="uk-button uk-margin-small-right" id="setblogdetailBttn"
                                     url-send-blogtmp="{{ url('admin-setblogdetail') }}">保存到草稿</button>
-                                <button type="button" class="uk-button uk-button-primary uk-margin-small-right" id="loadlastcacheBttn"
+                                <button type="button" class="uk-button uk-margin-small-right" id="loadlastcacheBttn"
                                     url-send-loadlastcache="{{ url('admin-loadlastcache') }}">读取草稿</button>
                                 <button type="button" class="uk-button uk-button-primary" id="publicblogdetailBttn"
                                     url-send-publicblog="{{ url('admin-publicblogdetail') }}">{{ "保存" if

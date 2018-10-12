@@ -91,6 +91,8 @@ SWITCH_i18n = dict(
     blog_url_left=lambda x: f"本文链接：{x}",
     blog_online_days=lambda x: "博客上线",
     blog_last_updatetime=lambda x: f"本文于 {x} 由作者进行过修改",
+    addnewblog=lambda x: "新增文章",
+    setblogdetail=lambda x: "文章管理",
     filter_sum_count=lambda x: f"共 {x} 篇",
     footer_pages=lambda x: "页面",
     footer_contactme=lambda x: "联系方式",
@@ -169,7 +171,7 @@ def fmtYearMonthDateFromFloat(flt):
 def fmtLabel(content, typeName, *parm):
     do = SWITCH_i18n.get(typeName)
     if not do:
-        return content
+        return typeName
     else:
         return do(content, *parm) if parm else do(content)
 

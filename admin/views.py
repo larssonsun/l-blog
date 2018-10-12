@@ -74,6 +74,10 @@ class AddNewBlog(web.View):
     async def get(self):
         vm = dict(blogdraft=None)
         await getCateAndTags(vm)
+        data = await getBlogLastCache()
+        if data:
+            data["blogid"]=None
+            await setCacheForBlogPost(data, data["catelog"], data["tags"])
         return aiohttp_jinja2.render_template("setblogdetail.html", self.request, vm)
 
     @login_required(True)
@@ -82,7 +86,7 @@ class AddNewBlog(web.View):
         rtd = None
         try:
             data = await getBlogLastCache()
-            rtd = rtData(error_code=-1, error_msg="读取草稿成功", data=data)
+            rtd = rtData(error_code=-1, error_msg="读取草稿成功" if data else "无草稿可供使用", data=data)
         except Exception as ex:
             rtd = rtData(error_code=16001,
                          error_msg=f"读取草稿时发生错误{ex}", data=None)

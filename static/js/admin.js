@@ -205,12 +205,12 @@ $(document).ready(function () {
 
     //deleteblog
     $("#deleteblogBttn").click(function () {
-        var ifdo
+        var bttn = $(this);
         UIkit.modal.confirm('UIkit confirm!').then(function () {
-            $(this).attr("disabled", "");
+            bttn.attr("disabled", "");
 
-            var URL = $(this).attr("url-send-deleteblog");
-            var id = $(this).attr("data-blog-id");
+            var URL = bttn.attr("url-send-deleteblog");
+            var id = bttn.attr("data-blog-id");
             ajxJson(URL, "post", { "id": id }, function (result) {
                 if (new Number(result.error_code) < 0) {
                     // window.location.reload();
@@ -220,11 +220,11 @@ $(document).ready(function () {
                     showMsg(result.error_msg, "danger")
                 }
             },
-                function (XMLHttpRequest, textStatus, errorThrown) {
-                    showMsg(textStatus, "danger")
-                });
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus, "danger")
+            });
 
-            $(this).removeAttr("disabled");
+            bttn.removeAttr("disabled");
         }, function () { });
 
         return false;
