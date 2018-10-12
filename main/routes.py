@@ -10,9 +10,9 @@ from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
-from admin.views import (DeleteBlog, PublicBlogDetail, ResetBlogCache,
-                         ResetBlogIndex, ResetFeeds, ResetRobots, ResetSitemap,
-                         SetBlogDetail)
+from admin.views import (AddNewBlog, DeleteBlog, PublicBlogDetail,
+                         ResetBlogCache, ResetBlogIndex, ResetFeeds,
+                         ResetRobots, ResetSitemap, SetBlogDetail)
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 from main import filters
 from main.views import (About, AddComment, Approve, Archive, BlogDetail,
@@ -31,10 +31,10 @@ def setupRoutes(app):
     app.router.add_view("/archive/", Archive, name="archive")
     app.router.add_view("/about/", About, name="about")
     app.router.add_view("/timeline/", Timeline, name="timeline")
-    app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\_]+}/", Index, name="tag")
-    app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\_]+}/" + r"{type:[hot|time]+}/", Index, name="index_tag_sort")
-    app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/", Index, name="catelog")
-    app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\_]+}/" + r"{type:[hot|time]+}/", Index, name="index_catelog_sort")
+    app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\-]+}/", Index, name="tag")
+    app.router.add_view("/tag/" + r"{tagId:[0-9a-zA-Z\-]+}/" + r"{type:[hot|time]+}/", Index, name="index_tag_sort")
+    app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\-]+}/", Index, name="catelog")
+    app.router.add_view("/catelog/" + r"{cateId:[0-9a-zA-Z\-]+}/" + r"{type:[hot|time]+}/", Index, name="index_catelog_sort")
     app.router.add_view("/blogdetail/" + r"{id:[0-9a-zA-Z\-]+}/", BlogDetail, name="BlogDetail")
     app.router.add_view("/blogdetail/addcomment", AddComment, name="add-comment")
     app.router.add_view("/blogdetail/delcomment", DelComment, name="delete-comment")
@@ -59,6 +59,8 @@ def setupRoutes(app):
     app.router.add_view("/admin/resetsitemap/", ResetSitemap, name="admin-resetsitemap")
     app.router.add_view("/admin/resetBobots/", ResetRobots, name="admin-resetrobots")
     app.router.add_view("/admin/setblogdetail/", SetBlogDetail, name="admin-setblogdetail")
+    app.router.add_view("/admin/setblogdetail/addnewblog", AddNewBlog, name="admin-addnewblog")
+    app.router.add_view("/admin/setblogdetail/loadlastcache", AddNewBlog, name="admin-loadlastcache")
     app.router.add_view("/admin/setblogdetail/" + r"{id:[0-9a-zA-Z\-]+}/", SetBlogDetail, name="admin-editblogdetail")
     app.router.add_view("/admin/publicblogdetail/", PublicBlogDetail, name="admin-publicblogdetail")
     app.router.add_view("/admin/deleteblog/", DeleteBlog, name="admin-deleteblog")

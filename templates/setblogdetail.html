@@ -67,8 +67,11 @@
                                 <input type="hidden" name="blogid" value="{{ blogdraft.blogid if blogdraft.blogid else '' }}">
                                 <button type="button" class="uk-button uk-button-primary uk-margin-small-right" id="setblogdetailBttn"
                                     url-send-blogtmp="{{ url('admin-setblogdetail') }}">保存到草稿</button>
+                                <button type="button" class="uk-button uk-button-primary uk-margin-small-right" id="loadlastcacheBttn"
+                                    url-send-loadlastcache="{{ url('admin-loadlastcache') }}">读取草稿</button>
                                 <button type="button" class="uk-button uk-button-primary" id="publicblogdetailBttn"
-                                    url-send-publicblog="{{ url('admin-publicblogdetail') }}">{{ "保存" if  blogdraft.blogid else "发布" }}文章</button>
+                                    url-send-publicblog="{{ url('admin-publicblogdetail') }}">{{ "保存" if
+                                    blogdraft.blogid else "发布" }}文章</button>
                             </div>
                         </fieldset>
                     </form>

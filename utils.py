@@ -30,6 +30,7 @@ rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])
 emailRc = re.compile(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
 pwdRc = re.compile(r'^[0-9a-zA-Z\_]{6,18}$')
 userNameRc = re.compile(r'^[0-9a-zA-Z]{6,18}$')
+blogName_enRc = re.compile(r'^[0-9a-zA-Z\-]+$')
 duplicateSqlRc = re.compile(r'[d|D]uplicate entry .+ for key .+')
 titleImageRc = re.compile(
     r"^/static/images/article/(\w+).png\|bgc\|#(\w{6})\|bgcend\|$")

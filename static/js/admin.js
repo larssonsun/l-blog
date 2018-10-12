@@ -161,7 +161,7 @@ $(document).ready(function () {
             if (cbs[i].checked)
                 catelog += $(cbs[i]).attr("catename") + ",";
         }
-        if(cbs.length > 0)
+        if (cbs.length > 0)
             catelog = catelog.substring(0, catelog.length - 1);
 
         var tags = "";
@@ -171,11 +171,11 @@ $(document).ready(function () {
             if (cbs[i].checked)
                 tags += $(cbs[i]).attr("tagname") + ",";
         }
-        if(cbs.length > 0)
+        if (cbs.length > 0)
             tags = tags.substring(0, tags.length - 1);
 
         var shit = {
-            "blogid":$(blogid).val(),
+            "blogid": $(blogid).val(),
             "source_from": source_from,
             "name": $(name).val(),
             "name_en": $(name_en).val(),
@@ -203,16 +203,81 @@ $(document).ready(function () {
         $(this).removeAttr("disabled");
     });
 
-    //deleteblogBttn
-    $("#deleteblogBttn").click(function(){
+    //deleteblog
+    $("#deleteblogBttn").click(function () {
+        var ifdo
+        UIkit.modal.confirm('UIkit confirm!').then(function () {
+            $(this).attr("disabled", "");
+
+            var URL = $(this).attr("url-send-deleteblog");
+            var id = $(this).attr("data-blog-id");
+            ajxJson(URL, "post", { "id": id }, function (result) {
+                if (new Number(result.error_code) < 0) {
+                    // window.location.reload();
+                    showMsg(result.error_msg, "success")
+                }
+                else {
+                    showMsg(result.error_msg, "danger")
+                }
+            },
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    showMsg(textStatus, "danger")
+                });
+
+            $(this).removeAttr("disabled");
+        }, function () { });
+
+        return false;
+    });
+
+    //loadlastcache
+    $("#loadlastcacheBttn").click(function () {
         $(this).attr("disabled", "");
 
-        var URL = $(this).attr("url-send-deleteblog");
-        var id = $(this).attr("data-blog-id");
-        ajxJson(URL, "post", {"id": id}, function (result) {
+        var URL = $(this).attr("url-send-loadlastcache");
+        ajxJson(URL, "post", null, function (result) {
             if (new Number(result.error_code) < 0) {
-                // window.location.reload();
-                showMsg(result.error_msg, "success")
+                blog = result.data;
+                if (!blog)
+                    showMsg(result.error_msg, "danger");
+                else {
+                    var frm = $("#setblogdetail");
+                    var blogid = frm.find("[name='blogid']")[0];
+                    var source_from = frm.find("[name='source_from']");
+                    var name = frm.find("[name='name']")[0];
+                    var name_en = frm.find("[name='name_en']")[0];
+                    var title_image_filename = frm.find("[name='title_image_filename']")[0];
+                    var title_image_bgcolor = frm.find("[name='title_image_bgcolor']")[0];
+                    var summary = frm.find("[name='summary']")[0];
+                    var content = frm.find("[name='content']")[0];
+                    var catelogCtl = frm.find("ul[name='catelog']")[0];
+                    var tagsCtl = frm.find("ul[name='tags']")[0];
+
+                    $(blogid).val(blog.blogid);
+                    $(name).val(blog.name);
+                    $(name_en).val(blog.name_en);
+                    source_from[0].checked = blog.source_from == "original" ? true : false;
+                    source_from[1].checked = blog.source_from == "transfer" ? true : false;
+                    $(title_image_filename).val(blog.title_image_filename);
+                    $(title_image_bgcolor).val(blog.title_image_bgcolor);
+                    $(summary).val(blog.summary);
+                    $(content).val(blog.content);
+                    var cbs = $(catelogCtl).find("input[type='radio']");
+                    $.each(blog.catelog, function (i, cate) {
+                        var cb = $(cbs).filter("[catename='" + cate + "']");
+                        if (cb)
+                            $(cb).prop("checked", true);
+                    });
+
+                    cbs = $(tagsCtl).find("input[type='checkbox']");
+                    $.each(blog.tags, function (i, tag) {
+                        var cb = $(cbs).filter("[tagname='" + tag + "']");
+                        if (cb)
+                            $(cb).prop("checked", true);
+                    });
+
+                    showMsg(result.error_msg, "success")
+                }
             }
             else {
                 showMsg(result.error_msg, "danger")
