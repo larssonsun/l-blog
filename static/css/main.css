@@ -27,6 +27,10 @@ html {
     color: #1E87F0;
 }
 
+.uk-panel-scrollable {
+    resize:vertical
+}
+
 .l-icon-button {
     width: auto; height: auto;
     margin: 2px
@@ -251,6 +255,10 @@ div.l-bottom-bar a {
 
 .l-breadcrumb ul >li span {
     color:#000;
+}
+
+.l-button {
+    padding:0
 }
 
 .l-cateloglist {

@@ -10,9 +10,10 @@ from aiohttp import web
 from aiohttp_session import setup
 from aiohttp_session.redis_storage import RedisStorage
 
-from admin.views import (AddNewBlog, DeleteBlog, PublicBlogDetail,
-                         ResetBlogCache, ResetBlogIndex, ResetFeeds,
-                         ResetRobots, ResetSitemap, SetBlogDetail)
+from admin.views import (AddNewBlog, DeleteBlog, DeleteCatelog, DeleteTag,
+                         PublicBlogDetail, ResetBlogCache, ResetBlogIndex,
+                         ResetFeeds, ResetRobots, ResetSitemap, SetBlogDetail,
+                         SetCatelog, SetTag)
 from config.settings import STATIC_DIR, TEMPLATE_DIR
 from main import filters
 from main.views import (About, AddComment, Approve, Archive, BlogDetail,
@@ -64,6 +65,10 @@ def setupRoutes(app):
     app.router.add_view("/admin/setblogdetail/" + r"{id:[0-9a-zA-Z\-]+}/", SetBlogDetail, name="admin-editblogdetail")
     app.router.add_view("/admin/publicblogdetail/", PublicBlogDetail, name="admin-publicblogdetail")
     app.router.add_view("/admin/deleteblog/", DeleteBlog, name="admin-deleteblog")
+    app.router.add_view("/admin/setcatelog/", SetCatelog, name="admin-setcatelog")
+    app.router.add_view("/admin/deletecatelog/" + r"{id:[0-9a-zA-Z\-]+}/", DeleteCatelog, name="admin-deletecatelog")
+    app.router.add_view("/admin/settag/", SetTag, name="admin-settag")
+    app.router.add_view("/admin/deletetag/" + r"{id:[0-9a-zA-Z\-]+}/", DeleteTag, name="admin-deletetag")
     
 
 def setupStaticRoutes(app):

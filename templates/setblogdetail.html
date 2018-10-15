@@ -42,34 +42,41 @@
                                 <textarea class="uk-textarea" rows="10" name="content" placeholder="正文 (支持markdown)">{{ blogdraft.content }}</textarea>
                             </div>
                             <div class="uk-flex uk-flex-center uk-margin">
-                                <div class="uk-panel uk-panel-scrollable uk-width-1-2">
+                                <div name="catelogform" class="uk-panel uk-panel-scrollable uk-width-1-2">
                                     <div class="uk-flex">
-                                        <textarea class="uk-textarea" rows="2" placeholder="添加分类（如：live|市井|市井杂文，粗如爵蜡。）"></textarea>
-                                        <button id="addcatelog" type="button" class="uk-button uk-padding-small"></button>
+                                        <textarea class="uk-textarea" rows="2" catelogid="" placeholder="格式：live|市井|市井杂文，粗如爵蜡。"></textarea>
+                                        <button id="setcatelogBttn" url-send-setcatelog="{{ url('admin-setcatelog') }}"
+                                            type="button" class="uk-button l-button">新增</button>
                                     </div>
                                     <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="catelog">
-                                        <li><b>分类</b></li>
+                                        <li><b>分类</b><a href="" newcatelog class="uk-icon-link uk-margin-small-left" uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
                                         {% for catelog in catelogs %}
                                         <li><label><input class="uk-radio" type="radio" name="catelog" catename="{{ catelog.id }}"
                                                     {% if catelog.id in blogdraft.catelog %} checked {% endif %}>{{
-                                                " " + catelog.catelog_name }}</label><a href="" delcatename="{{ catelog.id }}"
+                                                " " + catelog.catelog_name }}</label><a href="" setcatelogid="{{ catelog.id }}"
+                                                catelogcontent="{{ catelog.id + "|" + catelog.catelog_name + "|" + catelog.catelog_discrib }}"
+                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: file-edit; ratio: 0.8"></a><a
+                                                href="" delcatelog url-send-deletecatelog="{{ url('admin-deletecatelog', id=catelog.id) }}"
                                                 class="uk-icon-link uk-margin-small-left" uk-icon="icon: trash; ratio: 0.8"></a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
-                                <div class="uk-panel uk-panel-scrollable uk-margin-small-left uk-width-1-2">
+                                <div name="tagform" class="uk-panel uk-panel-scrollable uk-margin-small-left uk-width-1-2">
                                     <div class="uk-flex">
-                                        <textarea class="uk-textarea" rows="2" placeholder="添加分类（如：uikit|Uikit|UIkit 是 YOOtheme）"></textarea>
-                                        <button id="addtag" type="button" class="uk-button uk-padding-small"></button>
+                                        <textarea class="uk-textarea" rows="2" tagid="" placeholder="格式：uikit|Uikit|UIkit 是 YOOtheme"></textarea>
+                                        <button id="settagBttn" url-send-settag="{{ url('admin-settag') }}" type="button"
+                                            class="uk-button uk-padding-small l-button">新增</button>
                                     </div>
                                     <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="tags">
-                                        <li><b>标签</b></li>
+                                        <li><b>标签</b><a href="" newtag class="uk-icon-link uk-margin-small-left" uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
                                         {% for tag in tags %}
                                         <li><label><input class="uk-checkbox" type="checkbox" tagname="{{ tag.id }}" {%
-                                                    if tag.id in blogdraft.tags %} checked {% endif %}>{{ " " +
-                                                tag.tag_name
-                                                }}</label><a href="" deltagname="{{ tag.id }}" class="uk-icon-link uk-margin-small-left"
-                                                uk-icon="icon: trash; ratio: 0.8"></a></li>
+                                                    if tag.id in blogdraft.tags %} checked {% endif %}>{{
+                                                " " + tag.tag_name }}</label><a href="" settagid="{{ tag.id }}"
+                                                tagcontent="{{ tag.id + "|" + tag.tag_name +"|"+ tag.tag_discrib }}"
+                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: file-edit; ratio: 0.8"></a><a
+                                                href="" deltag url-send-deletetag="{{ url('admin-deletetag', id=tag.id) }}"
+                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: trash; ratio: 0.8"></a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>

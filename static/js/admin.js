@@ -206,7 +206,7 @@ $(document).ready(function () {
     //deleteblog
     $("#deleteblogBttn").click(function () {
         var bttn = $(this);
-        UIkit.modal.confirm('UIkit confirm!').then(function () {
+        UIkit.modal.confirm('正在删除文章, 是否继续?').then(function () {
             bttn.attr("disabled", "");
 
             var URL = bttn.attr("url-send-deleteblog");
@@ -220,9 +220,9 @@ $(document).ready(function () {
                     showMsg(result.error_msg, "danger")
                 }
             },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                showMsg(textStatus, "danger")
-            });
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    showMsg(textStatus, "danger")
+                });
 
             bttn.removeAttr("disabled");
         }, function () { });
@@ -299,6 +299,137 @@ $(document).ready(function () {
 
         var URL = $(this).attr("url-send-publicblog");
         ajxJson(URL, "post", {}, function (result) {
+            if (new Number(result.error_code) < 0) {
+                // window.location.reload();
+                showMsg(result.error_msg, "success")
+            }
+            else {
+                showMsg(result.error_msg, "danger")
+            }
+        },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus, "danger")
+            });
+
+        $(this).removeAttr("disabled");
+    });
+
+    //begin editcatelog
+    $("a[setcatelogid]").click(function () {
+        var frm = $("div[name = 'catelogform']");
+        var ta = frm.find("textarea")[0];
+        $("#setcatelogBttn").text("修改");
+        $(ta).attr("catelogid", $(this).attr("setcatelogid"));
+        $(ta).val($(this).attr("catelogcontent"));
+        return false;
+    });
+
+    //begin addnwecatelog
+    $("a[newcatelog]").click(function () {
+        var frm = $("div[name = 'catelogform']");
+        var ta = frm.find("textarea")[0];
+        $("#setcatelogBttn").text("新增");
+        $(ta).attr("catelogid", "");
+        $(ta).val($(this).attr(""));
+        return false;
+    });
+
+    //deletecatelog
+    $("a[delcatelog]").click(function () {
+        var URL = $(this).attr("url-send-deletecatelog");
+        ajxJson(URL, "post",{} , function (result) {
+            if (new Number(result.error_code) < 0) {
+                // window.location.reload();
+                showMsg(result.error_msg, "success")
+            }
+            else {
+                showMsg(result.error_msg, "danger")
+            }
+        },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus, "danger")
+            });
+
+        return false;
+    });
+
+    //setcatelog
+    $("#setcatelogBttn").click(function () {
+
+        $(this).attr("disabled", "");
+        var frm = $("div[name = 'catelogform']");
+        var URL = $(this).attr("url-send-setcatelog");
+        var ta = frm.find("textarea")[0];
+        var id = $(ta).attr("catelogid");
+        var content = $(ta).val();
+
+        ajxJson(URL, "post", { "id": id, "content": content }, function (result) {
+            if (new Number(result.error_code) < 0) {
+                // window.location.reload();
+                showMsg(result.error_msg, "success")
+            }
+            else {
+                showMsg(result.error_msg, "danger")
+            }
+        },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus, "danger")
+            });
+
+        $(this).removeAttr("disabled");
+    });
+
+
+     //begin edittag
+     $("a[settagid]").click(function () {
+        var frm = $("div[name = 'tagform']");
+        var ta = frm.find("textarea")[0];
+        $("#settagBttn").text("修改");
+        $(ta).attr("tagid", $(this).attr("settagid"));
+        $(ta).val($(this).attr("tagcontent"));
+        return false;
+    });
+
+    //begin addnwetag
+    $("a[newtag]").click(function () {
+        var frm = $("div[name = 'tagform']");
+        var ta = frm.find("textarea")[0];
+        $("#settagBttn").text("新增");
+        $(ta).attr("tagid", "");
+        $(ta).val($(this).attr(""));
+        return false;
+    });
+
+    //deletetag
+    $("a[deltag]").click(function () {
+        var URL = $(this).attr("url-send-deletetag");
+        ajxJson(URL, "post",{} , function (result) {
+            if (new Number(result.error_code) < 0) {
+                // window.location.reload();
+                showMsg(result.error_msg, "success")
+            }
+            else {
+                showMsg(result.error_msg, "danger")
+            }
+        },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                showMsg(textStatus, "danger")
+            });
+
+        return false;
+    });
+
+    //settag
+    $("#settagBttn").click(function () {
+
+        $(this).attr("disabled", "");
+        var frm = $("div[name = 'tagform']");
+        var URL = $(this).attr("url-send-settag");
+        var ta = frm.find("textarea")[0];
+        var id = $(ta).attr("tagid");
+        var content = $(ta).val();
+
+        ajxJson(URL, "post", { "id": id, "content": content }, function (result) {
             if (new Number(result.error_code) < 0) {
                 // window.location.reload();
                 showMsg(result.error_msg, "success")

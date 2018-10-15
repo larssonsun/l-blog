@@ -3,19 +3,21 @@
 
 import asyncio
 import json
+import re
 import uuid
 from datetime import datetime
 from functools import wraps
-import re
+
 import aiohttp_jinja2
-from aiohttp import web, http_exceptions
+from aiohttp import http_exceptions, web
 from aiohttp_session import get_session
 
 from main.views import basePageInfo, login_required
 from models.db import (delete_cache, exeNonQuery, exeScalar, get_cache, select,
                        set_cache)
-from utils import (WhooshSchema, addDictProp, rtData, setFeed, setRobots, blogName_enRc,
-                   setSitemap, setWhooshSearch, smtp_send_thread_self, titleImageRc)
+from utils import (WhooshSchema, addDictProp, blogName_enRc, rtData, setFeed,
+                   setRobots, setSitemap, setWhooshSearch,
+                   smtp_send_thread_self, titleImageRc)
 
 
 def admin_required(func):
@@ -62,9 +64,9 @@ async def setCacheForBlogPost(blogPostData, catelogLst, tagsLst):
 
 async def getCateAndTags(vm):
     # tags
-    vm["tags"] = await select("select `id`, `tag_name`, `blog_count` from `tags`")
+    vm["tags"] = await select("select `id`, `tag_name`, `tag_discrib`, `blog_count` from `tags`")
     # catelogs
-    vm["catelogs"] = await select("select `id`, `catelog_name`, `blog_count` from `catelog`")
+    vm["catelogs"] = await select("select `id`, `catelog_name`, `catelog_discrib`, `blog_count` from `catelog`")
 
 
 class AddNewBlog(web.View):
@@ -76,7 +78,7 @@ class AddNewBlog(web.View):
         await getCateAndTags(vm)
         data = await getBlogLastCache()
         if data:
-            data["blogid"]=None
+            data["blogid"] = None
             await setCacheForBlogPost(data, data["catelog"], data["tags"])
         return aiohttp_jinja2.render_template("setblogdetail.html", self.request, vm)
 
@@ -86,7 +88,8 @@ class AddNewBlog(web.View):
         rtd = None
         try:
             data = await getBlogLastCache()
-            rtd = rtData(error_code=-1, error_msg="读取草稿成功" if data else "无草稿可供使用", data=data)
+            rtd = rtData(
+                error_code=-1, error_msg="读取草稿成功" if data else "无草稿可供使用", data=data)
         except Exception as ex:
             rtd = rtData(error_code=16001,
                          error_msg=f"读取草稿时发生错误{ex}", data=None)
@@ -150,14 +153,15 @@ class PublicBlogDetail(web.View):
         rtd = None
         if not blogdraft:
             rtd = None
-        elif len(blogdraft["catelog"]) != 1 or len(blogdraft["catelog"][0])==0:
+        elif len(blogdraft["catelog"]) != 1 or len(blogdraft["catelog"][0]) == 0:
             rtd = rtData(error_code=13006, error_msg="请选择文章分类", data=None)
-        elif len(blogdraft["tags"]) <= 0 or len(blogdraft["tags"][0])==0:
+        elif len(blogdraft["tags"]) <= 0 or len(blogdraft["tags"][0]) == 0:
             rtd = rtData(error_code=13007, error_msg="请选择文章标签", data=None)
         elif len(blogdraft["source_from"]) <= 0:
             rtd = rtData(error_code=13008, error_msg="请选择文章来源", data=None)
         elif not re.match(blogName_enRc, blogdraft["name_en"]):
-            rtd = rtData(error_code=13009, error_msg="文章索引标题错误(数字字母或-,不含空格)", data=None)
+            rtd = rtData(error_code=13009,
+                         error_msg="文章索引标题错误(数字字母或-,不含空格)", data=None)
         return rtd
 
     @login_required(True)
@@ -217,7 +221,7 @@ class PublicBlogDetail(web.View):
                         sqls = [["UPDATE `blogs` SET `title_image` = %s, `name_en` = %s, `name` = %s, `summary` = %s, \
                             `content` = %s, `updated_at` = %s, `source_from` = %s, `tags` = %s, `catelog` = %s \
                             WHERE `name_en` = %s;", title_image, name_en, name, summary, content, updated_at, source_from,
-                            tags, catelog, blogid]]
+                                 tags, catelog, blogid]]
 
                     # catelog
                     catelist = blogdraft["catelog"]
@@ -316,6 +320,117 @@ class DeleteBlog(web.View):
         except Exception as ex:
             rtd = rtData(error_code=15001,
                          error_msg=f"删除文章时发生错误{ex}", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class SetTag(web.View):
+    @login_required(True)
+    @admin_required
+    async def post(self):
+        # struct: live|市井|市井杂文，粗如爵蜡。
+        rtd = None
+        data = await self.request.post()
+        sql = None
+        try:
+            content = data["content"].split("|")
+            if len(content) == 3:
+                msgtype = None
+                if "id" in data and len(data["id"]) > 0 :
+                    msgtype = "修改"
+                    sql = f"update `tags` set `tag_name`='{content[1]}', `tag_discrib`='{content[2]}' \
+                        where `id`='{data['id']}'"
+                else:
+                    msgtype = "新增"
+                    sql = f"insert into `tags` values ('{content[0]}', '{content[1]}', '{content[2]}', 0) "
+
+                ic = await exeNonQuery(sql)
+                if ic == 1:
+                    rtd = rtData(
+                        error_code=-1, error_msg=f"{msgtype}标签成功", data=None)
+                else:
+                    rtd = rtData(error_code=19002,
+                                 error_msg=f"未能成功{msgtype}标签", data=None)
+            else:
+                rtd = rtData(error_code=19003,
+                             error_msg=f"标签必须是类似:\"live|市井|市井杂文，粗如爵蜡\"的格式", data=None)
+        except Exception as ex:
+            rtd = rtData(error_code=19001,
+                         error_msg=f"{msgtype}标签时发生错误{ex}", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class DeleteTag(web.View):
+    @login_required(True)
+    @admin_required
+    async def post(self):
+        rtd = None
+        try:
+            ic = await exeNonQuery(f"delete from `tags` where `id`='{ self.request.match_info['id'] }' and `blog_count` = 0")
+            if ic == 1:
+                rtd = rtData(
+                    error_code=-1, error_msg=f"删除标签成功", data=None)
+            else:
+                rtd = rtData(error_code=20002,
+                             error_msg=f"未能成功删除标签", data=None)
+        except Exception as ex:
+            rtd = rtData(error_code=20001,
+                         error_msg=f"删除标签时发生错误{ex}", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class SetCatelog(web.View):
+    @login_required(True)
+    @admin_required
+    async def post(self):
+        # struct: live|市井|市井杂文，粗如爵蜡。
+        rtd = None
+        data = await self.request.post()
+        sql = None
+        try:
+            content = data["content"].split("|")
+            if len(content) == 3:
+
+                msgtype = None
+                if "id" in data and len(data["id"]) > 0 :
+                    msgtype = "修改"
+                    sql = f"update `catelog` set `catelog_name`='{content[1]}', `catelog_discrib`='{content[2]}' \
+                        where `id`='{data['id']}'"
+                else:
+                    msgtype = "新增"
+                    sql = f"insert into `catelog` values ('{content[0]}', '{content[1]}', '{content[2]}', 0) "
+
+                ic = await exeNonQuery(sql)
+                if ic == 1:
+                    rtd = rtData(
+                        error_code=-1, error_msg=f"{msgtype}分类成功", data=None)
+                else:
+                    rtd = rtData(error_code=17002,
+                                 error_msg=f"未能成功{msgtype}分类", data=None)
+            else:
+                rtd = rtData(error_code=17003,
+                             error_msg=f"分类必须是类似:\"live|市井|市井杂文，粗如爵蜡\"的格式", data=None)
+        except Exception as ex:
+            rtd = rtData(error_code=17001,
+                         error_msg=f"{msgtype}分类时发生错误{ex}", data=None)
+        return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
+
+
+class DeleteCatelog(web.View):
+    @login_required(True)
+    @admin_required
+    async def post(self):
+        rtd = None
+        try:
+            ic = await exeNonQuery(f"delete from `catelog` where `id`='{ self.request.match_info['id'] }' and `blog_count` = 0")
+            if ic == 1:
+                rtd = rtData(
+                    error_code=-1, error_msg=f"删除分类成功", data=None)
+            else:
+                rtd = rtData(error_code=18002,
+                             error_msg=f"未能成功删除分类", data=None)
+        except Exception as ex:
+            rtd = rtData(error_code=18001,
+                         error_msg=f"删除分类时发生错误{ex}", data=None)
         return web.json_response(data=dict(rtd._asdict()), dumps=json.dumps)
 
 
