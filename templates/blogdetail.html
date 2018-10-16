@@ -34,14 +34,15 @@
                         <span class="uk-align-right uk-margin-remove">
                             <a href="{{ url('admin-editblogdetail', id=blog.name_en) }}" class="uk-icon-button l-icon-button"
                                 uk-icon="file-edit"></a>
-                            <a id="deleteblogBttn" class="uk-margin-large-left" href="" url-send-deleteblog="{{ url('admin-deleteblog') }}" data-blog-id="{{ blog.name_en }}" class="uk-icon-button l-icon-button"
-                                uk-icon="trash"></a></span>
+                            <a id="deleteblogBttn" class="uk-margin-medium-left" href="" url-send-deleteblog="{{ url('admin-deleteblog') }}"
+                                data-blog-id="{{ blog.name_en }}" class="uk-icon-button l-icon-button" uk-icon="trash"></a></span>
                         {% endif %}
                     </p>
                     <div class="l-atricalContent">{{ blog.markDownedContent|safe }}</div>
                     <hr class="uk-divider-icon">
                     {% if blog.updated_at != blog.created_at %}
-                    <p class="l-urlblock"><span uk-icon="icon: file-edit; ratio: 0.8"></span>{{ blog.updated_at|fmtDatetimeFromFloat|fmtLabel('blog_last_updatetime') }}</p>
+                    <p class="l-urlblock"><span uk-icon="icon: file-edit; ratio: 0.8"></span>{{
+                        blog.updated_at|fmtDatetimeFromFloat|fmtLabel('blog_last_updatetime') }}</p>
                     {% endif %}
                     <p class="l-urlblock"><span uk-icon="link"></span>{{ blogurl|fmtLabel('blog_url_left') }}</p>
                     {% if blog.tags %}
