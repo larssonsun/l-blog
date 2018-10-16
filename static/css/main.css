@@ -720,13 +720,17 @@ footer .l-tel, footer .l-mail {
 
 .l-nav>li>a {
     color: #666;
-}
-.l-nav>li>a {
     padding: 5px 0;
-}
-.l-nav li>a {
     display: block;
     text-decoration: none;
+    text-shadow:-1px 0 black,
+    0 1px white,
+    1px 0 white,
+    0 -1px white;
+}
+
+.l-nav .uk-nav-divider {
+    border-color:#666
 }
 
 .l-rightSideBar > div {
