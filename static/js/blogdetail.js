@@ -35,4 +35,33 @@ $(document).ready(function(){
         
         return false;
     });
+
+    
+    //deleteblog
+    $("#deleteblogBttn").click(function () {
+        var bttn = $(this);
+        UIkit.modal.confirm('正在删除文章, 是否继续?').then(function () {
+            bttn.attr("disabled", "");
+
+            var URL = bttn.attr("url-send-deleteblog");
+            var id = bttn.attr("data-blog-id");
+            ajxJson(URL, "post", { "id": id }, function (result) {
+                if (new Number(result.error_code) < 0) {
+                    // window.location.reload();
+                    showMsg(result.error_msg, "success")
+                }
+                else {
+                    showMsg(result.error_msg, "danger")
+                }
+            },
+                function (XMLHttpRequest, textStatus, errorThrown) {
+                    showMsg(textStatus, "danger")
+                });
+
+            bttn.removeAttr("disabled");
+        }, function () { });
+
+        return false;
+    });
+
 });
