@@ -11,7 +11,8 @@
         <li class="uk-visible@l"><span class="uk-text-middle">{{ blogName }}</span></li>
         <li class="uk-hidden@l"><span class="uk-text-middle">{{ None|fmtLabel("blog_name_hide") }}</span></li>
         {% else %}
-        <li><span class="uk-text-middle">{{ firChdName }}</span></li>
+        <li class="uk-visible@l"><span class="uk-text-middle">{{ firChdName }}</span></li>
+        <li class="uk-hidden@l"><span class="uk-text-middle">{{ None|fmtLabel("blog_name_hide") }}</span></li>
         {% endif %}
     </ul>
 </div>

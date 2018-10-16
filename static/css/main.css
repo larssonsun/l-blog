@@ -45,8 +45,10 @@ h1, .uk-h1, h2, .uk-h2, h3, .uk-h3, h4, .uk-h4, h5, .uk-h5, h6, .uk-h6 {
 }
 
 textarea {
-    resize:vertical
+    resize:vertical;
+    min-width:20px
 }
+
 
 body {
     display: flex ;
@@ -94,6 +96,10 @@ body {
     padding:5px;
     border: #E5E5E5 px solid;
     
+}
+
+.l-blogcontentta {
+    word-break: break-all;
 }
 
 .l-context-search {
@@ -258,7 +264,11 @@ div.l-bottom-bar a {
 }
 
 .l-button {
-    padding:0
+    padding:3px 22px
+}
+
+.l-button-tight {
+    padding: 1px
 }
 
 .l-cateloglist {
@@ -848,6 +858,10 @@ footer .l-tel, footer .l-mail {
         margin-left: 2px!important;
     }
     
+    .CodeMirror span {
+        word-break: break-all
+    }
+
     li.l-active > a{
         color: #3895F2!important;
     }
@@ -899,9 +913,19 @@ footer .l-tel, footer .l-mail {
         background: #F2F2F2
     }
 
+    .l-bloginfo {
+        background-color:#fff;
+        padding:5px;
+        border: #c1c1c1 solid 1px;
+    }
+
     .l-breadcrumb {
         border: #c1c1c1 solid 1px;
         margin-bottom: 1px !important;
+    }
+
+    .l-breadcrumb span {
+        overflow: hidden
     }
 
     .l-comment-list .uk-comment~ul {
@@ -938,7 +962,12 @@ footer .l-tel, footer .l-mail {
     }
 
     p.l-meta {
+        height: 30px;
         margin:0
+    }
+
+    p.l-meta > span {
+        margin-right:3px;
     }
 
     .l-mobi-menu {

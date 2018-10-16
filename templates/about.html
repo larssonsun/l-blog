@@ -5,7 +5,9 @@
 
 {% block description %}{{ None|fmtLabel('about_discrib') }}{% endblock %}
 {% block keywords %}{{ None|fmtLabel('about_keywords') }}{% endblock %}
-
+{% block head_js %}
+<script src="/static/js/about.js"></script>
+{% endblock %}
 {% block content %}
 <div class="uk-section uk-section-small l-background-color">
     <div class="uk-container">

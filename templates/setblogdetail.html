@@ -5,18 +5,24 @@
 
 {% block description %}{{ None|fmtLabel('about_discrib') }}{% endblock %}
 {% block keywords %}{{ None|fmtLabel('about_keywords') }}{% endblock %}
-
+{% block head_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.css" />
+{% endblock %}
+{% block head_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplemde/1.11.2/simplemde.min.js"></script>
+<script src="/static/js/setblogdetail.js"></script>
+{% endblock %}
 {% block content %}
 <div class="uk-section uk-section-small l-background-color">
     <div class="uk-container">
         <div class="uk-grid uk-margin-remove-left">
-            <div class="uk-width-3-4@m uk-width-1-1@s uk-section uk-padding-remove">
+            <div class="uk-width-1-1@m uk-width-1-1@s uk-section uk-padding-remove">
                 {{ mcs.breadcrumb(url('Index'), None|fmtLabel("home_page"), None|fmtLabel(app.site_status.last2path) +
                 " - " + None|fmtLabel(app.site_status.lastpath)) }}
                 <div class="uk-box-shadow uk-box-shadow-large l-bloginfo">
                     <form id="setblogdetail">
                         <fieldset class="uk-fieldset">
-                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                            <div class="uk-margin">
                                 <label><input class="uk-radio" type="radio" name="source_from" {% if
                                         blogdraft.source_from=="original" %} checked {% endif %}>原创</label>
                                 <label><input class="uk-radio" type="radio" name="source_from" {% if
@@ -26,49 +32,47 @@
                                     value="{{ blogdraft.name }}"></div>
                             <div class="uk-margin"><input class="uk-input uk-form-small" name="name_en" placeholder="索引标题 (如:python-slice)"
                                     value="{{ blogdraft.name_en }}"></div>
-                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid uk-align-middle">
-                                <label>/static/images/article/</label>
-                                <input class="uk-input uk-form-small uk-width-medium" name="title_image_filename" value="{{ blogdraft.title_image_filename }}"
-                                    placeholder="文件名 (如:python)">
-                                <label class="uk-padding-remove">.png</label><label class="uk-padding-remove">|bgc|#</label>
-                                <input class="uk-input uk-form-small" name="title_image_bgcolor" placeholder="背景色 (缺省:#FFFFFF)"
-                                    value="{{ blogdraft.title_image_bgcolor }}">
-                                <label class="uk-padding-remove">|bgcend|</label>
+                            <div class="uk-margin uk-flex ">
+                                <input class="uk-input uk-form-small" name="title_image_filename" value="{{ blogdraft.title_image_filename }}"
+                                    placeholder="主题图文件名 (如:python, 不带后缀)"><input class="uk-input uk-form-small" name="title_image_bgcolor"
+                                    placeholder="主题图背景色 (缺省:FFFFFF, 不带＃)" value="{{ blogdraft.title_image_bgcolor }}">
                             </div>
                             <div class="uk-margin">
                                 <textarea class="uk-textarea" rows="5" name="summary" placeholder="概要 (缺省则为正文前 80个全角字符)">{{ blogdraft.summary }}</textarea>
                             </div>
                             <div class="uk-margin">
-                                <textarea class="uk-textarea" rows="10" name="content" placeholder="正文 (支持markdown)">{{ blogdraft.content }}</textarea>
+                                <textarea name="content" class="uk-textarea" rows="10" name="content" placeholder="正文 (支持markdown)">{{ blogdraft.content }}</textarea>
                             </div>
                             <div class="uk-flex uk-flex-center uk-margin">
-                                <div name="catelogform" class="uk-panel uk-panel-scrollable uk-width-1-2">
+                                <div name="catelogform" class="uk-panel uk-panel-scrollable uk-width-1-2@m uk-width-1-1s">
                                     <div class="uk-flex">
                                         <textarea class="uk-textarea" rows="2" catelogid="" placeholder="格式：live|市井|市井杂文，粗如爵蜡。"></textarea>
                                         <button id="setcatelogBttn" url-send-setcatelog="{{ url('admin-setcatelog') }}"
-                                            type="button" class="uk-button l-button">新增</button>
+                                            type="button" class="uk-button l-button-tight">新增</button>
                                     </div>
                                     <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="catelog">
-                                        <li><b>分类</b><a href="" newcatelog class="uk-icon-link uk-margin-small-left" uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
+                                        <li><b>分类</b><a href="" newcatelog class="uk-icon-link uk-margin-small-left"
+                                                uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
                                         {% for catelog in catelogs %}
                                         <li><label><input class="uk-radio" type="radio" name="catelog" catename="{{ catelog.id }}"
                                                     {% if catelog.id in blogdraft.catelog %} checked {% endif %}>{{
                                                 " " + catelog.catelog_name }}</label><a href="" setcatelogid="{{ catelog.id }}"
                                                 catelogcontent="{{ catelog.id + "|" + catelog.catelog_name + "|" + catelog.catelog_discrib }}"
-                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: file-edit; ratio: 0.8"></a><a
+                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: file-edit; ratio: 0.9"></a><a
                                                 href="" delcatelog url-send-deletecatelog="{{ url('admin-deletecatelog', id=catelog.id) }}"
-                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: trash; ratio: 0.8"></a></li>
+                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: trash; ratio: 0.9"></a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
-                                <div name="tagform" class="uk-panel uk-panel-scrollable uk-margin-small-left uk-width-1-2">
+                                <div name="tagform" class="uk-panel uk-panel-scrollable uk-margin-small-left uk-width-1-2@m uk-width-1-1s">
                                     <div class="uk-flex">
                                         <textarea class="uk-textarea" rows="2" tagid="" placeholder="格式：uikit|Uikit|UIkit 是 YOOtheme"></textarea>
                                         <button id="settagBttn" url-send-settag="{{ url('admin-settag') }}" type="button"
-                                            class="uk-button uk-padding-small l-button">新增</button>
+                                            class="uk-button uk-padding-small l-button-tight">新增</button>
                                     </div>
                                     <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="tags">
-                                        <li><b>标签</b><a href="" newtag class="uk-icon-link uk-margin-small-left" uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
+                                        <li><b>标签</b><a href="" newtag class="uk-icon-link uk-margin-small-left"
+                                                uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
                                         {% for tag in tags %}
                                         <li><label><input class="uk-checkbox" type="checkbox" tagname="{{ tag.id }}" {%
                                                     if tag.id in blogdraft.tags %} checked {% endif %}>{{
@@ -84,23 +88,17 @@
                             <hr>
                             <div class="uk-flex uk-flex-right">
                                 <input type="hidden" name="blogid" value="{{ blogdraft.blogid if blogdraft.blogid else '' }}">
-                                <button type="button" class="uk-button uk-margin-small-right" id="setblogdetailBttn"
+                                <button type="button" class="uk-button uk-margin-small-right l-button" id="setblogdetailBttn"
                                     url-send-blogtmp="{{ url('admin-setblogdetail') }}">保存到草稿</button>
-                                <button type="button" class="uk-button uk-margin-small-right" id="loadlastcacheBttn"
+                                <button type="button" class="uk-button uk-margin-small-right l-button" id="loadlastcacheBttn"
                                     url-send-loadlastcache="{{ url('admin-loadlastcache') }}">读取草稿</button>
-                                <button type="button" class="uk-button uk-button-primary" id="publicblogdetailBttn"
+                                <button type="button" class="uk-button uk-button-primary l-button" id="publicblogdetailBttn"
                                     url-send-publicblog="{{ url('admin-publicblogdetail') }}">{{ "保存" if
                                     blogdraft.blogid else "发布" }}文章</button>
                             </div>
                         </fieldset>
                     </form>
                 </div>
-            </div>
-            <div class="uk-width-1-4@m uk-visible@m l-rightSideBar">
-                {% include "_something.html" %}
-                {% include "_tagsform.html" %}
-                {% include "_catelogform.html" %}
-                {% include "_friendlyConn.html" %}
             </div>
         </div>
     </div>

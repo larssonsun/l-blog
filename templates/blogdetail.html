@@ -9,6 +9,9 @@
 {% block head_css %}
 <link rel="stylesheet" href="/static/css/colorful.css">
 {% endblock %}
+{% block head_js %}
+<script src="/static/js/blogdetail.js"></script>
+{% endblock %}
 {% block content %}
 <div class="uk-section uk-section-small l-background-color">
     <div class="uk-container">
@@ -28,10 +31,10 @@
                         <span>{{ commentCount|fmtLabel('comment_count') }}</span>
                         <span>{{ blog.created_at|fmtDatetimeFromFloat }}</span>
                         {% if app.l_data.admin == 1 %}
-                        <span class="uk-align-right">
+                        <span class="uk-align-right uk-margin-remove">
                             <a href="{{ url('admin-editblogdetail', id=blog.name_en) }}" class="uk-icon-button l-icon-button"
                                 uk-icon="file-edit"></a>
-                            <a id="deleteblogBttn" href="" url-send-deleteblog="{{ url('admin-deleteblog') }}" data-blog-id="{{ blog.name_en }}" class="uk-icon-button l-icon-button"
+                            <a id="deleteblogBttn" class="uk-margin-large-left" href="" url-send-deleteblog="{{ url('admin-deleteblog') }}" data-blog-id="{{ blog.name_en }}" class="uk-icon-button l-icon-button"
                                 uk-icon="trash"></a></span>
                         {% endif %}
                     </p>
