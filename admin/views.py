@@ -116,7 +116,7 @@ class SetBlogDetail(web.View):
             tags = str(blog.get("tags")).split(",")
             m = titleImageRc.match(blog.get("title_image"))
             blog["title_image_filename"] = m.group(1) if m else ""
-            blog["title_image_bgcolor"] = m.group(2) if m else "",
+            blog["title_image_bgcolor"] = m.group(2) if m else ""
             await setCacheForBlogPost(blog, catelog, tags)
         else:
             raise http_exceptions.HttpBadRequest(message="未能找到编辑需要的文章id")
