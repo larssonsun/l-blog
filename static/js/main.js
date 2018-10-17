@@ -458,6 +458,7 @@ $(document).ready(function () {
     }
 
     $(".fullSiteSearchBttn").click(function (e) {
+        alert(1);
         return fullSiteSearch(this);
     });
 
