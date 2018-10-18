@@ -7,12 +7,18 @@
             </div>
             <div class="uk-width-1-4@m uk-width-1-1@s">
                 <h3>{{ None|fmtLabel("footer_pages") }}</h3>
-                <ul class="uk-list">
+                <ul class="uk-list uk-column-1-2">
                     <li class="uk-margin-small-bottom l-footer-li">
                         <a href="{{ url('Index') }}">{{ None|fmtLabel("home_page") }}</a>
                     </li>
                     <li class="uk-margin-small-bottom l-footer-li">
                         <a href="{{ url('archive') }}">{{ None|fmtLabel("archive_label") }}</a>
+                    </li>
+                    <li class="uk-margin-small-bottom l-footer-li">
+                        <a href="{{ url('about') }}">{{ None|fmtLabel("about_menu_href") }}</a>
+                    </li>
+                    <li class="uk-margin-small-bottom l-footer-li">
+                        <a href="{{ url('timeline') }}">{{ None|fmtLabel("timeline_label") }}</a>
                     </li>
                     <li class="uk-margin-small-bottom l-footer-li">
                         <a href="#"></a>
