@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# 导入项目顶层路径方便导入模块
-# import os
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# os.sys.path.append(BASE_DIR)
+# 使用pth文件帮助pytest导入项目包
+# 执行 import site;site.getsitepackages() 找到要放pth文件的路径
 # 或自定义一个pth文件放入site.getsitepackages()的第一个路径下。如果是x86则直接将路径加入\Lib\site-packages\pywin32.py中
-# import site;site.getsitepackages()
+# pth文件中写入D:/PROJ/l-blog/project/app/
+
 
 import re
 
 import pytest_aiohttp
 from aiohttp import web
 
-from app.site_ import Feeds_Atom, Feeds_Rss, Robots, Sitemap
+from site_ import Feeds_Atom, Feeds_Rss, Robots, Sitemap
 
 
 @pytest_aiohttp.pytest.fixture
