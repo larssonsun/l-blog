@@ -3,7 +3,7 @@
 
 import asyncio
 from aiohttp import web
-from config.settings import FEED_DIR, SITEMAP_DIR, ROBOTS_DIR
+from app.config.settings import FEED_DIR, SITEMAP_DIR, ROBOTS_DIR
 
 class Feeds_Atom(web.View):
     async def get(self):

@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# 导入项目顶层路径方便导入模块
+# import os
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# os.sys.path.append(BASE_DIR)
+# 或自定义一个pth文件放入site.getsitepackages()的第一个路径下。如果是x86则直接将路径加入\Lib\site-packages\pywin32.py中
+# import site;site.getsitepackages()
+
 import re
 
 import pytest_aiohttp
