@@ -1,10 +1,10 @@
 __pycache__/
 /config/settings.py
 /static/index/
-test/
 env/
 rss.xml
 atom.xml
 sitemap.xml
 robots.txt
 *.conf
+test/*tst*.py
