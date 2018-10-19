@@ -1,6 +1,6 @@
 __pycache__/
-/config/settings.py
-/static/index/
+l-blog/config/settings.py
+l-blog/static/index/
 env/
 rss.xml
 atom.xml
@@ -8,3 +8,4 @@ sitemap.xml
 robots.txt
 *.conf
 test/*tst*.py
+shity.py
