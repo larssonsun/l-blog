@@ -6,7 +6,7 @@ import re
 import pytest_aiohttp
 from aiohttp import web
 
-from project.l_blog.site_ import Feeds_Atom, Feeds_Rss, Robots, Sitemap
+from project.app.site_ import Feeds_Atom, Feeds_Rss, Robots, Sitemap
 
 
 @pytest_aiohttp.pytest.fixture
