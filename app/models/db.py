@@ -6,7 +6,7 @@
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # os.sys.path.append(BASE_DIR)
 #或自定义一个pth文件放入site.getsitepackages()的第一个路径下。如果是x86则直接将路径加入\Lib\site-packages\pywin32.py中
-
+# import site;site.getsitepackages()
 import asyncio
 import logging
 
@@ -15,8 +15,8 @@ import aioredis
 from aiocache import RedisCache
 from aiocache.serializers import PickleSerializer
 
-from config.settings import CACHES_CONTENT, CACHES_SESSION, DATABASES
-from models.larsson_db_mysql_aio import MyPyAioMysql
+from project.app.config.settings import CACHES_CONTENT, CACHES_SESSION, DATABASES
+from project.app.models.larsson_db_mysql_aio import MyPyAioMysql
 
 # logging.basicConfig(level=logging.INFO)
 

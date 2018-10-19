@@ -20,9 +20,9 @@ from whoosh.fields import ID, NUMERIC, STORED, TEXT, Schema
 from whoosh.index import create_in, exists_in, open_dir
 from whoosh.qparser import MultifieldParser
 
-from project.app.config.settings import (FEED_DIR, HASH_KEY, INDEX_DIR, INDEXPREFIX,
+from config.settings import (FEED_DIR, HASH_KEY, INDEX_DIR, INDEXPREFIX,
                              MAIL_SMTPCLIENT, ROBOTS_DIR, SITEMAP_DIR)
-from project.app.models.db import get_cache, get_cache_ttl, set_cache
+from models.db import get_cache, get_cache_ttl, set_cache
 
 analyzer = ChineseAnalyzer()
 rtData = namedtuple("rtData", ["error_code", "error_msg", "data"])

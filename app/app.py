@@ -11,10 +11,10 @@ from aiohttp import web
 from main.middlewares import setup_middlewares
 from main.routes import (setupRoutes, setupSession, setupStaticRoutes,
                                 setupTemplateRoutes)
-from project.app.models.db import create_cache, create_pool, create_redis_pool
-from project.app.config.settings import LOGTYPE
+from models.db import create_cache, create_pool, create_redis_pool
+from config.settings import LOGTYPE
 
-logging.basicConfig(level=LOGTYPE)
+# logging.basicConfig(level=LOGTYPE)
 
 
 async def init(loop):
