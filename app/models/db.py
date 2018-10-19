@@ -15,8 +15,8 @@ import aioredis
 from aiocache import RedisCache
 from aiocache.serializers import PickleSerializer
 
-from project.app.config.settings import CACHES_CONTENT, CACHES_SESSION, DATABASES
-from project.app.models.larsson_db_mysql_aio import MyPyAioMysql
+from config.settings import CACHES_CONTENT, CACHES_SESSION, DATABASES
+from models.larsson_db_mysql_aio import MyPyAioMysql
 
 # logging.basicConfig(level=logging.INFO)
 
