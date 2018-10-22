@@ -1,11 +1,14 @@
 __pycache__/
-config/settings.py
-static/index/
+app/config/settings.py
+app/static/index/
 env/
 rss.xml
 atom.xml
 sitemap.xml
 robots.txt
-*.conf
 test/*tst*.py
 shity.py
+*.conf
+*.code-workspace
+.vscode
+
