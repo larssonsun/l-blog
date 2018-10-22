@@ -1,6 +1,6 @@
 __pycache__/
-app/config/settings.py
-app/static/index/
+config/settings.py
+static/index/
 env/
 rss.xml
 atom.xml
