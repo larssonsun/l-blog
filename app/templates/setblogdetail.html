@@ -51,16 +51,15 @@
                                             type="button" class="uk-button l-button-tight">新增</button>
                                     </div>
                                     <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="catelog">
-                                        <li><b>分类</b><a href="" newcatelog class="uk-icon-link uk-margin-small-left"
-                                                uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
+                                        <li><b>分类</b><a href="" newcatelog class="uk-margin-small-left">+</a></li>
                                         {% for catelog in catelogs %}
                                         <li><label><input class="uk-radio" type="radio" name="catelog" catename="{{ catelog.id }}"
                                                     {% if catelog.id in blogdraft.catelog %} checked {% endif %}>{{
                                                 " " + catelog.catelog_name }}</label><a href="" setcatelogid="{{ catelog.id }}"
-                                                catelogcontent="{{ catelog.id + "|" + catelog.catelog_name + "|" + catelog.catelog_discrib }}"
-                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: file-edit; ratio: 0.9"></a><a
+                                                catelogcontent="{{ catelog.id + '|' + catelog.catelog_name + '|' + catelog.catelog_discrib }}"
+                                                class="uk-margin-small-left">E</a><a
                                                 href="" delcatelog url-send-deletecatelog="{{ url('admin-deletecatelog', id=catelog.id) }}"
-                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: trash; ratio: 0.9"></a></li>
+                                                class="uk-margin-small-left">D</a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
@@ -70,17 +69,19 @@
                                         <button id="settagBttn" url-send-settag="{{ url('admin-settag') }}" type="button"
                                             class="uk-button uk-padding-small l-button-tight">新增</button>
                                     </div>
+                                    <div>
+                                        
+                                    </div>
                                     <ul class="uk-list uk-column-1-2@m uk-column-1-1@s" name="tags">
-                                        <li><b>标签</b><a href="" newtag class="uk-icon-link uk-margin-small-left"
-                                                uk-icon="icon: plus-circle; ratio: 0.8"></a></li>
+                                        <li><b>标签</b><a href="" newtag class="uk-margin-small-left">+</a></li>
                                         {% for tag in tags %}
                                         <li><label><input class="uk-checkbox" type="checkbox" tagname="{{ tag.id }}" {%
                                                     if tag.id in blogdraft.tags %} checked {% endif %}>{{
                                                 " " + tag.tag_name }}</label><a href="" settagid="{{ tag.id }}"
-                                                tagcontent="{{ tag.id + "|" + tag.tag_name +"|"+ tag.tag_discrib }}"
-                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: file-edit; ratio: 0.8"></a><a
+                                                tagcontent="{{ tag.id + '|' + tag.tag_name +'|'+ tag.tag_discrib }}"
+                                                class="uk-margin-small-left">E</a><a
                                                 href="" deltag url-send-deletetag="{{ url('admin-deletetag', id=tag.id) }}"
-                                                class="uk-icon-link uk-margin-small-left" uk-icon="icon: trash; ratio: 0.8"></a></li>
+                                                class="uk-margin-small-left">D</a></li>
                                         {% endfor %}
                                     </ul>
                                 </div>
