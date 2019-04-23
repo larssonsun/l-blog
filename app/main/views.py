@@ -371,8 +371,16 @@ class Index(web.View):
                  from `catelog` where `id` = %s limit 1 offset 0", catelogid)
             catelog = catelog[0]
 
-        #fot sort
+        #for sort
         sortType = self.request.match_info.get("type")
+
+        #for pagin p1
+        pagesize = 10
+        pageno = self.request.query.get("pageno")
+        if not pageno:
+            pageno = 1
+        else:
+            pageno = int(pageno) if int(pageno) > 0 else 1
 
         #blog
         articals = await select(f"""
@@ -386,7 +394,26 @@ class Index(web.View):
             and { "`catelog` = (%s)" if catelog else "0=%s" }
             group by a.`id`
             order by {"a.`created_at` desc" if not sortType or sortType == "time" else "a.`browse_count` desc" }
+            limit { pagesize } offset { (pageno - 1) * pagesize }
             """, f'%{tagId}%' if tag else int("0"), catelogid if catelog else int("0"))
+
+        #for pagin p2
+        articalsCount = await exeScalar(f"""
+            select count(*) from `blogs` where `id` is not null
+            and { "`tags` like (%s)" if tag else "0=%s" }
+            and { "`catelog` = (%s)" if catelog else "0=%s" }
+            """, f'%{tagId}%' if tag else int("0"), catelogid if catelog else int("0"))
+        if not articalsCount:
+            articalsCount = 0
+        else:
+            articalsCount = int(articalsCount)
+        pageCount = articalsCount // pagesize
+        pagedLeftCount = articalsCount % pagesize
+        if pagedLeftCount > 0:
+            pageCount+= 1
+        prevPageNo = pageno - 1 if pageno > 1 else 1
+        nextPageNo = pageno + 1 if pageno < pageCount else pageCount
+
 
         #right side include
         tags, catelogs, friCnns = await setRightSideInclude(tagId, catelogid)

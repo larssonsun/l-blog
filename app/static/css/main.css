@@ -31,6 +31,12 @@ html {
     resize:vertical
 }
 
+.l-pagination>*>* {
+    display: block;
+    color: #000;
+    font-weight: bold
+}
+
 .l-icon-button {
     width: auto; height: auto;
     margin: 2px

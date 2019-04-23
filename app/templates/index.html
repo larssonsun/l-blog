@@ -88,6 +88,30 @@
                     </div>
                 </article>
                 {% endfor %}
+                <div class="uk-margin-small-top">
+                    <ul class="uk-pagination uk-flex-center l-pagination">
+                        <li>
+                            {% if tag %}
+                            <a href="{{ url('tag', tagId=tagId, query_={'pageno': prevPageNo}) }}">
+                            {% elif catelog %}
+                            <a href="{{ url('catelog', cateId=catelogid, query_={'pageno': prevPageNo}) }}">
+                            {% else %}
+                            <a href="{{ url('Index', query_={'pageno': prevPageNo}) }}">
+                            {% endif %}
+                            <span class="uk-margin-small-right" uk-pagination-previous></span>前一页</a>
+                        </li>
+                        <li>
+                            {% if tag %}
+                            <a href="{{ url('tag', tagId=tagId, query_={'pageno': nextPageNo}) }}">
+                            {% elif catelog %}
+                            <a href="{{ url('catelog', cateId=catelogid, query_={'pageno': nextPageNo}) }}">
+                            {% else %}
+                            <a href="{{ url('Index', query_={'pageno': nextPageNo}) }}">
+                            {% endif %}
+                            后一页<span class="uk-margin-small-left" uk-pagination-next></span></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="uk-width-1-4@m uk-visible@m l-rightSideBar">
             {% include "_something.html" %}
