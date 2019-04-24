@@ -59,14 +59,15 @@
                     <ul class="uk-pagination l-prev-next-pagi">
                         {% if blog.Prev %}
                         <li>
-                            <a href="{{ url('BlogDetail', id=blog.Prev)}}">
-                                <span class="uk-margin-small-right" uk-pagination-previous></span> {{ blog.PrevName }}
+                            <a href="{{ url('BlogDetail', id=blog.Prev)}}" uk-tooltip="title:{{ blog.PrevName }};pos:top">
+                                <span class="uk-margin-small-right" uk-pagination-previous></span>{{ blog.PrevName|getArticalFull(size=50) }}
                             </a>
                         </li>
                         {% endif %}
                         {% if blog.Next %}
                         <li class="uk-margin-auto-left">
-                            <a href="{{ url('BlogDetail', id=blog.Next)}}">{{ blog.NextName }}
+                            <a href="{{ url('BlogDetail', id=blog.Next)}}"  uk-tooltip="title:{{ blog.NextName }};pos:top">
+                                {{ blog.NextName|getArticalFull(size=50) }}
                                 <span class="uk-margin-small-left" uk-pagination-next></span>
                             </a>
                         </li>
