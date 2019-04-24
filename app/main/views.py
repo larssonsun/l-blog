@@ -35,20 +35,18 @@ def basePageInfo(func):
         cls.request.app.site_status = {}
         site_status = cls.request.app.site_status
 
-        #currMenuItem
+        # currMenuItem
         paths = cls.request.path.split("/")
 
         if len(paths) < 2 or len(paths[1]) == 0:
             curr = "index"
         else:
             curr = paths[1]
-            #lastpath
+            # lastpath
             if len(paths) > 1:
                 site_status["lastpath"] = paths[-2]
                 site_status["last2path"] = paths[-3]
         site_status["currMenuItem"] = curr
-
-        
 
         #blog_count, comment_count
         blog_count = await exeScalar("select count(1) from `blogs`")
@@ -56,7 +54,7 @@ def basePageInfo(func):
         site_status["blog_count"] = blog_count
         site_status["comment_count"] = comment_count
 
-        #siteonlinedays
+        # siteonlinedays
         beginTime = datetime.strptime("2018-9-24 13:56", "%Y-%m-%d %H:%M")
         site_status["siteonlinedays"] = (datetime.now() - beginTime).days
 
@@ -115,14 +113,14 @@ async def getTags(*blogTags):
         select `id`, `tag_name`, blog_count as `bct` from `tags` where `id` in ({ps}) order by `id`
         """, *blogTags)
     else:
-        #tag
+        # tag
         tags = await select("select `id`, `tag_name`, blog_count as `bct` from `tags` where `blog_count` > 0 order by `id`")
 
     return tags
 
 
 async def sendCerMain(*, cerUrl, userId, uname, mailAddr):
-    #send certificate mail to registed email address
+    # send certificate mail to registed email address
     rtd = None
     eabl, lastExpert = await smtp_send_enable(wilSendMail=True)
     if eabl:
@@ -144,16 +142,16 @@ async def sendCerMain(*, cerUrl, userId, uname, mailAddr):
 
 
 async def setRightSideInclude(tagId=None, catelogid=None):
-    #tags
+    # tags
     tags = await select("select `id`, `tag_name`, `blog_count` as `bct` from `tags` where `blog_count` > 0 order by `id`")
     [addDictProp(tg, "current", tg.get("id") == tagId) for tg in tags]
 
-    #catelogs
+    # catelogs
     catelogs = await select("select `id`, `catelog_name`, `blog_count` as `bct` from `catelog` where `blog_count` > 0 order by `id`")
     [addDictProp(cate, "current", cate.get("id") == catelogid)
         for cate in catelogs]
 
-    #friendly conns
+    # friendly conns
     friCnns = await select("select `name`, `url` from `friendlyconn`")
 
     return tags, catelogs, friCnns
@@ -281,7 +279,7 @@ class Registe(web.View):
             sme, lastExpert = await smtp_send_enable(wilSendMail=False)
             if not sme:
                 rtd = rtData(error_code=10008,
-                            error_msg=f"验证邮件发送受限，请于 {lastExpert}秒后再试", data=dict(waits=lastExpert))
+                             error_msg=f"验证邮件发送受限，请于 {lastExpert}秒后再试", data=dict(waits=lastExpert))
 
         if rtd.error_code == -1:
             try:
@@ -340,7 +338,8 @@ class ResetPwd(web.View):
             try:
                 ic = await exeNonQuery("update `users` set `passwd`= %s where `name` = %s", hash_md5(newpwd), loginedName)
                 if ic != 1:
-                    rtd = rtData(error_code=70006, error_msg="未能成功更新密码", data=None)
+                    rtd = rtData(error_code=70006,
+                                 error_msg="未能成功更新密码", data=None)
             except Exception:
                 rtd = rtData(error_code=70007,
                              error_msg="更新密码时发生错误", data=None)
@@ -354,7 +353,7 @@ class Index(web.View):
     @basePageInfo
     async def get(self):
 
-        #for tag filter
+        # for tag filter
         tagId = self.request.match_info.get("tagId")
         tag = None
         if tagId:
@@ -363,7 +362,7 @@ class Index(web.View):
             tag = tag[0]
             sortFurtUrl = ""
 
-        #for catelog filter
+        # for catelog filter
         catelogid = self.request.match_info.get("cateId")
         catelog = None
         if catelogid:
@@ -371,10 +370,10 @@ class Index(web.View):
                  from `catelog` where `id` = %s limit 1 offset 0", catelogid)
             catelog = catelog[0]
 
-        #for sort
+        # for sort
         sortType = self.request.match_info.get("type")
 
-        #for pagin p1
+        # for pagin p1
         pagesize = 10
         pageno = self.request.query.get("pageno")
         if not pageno:
@@ -382,7 +381,7 @@ class Index(web.View):
         else:
             pageno = int(pageno) if int(pageno) > 0 else 1
 
-        #blog
+        # blog
         articals = await select(f"""
             select a.`id`, a.`user_name`, a.`name`, a.`summary`, a.`created_at`, count(b.`id`) as `commentCount`,
                 a.`browse_count` as `readCount`, a.`source_from`, a.`name_en`, a.`title_image`, c.`catelog_name`
@@ -397,7 +396,7 @@ class Index(web.View):
             limit { pagesize } offset { (pageno - 1) * pagesize }
             """, f'%{tagId}%' if tag else int("0"), catelogid if catelog else int("0"))
 
-        #for pagin p2
+        # for pagin p2
         articalsCount = await exeScalar(f"""
             select count(*) from `blogs` where `id` is not null
             and { "`tags` like (%s)" if tag else "0=%s" }
@@ -410,12 +409,11 @@ class Index(web.View):
         pageCount = articalsCount // pagesize
         pagedLeftCount = articalsCount % pagesize
         if pagedLeftCount > 0:
-            pageCount+= 1
+            pageCount += 1
         prevPageNo = pageno - 1 if pageno > 1 else 1
         nextPageNo = pageno + 1 if pageno < pageCount else pageCount
 
-
-        #right side include
+        # right side include
         tags, catelogs, friCnns = await setRightSideInclude(tagId, catelogid)
 
         return aiohttp_jinja2.render_template("index.html", self.request, locals())
@@ -468,16 +466,16 @@ class BlogDetail(web.View):
             blog["markDownedContent"], blog["toc"] = mdToHtml(
                 blog.get("content"))
 
-            #blog tags str
+            # blog tags str
             blog["tagsStr"] = blog.get("tags")
 
-            #blog tags
+            # blog tags
             blog["tags"] = await getTags(blog.get("tags"))
 
-            #blog prev and next
+            # blog prev and next
             await self.setPrevNextBlog(blog)
 
-            #set cache
+            # set cache
             await set_cache(k, blog)
 
         return blog
@@ -487,11 +485,11 @@ class BlogDetail(web.View):
     async def get(self):
         name_en = self.request.match_info["id"]
 
-        #blog
+        # blog
         blog = await self.get_blog_cache(name_en)
         if blog:
 
-            #article read count
+            # article read count
             currentbrowse_count = 0
             session = await get_session(self.request)
             uid = session.get("uid")
@@ -502,11 +500,11 @@ class BlogDetail(web.View):
                     if 1 == i:
                         session[blog.get("id")] = datetime.now().timestamp()
 
-            #get newest browse_count
+            # get newest browse_count
             currentbrowse_count = await exeScalar("select `browse_count` from `blogs` where `id` = %s", blog.get("id"))
             blog["browse_count"] = int(currentbrowse_count)
 
-            #comments
+            # comments
             comments = await select("""
                 select a.*, b.email, b.`admin` from `comments` a 
                 inner join `users` b on a.`user_id` = b.`id`
@@ -515,10 +513,10 @@ class BlogDetail(web.View):
             commentCount = len(comments)
             cmmNo = (f'{str(x)} 楼' for x in range(commentCount, 0, -1))
             commentContentMaxLeng = 170
-            #comm addon set
+            # comm addon set
             self.setAvatarIntoCmm(comments)
             self.setAdminTag(comments)
-            #comments for comments
+            # comments for comments
             if commentCount > 0:
                 cmmIdList = [cmm.get("id") for cmm in comments]
                 inStr = ",".join(["%s" for i in range(0, commentCount)])
@@ -527,11 +525,11 @@ class BlogDetail(web.View):
                 inner join `users` b on a.`user_id` = b.`id`
                 where a.`parent_comment_id` in ({inStr}) order by a.`parent_comment_id`, a.`created_at` asc
                 """,  *cmmIdList)
-                #comm for comm avatar
+                # comm for comm avatar
                 self.setAvatarIntoCmm(cfcsList)
                 self.setAdminTag(cfcsList)
 
-        #current url
+        # current url
         blogurl = self.request.url
 
         return aiohttp_jinja2.render_template("blogdetail.html", self.request, locals())
@@ -637,11 +635,11 @@ class Archive(web.View):
     async def get(self):
         archiveVM = {}
 
-        def getYM(f): return datetime.fromtimestamp(f).year
+        def getYM(f): return datetime.fromtimestamp(f).year # Can be replaced with a lambda expression
 
-        def ifY(y, x): return y == x["year"]
+        def ifY(y, x): return y == x["year"] # Can be replaced with a lambda expression
 
-        #archives
+        # archives
         archivesInY = []
         archives = await select("select `name`, `name_en`, `created_at` from `blogs` order by `created_at` desc")
         if archives:
@@ -651,13 +649,14 @@ class Archive(web.View):
             for y in cy:
                 lstInY = [achiv if ifY(
                     y, achiv) else None for achiv in archives]
-                if lstInY[0]:
+                lstInY = list(filter(lambda x: x and True, lstInY))
+                if len(lstInY) > 0:
                     archivesInY.append(dict(year=y, data=lstInY))
 
         archiveVM["archives"] = archivesInY
         archiveVM["bct"] = len(archives)
 
-        #right side include
+        # right side include
         tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("archive.html", self.request, locals())
@@ -669,7 +668,7 @@ class About(web.View):
     async def get(self):
         vm = {}
 
-        #right side include
+        # right side include
         tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("about.html", self.request,
@@ -682,7 +681,7 @@ class Timeline(web.View):
     async def get(self):
         vm = {}
 
-        #right side include
+        # right side include
         tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("timeline.html", self.request,
@@ -707,9 +706,9 @@ class FullSiteSearch(web.View):
         if results:
             vm["bct"] = len(results)
             for hit in results:
-               vm["results"].append(hit)
+                vm["results"].append(hit)
 
-        #right side include
+        # right side include
         tags, catelogs, friCnns = await setRightSideInclude()
 
         return aiohttp_jinja2.render_template("searchResult.html", self.request, locals())
