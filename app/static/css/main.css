@@ -63,7 +63,7 @@ body {
 }
 
 .codehilite pre {
-    border:1px solid #000;
+    border:1px solid #1c1c1c;
     background-color: #F0F0F0;
     border-radius: 4px;
     font-size: 90%;
@@ -77,7 +77,7 @@ body {
 
 .codehilite pre > a.copy-code {
     text-align: right;
-    color:#c1c1c1
+    color:#000
 }
 
 #artclAndCmmDiv {
