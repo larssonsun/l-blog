@@ -228,6 +228,16 @@ li.l-active>a>span {
     color:#333;
 }
 
+.l-atricalContent a {
+    font-weight: 600;
+    color:#000;
+    text-decoration: underline
+}
+
+.l-atricalContent a:hover {
+    color:#004FA7;
+}
+
 div.l-article-title {
     font-size:18px;
     font-weight:bold;
