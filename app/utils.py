@@ -111,7 +111,10 @@ def mdToHtml(mdStr):
         'markdown.extensions.fenced_code',
         'markdown.extensions.extra',
         'markdown.extensions.codehilite',
-        'markdown.extensions.toc'
+        'markdown.extensions.toc',
+        'pymdownx.keys',
+        'pymdownx.details',
+        'pymdownx.emoji'
     ])
     # TocExtension实例用替代'markdown.extensions.toc'时
     # slugify 参数可以接受一个函数作为参数，这个函数将被用于处理标题的锚点值。Markdown 内置的处理方法不能处理中文标题
