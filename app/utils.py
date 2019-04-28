@@ -112,8 +112,9 @@ def mdToHtml(mdStr):
         'markdown.extensions.extra',
         'markdown.extensions.codehilite',
         'markdown.extensions.toc',
+        'markdown.extensions.admonition',
+        'pymdownx.superfences',
         'pymdownx.keys',
-        'pymdownx.details',
         'pymdownx.emoji'
     ])
     # TocExtension实例用替代'markdown.extensions.toc'时
