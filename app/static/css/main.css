@@ -238,6 +238,14 @@ li.l-active>a>span {
     color:#004FA7;
 }
 
+.l-atricalContent  blockquote {
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 1rem;
+    font-style: normal;
+    border-left: 5px solid #eee;
+}
+
 div.l-article-title {
     font-size:18px;
     font-weight:bold;
