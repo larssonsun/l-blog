@@ -98,7 +98,7 @@ body {
 }
 
 .l-article-image>div>img {
-    width: 245px;
+    width: 200px;
     background-color: #fff;
     padding: 5px;
     border: #E5E5E5 px solid;
@@ -188,7 +188,7 @@ li.l-active>a>span {
 
 .l-article-list article {
     background-color: #FFF;
-    padding: 15px 10px 15px 30px;
+    padding: 15px 15px 15px 20px;
     border: #c1c1c1 solid 1px
 }
 
