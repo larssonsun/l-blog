@@ -284,6 +284,10 @@ li.l-active>a>span {
     border-color: #faebcc;
 }
 
+.l-atricalContent table tr td {
+    border-bottom: 1px solid #bbb;
+}
+
 .l-atricalContent .note .admonition-title:before {
     content: '\e3c9\0020';
 }
