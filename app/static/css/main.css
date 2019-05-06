@@ -242,6 +242,10 @@ li.l-active>a>span {
     border-left: 5px solid #eee;
 }
 
+.l-atricalContent p {
+    margin:15px 0 10px 0;
+}
+
 .l-atricalContent .admonition {
     padding: 13px;
     margin-bottom: 10px;
