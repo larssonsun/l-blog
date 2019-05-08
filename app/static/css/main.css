@@ -198,26 +198,33 @@ li.l-active>a>span {
 
 .l-atricalContent {
     padding-top: 20px;
+    font-family: Roboto, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .l-atricalContent h1 {
-    font-size: 24px;
+    color: #004867;
+    font-size: 27px;
+    font-weight: 500;
     padding: 0 0 3px 8px;
+    margin: 40px 0;
     background-color: #eee;
-    border-left: solid 8px #1E87F0;
+    border-left: solid 8px #004867;
 }
 
 .l-atricalContent h2 {
+    color: #004867;
     font-size: 22px;
-    font-weight: bolder
+    font-weight: 500;
 }
 
 .l-atricalContent h3 {
     font-size: 18px;
+    font-weight: 500;
 }
 
 .l-atricalContent h4 {
     font-size: 12px;
+    font-weight: 500;
 }
 
 .l-atricalContent em {
@@ -243,7 +250,7 @@ li.l-active>a>span {
 }
 
 .l-atricalContent p {
-    margin:15px 0 10px 0;
+    margin: 15px 0 10px 0;
 }
 
 .l-atricalContent .admonition {
@@ -288,8 +295,22 @@ li.l-active>a>span {
     border-color: #faebcc;
 }
 
-.l-atricalContent table tr td {
+.l-atricalContent table {
+    border-collapse: collapse;
+    margin-bottom:40px;
+    width:90%;
+}
+
+.l-atricalContent table tr:not(:nth-last-child(1)) td {
     border-bottom: 1px solid #bbb;
+    line-height:32px;
+}
+
+.l-atricalContent table tr th {
+    padding-left:10px;
+    text-align: left;
+    border-bottom: 2px solid #bbb;
+    line-height:32px;
 }
 
 .l-atricalContent .note .admonition-title:before {
@@ -304,9 +325,10 @@ li.l-active>a>span {
     content: '\e8b2\0020';
 }
 
-div.l-article-title {
-    font-size: 18px;
-    font-weight: bold;
+div.l-article-title>h2 {
+    color: #004867;
+    font-size: 28px;
+    font-weight: 500;
 }
 
 .l-avatar-img {
@@ -947,10 +969,10 @@ footer .l-tel, footer .l-mail {
     .l-article-list article:nth-of-type(n+2) {
         margin-top: 4px !important;
     }
-    .l-article-title h2 {
+    div.l-article-title>h2 {
         margin: 10px 0 !important;
-        font-size: 16px;
-        font-weight: bold
+        font-size: 19px;
+        font-weight: 500;
     }
     .l-article-title>a {
         font-size: 26px;
@@ -958,7 +980,7 @@ footer .l-tel, footer .l-mail {
     }
     .l-article-title>a, .l-article-title>span {
         font-size: 16px;
-        font-weight: bold
+        font-weight: 500
     }
     .l-atricalContent {
         padding-top: 5px;
