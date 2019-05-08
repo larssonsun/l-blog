@@ -325,6 +325,12 @@ li.l-active>a>span {
     content: '\e8b2\0020';
 }
 
+div.l-article-title {
+    color: #004867;
+    font-size: 17px;
+    font-weight: 800;
+}
+
 div.l-article-title>h2 {
     color: #004867;
     font-size: 28px;
