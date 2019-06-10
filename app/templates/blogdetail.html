@@ -3,7 +3,7 @@
 
 {% block title %}{{ blog.name }}{% endblock %}
 
-{% block description %}{{ blog.summary|getArticalFull(size=170) }}{% endblock %}
+{% block description %}{{ blog.summary|getArticalFull(size=370) }}{% endblock %}
 {% block keywords %}{{ blog.tagsStr }}{% endblock %}
 
 {% block head_css %}
@@ -61,14 +61,14 @@
                         {% if blog.Prev %}
                         <li>
                             <a href="{{ url('BlogDetail', id=blog.Prev)}}" uk-tooltip="title:{{ blog.PrevName }};pos:top">
-                                <span class="uk-margin-small-right" uk-pagination-previous></span>{{ blog.PrevName|getArticalFull(size=50) }}
+                                <span class="uk-margin-small-right" uk-pagination-previous></span>{{ blog.PrevName|getArticalFull(size=45) }}
                             </a>
                         </li>
                         {% endif %}
                         {% if blog.Next %}
                         <li class="uk-margin-auto-left">
                             <a href="{{ url('BlogDetail', id=blog.Next)}}"  uk-tooltip="title:{{ blog.NextName }};pos:top">
-                                {{ blog.NextName|getArticalFull(size=50) }}
+                                {{ blog.NextName|getArticalFull(size=45) }}
                                 <span class="uk-margin-small-left" uk-pagination-next></span>
                             </a>
                         </li>

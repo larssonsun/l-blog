@@ -295,6 +295,12 @@ li.l-active>a>span {
     border-color: #faebcc;
 }
 
+.l-atricalContent .error {
+    color: #A94442;
+    background-color: #F2DEDE;
+    border-color: #EBCCD1;
+}
+
 .l-atricalContent table {
     border-collapse: collapse;
     margin-bottom:40px;
@@ -323,6 +329,10 @@ li.l-active>a>span {
 
 .l-atricalContent .warning .admonition-title:before {
     content: '\e8b2\0020';
+}
+
+.l-atricalContent .error .admonition-title:before {
+    content: '\e160\0020';
 }
 
 div.l-article-title {
