@@ -335,6 +335,17 @@ li.l-active>a>span {
     content: '\e160\0020';
 }
 
+.l-atricalContent kbd {
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 2px 4px;
+    font-size: 90%;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.25);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.25);
+}
+
 div.l-article-title {
     color: #004867;
     font-size: 17px;
