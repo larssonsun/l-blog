@@ -8,7 +8,7 @@ Markdown==3.1
 aiohttp_session==2.5.1
 aiohttp_jinja2==1.1.0
 aioredis==1.1.0
-feedgen==0.7.0
+feedgen==0.9.0
 aiocache==0.10.0
 pygments==2.3.1
 pymdown-extensions==6.0
