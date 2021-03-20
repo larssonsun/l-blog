@@ -1,5 +1,5 @@
 aiomysql==0.0.19
-Jinja2==2.10.1
+Jinja2==2.11.3
 Whoosh==2.7.4
 jieba==0.39
 pytest_aiohttp==0.3.0
